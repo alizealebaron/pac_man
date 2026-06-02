@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 08:48:45 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/02 20:47:18 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -28,6 +28,7 @@ MUSIC_PATH = "assets/music/save_score_theme.mp3"
 
 SELECTED_PATH = "assets/quizz/question_selected.png"
 UNSELECTED_PATH = "assets/quizz/question_unselected.png"
+SCROLL_PATH = "assets/menu/scroll.png"
 
 
 # +-------------------------------------------------------------------------+
@@ -44,6 +45,7 @@ class WinView(arcade.View):
 
         super().__init__(window)
         self.background = arcade.load_texture(BACKGROUND_PATH)
+        self.scroll_texture = arcade.load_texture(SCROLL_PATH)
         self.lst_score = self.window.manager.scoreboard
 
         # Initialisation de la musique
@@ -98,7 +100,7 @@ class WinView(arcade.View):
 
         if self.show_input_ui:
             # Si on saisit le nom, on dessine l'interface par-dessus le fond
-            self.ui_manager.draw()
+            self.draw_input_box()
         else:
             # Sinon, on dessine le menu normal
             self.draw_title()
@@ -146,49 +148,93 @@ class WinView(arcade.View):
         self.window.show_view(self.window.start_view)
 
     def show_name_input(self):
-        """Crée et affiche les éléments de saisie du pseudo"""
+        """Crée et positionne le champ de saisie du pseudo"""
         self.show_input_ui = True
 
-        anchor_layout = arcade.gui.UIAnchorLayout(
+        # Layout pour ancrer au milieu de l'écran
+        self.anchor_layout = arcade.gui.UIAnchorLayout(
             width=self.window.width,
             height=self.window.height
         )
 
-        v_box = arcade.gui.UIBoxLayout()
-
+        # Création de la boîte de texte
         self.input_field = arcade.gui.UIInputText(
             text=self.window.manager.player.name,
             width=300,
             height=40,
-            text_color=arcade.color.BLACK
+            text_color=arcade.color.BLACK,
+            font_size=20,
+            font_name="FOT-Humming Pro",
+            border_width=0
         )
 
-        submit_button = arcade.gui.UIFlatButton(
-            text="Valider et Enregistrer",
-            width=200
-        )
+        # Interception des touches clavier
+        @self.input_field.event("on_event")
+        def on_text_event(event):
+            if isinstance(event, arcade.gui.events.UIKeyPressEvent):
+                if event.symbol in (arcade.key.ENTER, arcade.key.ENTER):
+                    new_name = self.input_field.text.strip()
+                    if new_name:
+                        # On applique le nouveau nom
+                        self.window.manager.player.name = new_name
+                        self.show_input_ui = False
+                        
+                        # Nettoyage et suppression de l'UI
+                        self.ui_manager.remove(self.anchor_layout)
+                        
+                        # Lancement de la sauvegarde
+                        self.save_without_name()
 
-        @submit_button.event("on_click")
-        def on_click_submit(event):
-            new_name = self.input_field.text.strip()
-            if new_name:
-                self.window.manager.player.name = new_name
-                self.save_without_name()
-
-        v_box.add(self.input_field, space_around=(0, 0, 20, 0))
-        v_box.add(submit_button)
-
-        anchor_layout.add(
+        # Alignement au centre parfait (sur l'axe X et Y)
+        self.anchor_layout.add(
             anchor_x="center_x",
             anchor_y="center_y",
-            child=v_box
+            child=self.input_field
         )
 
-        self.ui_manager.add(anchor_layout)
+        self.ui_manager.add(self.anchor_layout)
 
     # +---------------------------------------------------------------------+
     # |                            Draw Methods                             |
     # +---------------------------------------------------------------------+
+
+    def draw_input_box(self):
+
+        arcade.draw_texture_rect(texture=self.scroll_texture,
+                                 rect=arcade.XYWH(self.window.width / 2,
+                                                  self.window.height / 2,
+                                                  self.window.width * 0.5,
+                                                  self.window.height * 0.3))
+
+        # 2. Dessin de la ligne noire sous le pseudo 
+        line_width = 320
+        center_x = self.window.width / 2
+        center_y = self.window.height / 2
+
+        arcade.draw_line(
+            start_x=center_x - (line_width / 2),
+            start_y=center_y - 30,
+            end_x=center_x + (line_width / 2),
+            end_y=center_y - 30,
+            color=arcade.color.BLACK,
+            line_width=3
+        )
+
+        # 3. Dessin des éléments gérés par l'UI Manager (UIInputText au centre)
+        self.ui_manager.draw()
+
+        # 4. Dessin du texte explicatif sous le parchemin
+        text = arcade.Text(
+            text="Appuyez sur entrer pour valider",
+            x=self.window.width / 2,
+            y=(self.window.height / 2) - (self.window.height * 0.15) - 35,
+            color=arcade.color.BLACK,
+            font_size=14,
+            font_name="FOT-Humming Pro",
+            anchor_x="center"
+        )
+
+        text.draw()
 
     def draw_title(self):
 
