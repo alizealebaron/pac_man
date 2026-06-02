@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 21:34:20 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/02 22:25:21 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,6 +14,7 @@ import arcade
 from src.view.maze_renderer import MazeRenderer
 from src.managers.collectible_manager import CollectibleManager
 from src.view.save_score.win_view import WinView
+from src.view.save_score.gameover_view import GameoverView
 from src.pacmanManager import PacmanManager
 
 # +-------------------------------------------------------------------------+
@@ -93,6 +94,8 @@ class GameView(arcade.View):
         self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         self.scroll_texture = arcade.load_texture(SCROLL_PATH)
 
+        self.timer = float(self.manager.config.level_max_time)
+
         # Détection de la fin d'un level
         self.is_finished = 0  # 0: Play, 1: Win, 2: GameOver
 
@@ -126,6 +129,12 @@ class GameView(arcade.View):
     def on_update(self, delta_time):
         """ Movement and game logic """
 
+        # Mise à jour du timer
+        self.timer -= delta_time
+
+        if (self.timer <= 0):
+            self.is_finished = 2
+
         # Vérification que le jeu est toujours en cours
         if (self.is_finished == 1):
             if (self.manager.actual_level == (len(self.manager.level) - 1)):
@@ -136,7 +145,10 @@ class GameView(arcade.View):
                 self.manager.actual_level += 1
                 self.window.show_view(GameView(self.manager, self.music_player,
                                                self.music))
-
+        if (self.is_finished == 2):
+            self.music.stop(self.music_player)
+            self.window.set_mouse_visible(True)
+            self.window.show_view(GameoverView(self.window))
 
         vx, vy = self._player_move()
 
@@ -396,7 +408,7 @@ class GameView(arcade.View):
                                  anchor_x="center",
                                  anchor_y="center")
         
-        time_text = arcade.Text(f"Time: Coming soon",
+        time_text = arcade.Text(f"Time: {int(self.timer)} second(s)",
                                  self.window.width - width / 2 - 20,
                                  self.window.height - 105,
                                  color=arcade.color.BLACK,
