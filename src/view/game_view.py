@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 22:25:21 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/02 23:14:09 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -132,7 +132,7 @@ class GameView(arcade.View):
         # Mise à jour du timer
         self.timer -= delta_time
 
-        if (self.timer <= 0):
+        if (self.timer <= 0 or self.manager.player.nb_life == 0):
             self.is_finished = 2
 
         # Vérification que le jeu est toujours en cours
