@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 20:04:41 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/02 21:34:20 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -22,6 +22,7 @@ from src.pacmanManager import PacmanManager
 
 BACKGROUND_PATH = "assets/background/game_background.png"
 MUSIC_PATH = "assets/music/game_theme.mp3"
+SCROLL_PATH = "assets/menu/scroll.png"
 
 SPEED = 5.0
 TILE_SIZE = 64
@@ -90,6 +91,7 @@ class GameView(arcade.View):
                                                   f"{pokemon}/portraits/"
                                                   "Normal.png")
         self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
+        self.scroll_texture = arcade.load_texture(SCROLL_PATH)
 
         # Détection de la fin d'un level
         self.is_finished = 0  # 0: Play, 1: Win, 2: GameOver
@@ -119,7 +121,7 @@ class GameView(arcade.View):
         self.player_sprites.draw()
 
         # Affichage de l'HUD
-        self.draw_UHD()
+        self.draw_UI()
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -329,8 +331,9 @@ class GameView(arcade.View):
             )
         )
 
-    def draw_UHD(self):
+    def draw_UI(self):
 
+        # Affichage de la partie haut gauche de l'UI
         pokemon = self.manager.player.pokemon
         sprite = arcade.load_texture(f"assets/sprite/pokemon/{pokemon.name}"
                                      "/portraits/Normal.png")
@@ -338,16 +341,16 @@ class GameView(arcade.View):
 
         arcade.draw_texture_rect(
             texture=self.pokemon_sprite,
-            rect=arcade.XYWH((sprite_size / 2) + 10,
-                             (self.hauteur - (sprite_size / 2) - 10),
+            rect=arcade.XYWH((sprite_size / 2) + 30,
+                             (self.hauteur - (sprite_size / 2) - 10) - 20,
                              sprite_size,
                              sprite_size)
         )
 
         arcade.draw_texture_rect(
             texture=self.sprite_frame,
-            rect=arcade.XYWH((sprite_size / 2) + 10,
-                             (self.hauteur - (sprite_size / 2) - 10),
+            rect=arcade.XYWH((sprite_size / 2) + 30,
+                             (self.hauteur - (sprite_size / 2) - 10) - 20,
                              sprite_size + 9,
                              sprite_size + 9)
         )
@@ -355,18 +358,52 @@ class GameView(arcade.View):
         sprite_size = 75
 
         player_life = arcade.Text(f"Live(s): {self.manager.player.nb_life}",
-                                  sprite_size + 25,
-                                  (self.hauteur - (sprite_size / 2) - 5),
+                                  sprite_size + 25 + 20,
+                                  (self.hauteur - (sprite_size / 2) - 5) - 20,
                                   color=arcade.color.WHITE,
                                   font_size=15,
                                   font_name="Comic Sans MS")
 
         player_score = arcade.Text(f"Score: {self.manager.player.score}",
-                                   sprite_size + 25,
-                                   (self.hauteur - (sprite_size / 2) - 35),
+                                   sprite_size + 25 + 20,
+                                   (self.hauteur - (sprite_size / 2) - 35) - 20,
                                    color=arcade.color.WHITE,
                                    font_size=15,
                                    font_name="Comic Sans MS")
 
         player_life.draw()
         player_score.draw()
+
+        # Affichage de la partie haut droite de l'UI
+
+        height = self.window.height * 0.12
+        width = self.window.width * 0.2
+
+        arcade.draw_texture_rect(
+            texture=self.scroll_texture,
+            rect=arcade.XYWH(self.window.width - width / 2 - 20,
+                             self.window.height - height / 2 - 25,
+                             width,
+                             height)
+        )
+
+        level_text = arcade.Text(f"Floor: {self.manager.actual_level + 1}F",
+                                 self.window.width - width / 2 - 20,
+                                 self.window.height - 70,
+                                 color=arcade.color.BLACK,
+                                 font_size=18,
+                                 font_name="Comic Sans MS",
+                                 anchor_x="center",
+                                 anchor_y="center")
+        
+        time_text = arcade.Text(f"Time: Coming soon",
+                                 self.window.width - width / 2 - 20,
+                                 self.window.height - 105,
+                                 color=arcade.color.BLACK,
+                                 font_size=15,
+                                 font_name="Comic Sans MS",
+                                 anchor_x="center",
+                                 anchor_y="center")
+        
+        level_text.draw()
+        time_text.draw()
