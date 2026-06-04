@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 14:35:28 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 14:48:15 by alebaron        ###   ########.fr        #
+#  Updated: 2026/05/28 14:20:14 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -36,5 +36,5 @@ class MainWindow(arcade.Window):
         self.manager = manager
 
         # Démarrer le jeu
-        self.start_view = MenuView(self)
+        self.start_view = MenuView()
         self.show_view(self.start_view)

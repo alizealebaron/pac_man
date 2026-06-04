@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 15:26:26 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 15:25:54 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,17 +15,17 @@
 # +-------------------------------------------------------------------------+
 
 import arcade
-from src.view.view_utils.baseView import BaseView
-# from src.old_view.game_view import GameView
-# from src.old_view.scoreboard_view import ScoreboardView
-# from src.old_view.settings_view import SettingsView
-# from src.old_view.personnality.personnality_view import PersonnalityView
+from src.view.game_view import GameView
+from src.view.scoreboard_view import ScoreboardView
+from src.view.settings_view import SettingsView
+from src.view.personnality.personnality_view import PersonnalityView
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
 # +-------------------------------------------------------------------------+
 
-BACKGROUND_PATH = "assets/background/menu_background.png"
+
+BACKGROUND_PATH = "assets/background/menu_background.jpg"
 BTN_PATH = "assets/button/"
 MUSIC_PATH = "assets/music/mainMenu_theme.mp3"
 
@@ -37,38 +37,35 @@ TEXT_FONT_PATH = "assets/font/text_font.otf"
 # |                                 Classe                                  |
 # +-------------------------------------------------------------------------+
 
-class MenuView(BaseView):
+class MenuView(arcade.View):
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window: arcade.Window):
+    def __init__(self):
 
-        super().__init__(window)
+        super().__init__()
 
         # Initialisation des textures
-        self.player_pokemon = self.manager.player.pokemon
+        self.player_pokemon = self.window.manager.player.pokemon
+
+        self.background = arcade.load_texture(BACKGROUND_PATH)
+        self.sprite_board = arcade.load_texture("assets/menu/leaderboard.png")
+        self.sprite_qwerty = arcade.load_texture("assets/menu/keybinds.png")
+        self.sprite_azerty = arcade.load_texture("assets/menu/keybinds_azerty"
+                                                 ".png")
+        self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
+        self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
+                                                  f"{self.player_pokemon.name}"
+                                                  "/portraits/Normal.png")
+        self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
+        self.rank_0 = arcade.load_texture("assets/rank/rank_0.png")
+        self.amogus = arcade.load_texture("assets/sprite/undefined/Normal.png")
 
         # Initialisation des fonts
         arcade.load_font(MAIN_FONT_PATH)
         arcade.load_font(TEXT_FONT_PATH)
-
-        # Initialisation des boutons du menu
-        self.init_btn_menu()
-
-        # Initialisation des textures réutilisées
-        self.sprite_frame = super().get_texture("assets/sprite/face_frame.png")
-
-        # Initialisation de la musique
-        self.music_player = None
-        self.music = arcade.Sound(MUSIC_PATH, streaming=True)
-
-    # +---------------------------------------------------------------------+
-    # |                            Init Methods                             |
-    # +---------------------------------------------------------------------+
-
-    def init_btn_menu(self):
 
         # Récupération de la largeur et hauteur de la fenêtre
         self.largeur = self.window.width
@@ -90,51 +87,50 @@ class MenuView(BaseView):
         # Initialisation de la box à boutons
         self.boutons = {
             "new_game": {
-                "texture": super().get_texture(BTN_PATH + "start.png"),
+                "texture": arcade.load_texture(BTN_PATH + "start.png"),
                 "pos": (col_gauche, ligne_haut),
                 "action": self.start_game
             },
             "quizz": {
-                "texture": super().get_texture(BTN_PATH + "quizz.png"),
+                "texture": arcade.load_texture(BTN_PATH + "quizz.png"),
                 "pos": (col_droite, ligne_haut),
                 "action": self.open_quizz
             },
             "settings": {
-                "texture": super().get_texture(BTN_PATH + "settings.png"),
+                "texture": arcade.load_texture(BTN_PATH + "settings.png"),
                 "pos": (col_droite, ligne_milieu),
                 "action": self.open_settings
             },
             "scoreboard": {
-                "texture": super().get_texture(BTN_PATH + "score.png"),
+                "texture": arcade.load_texture(BTN_PATH + "score.png"),
                 "pos": (col_gauche, ligne_milieu),
                 "action": self.open_score
             },
             "exit": {
-                "texture": super().get_texture(BTN_PATH + "end.png"),
+                "texture": arcade.load_texture(BTN_PATH + "end.png"),
                 "pos": (col_centre, ligne_bas),
                 "action": self.end_game
             }
         }
+
+        # Initialisation de la musique
+        self.music_player = None
 
     # +---------------------------------------------------------------------+
     # |                            Btn Methods                              |
     # +---------------------------------------------------------------------+
 
     def start_game(self):
-        # self.window.show_view(GameView(self.window.manager))
-        print("1")
+        self.window.show_view(GameView(self.window.manager))
 
     def open_quizz(self):
-        # self.window.show_view(PersonnalityView(self.window))
-        print("2")
+        self.window.show_view(PersonnalityView(self.window))
 
     def open_settings(self):
-        # self.window.show_view(SettingsView(self.window))
-        print("3")
+        self.window.show_view(SettingsView(self.window))
 
     def open_score(self):
-        # self.window.show_view(ScoreboardView(self.window))
-        print("4")
+        self.window.show_view(ScoreboardView(self.window))
 
     def end_game(self):
         arcade.exit()
@@ -143,16 +139,41 @@ class MenuView(BaseView):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
+    def on_show_view(self):
+        """Appelé quand la vue change"""
+        volume = self.window.manager.settings.volume
+        if not (self.music_player and self.music_player.playing):
+            self.music = arcade.Sound(MUSIC_PATH,
+                                      streaming=True)
+            self.music_player = self.music.play(volume=volume, loop=True)
+
+        # Reload le nouveau sprite
+        self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
+                                                  f"{self.player_pokemon.name}"
+                                                  "/portraits/Normal.png")
+
     def on_draw(self):
 
-        super().on_draw()
+        self.clear()
+
+        # Affichage du fond d'écran
+        arcade.draw_texture_rect(
+            texture=self.background,
+            rect=arcade.XYWH(
+                self.window.width / 2,
+                self.window.height / 2,
+                self.window.width,
+                self.window.height
+            )
+        )
 
         # Affichage des boutons du menu
         for nom, data in self.boutons.items():
             x, y = data["pos"]
             arcade.draw_texture_rect(
                 texture=data["texture"],
-                rect=arcade.XYWH(x, y, self.btn_width, self.btn_height))
+                rect=arcade.XYWH(x, y, self.btn_width, self.btn_height)
+            )
 
         # Affichage de l'encadré en haut à gauche
         self._draw_player()
@@ -162,9 +183,8 @@ class MenuView(BaseView):
         sprite_height = 220
         sprite_width = 400
 
-        sprite_board = super().get_texture("assets/menu/leaderboard.png")
         arcade.draw_texture_rect(
-            texture=sprite_board,
+            texture=self.sprite_board,
             rect=arcade.XYWH((sprite_width / 2) + 10,
                              (sprite_height / 2) + 15,
                              sprite_width,
@@ -175,10 +195,9 @@ class MenuView(BaseView):
 
         # Affichage de l'encadré en bas à droite
         if (self.window.manager.settings.configuration == "AZERTY"):
-            sprite_keybinds = super().get_texture("assets/menu/keybinds_azerty"
-                                                  ".png")
+            sprite_keybinds = self.sprite_azerty
         else:
-            sprite_keybinds = super().get_texture("assets/menu/keybinds.png")
+            sprite_keybinds = self.sprite_qwerty
 
         arcade.draw_texture_rect(
             texture=sprite_keybinds,
@@ -190,7 +209,7 @@ class MenuView(BaseView):
 
     def on_mouse_press(self, x, y, button, modifiers):
         # La détection s'adapte aussi aux dimensions proportionnelles
-        for _, data in self.boutons.items():
+        for nom, data in self.boutons.items():
             bx, by = data["pos"]
 
             if (bx - self.btn_width / 2 < x < bx + self.btn_width / 2 and
@@ -212,11 +231,8 @@ class MenuView(BaseView):
     def _draw_player(self):
 
         sprite_size = 75
-        pokemon_sprite = super().get_texture(f"assets/sprite/pokemon/"
-                                             f"{self.player_pokemon.name}"
-                                             "/portraits/Normal.png")
         arcade.draw_texture_rect(
-            texture=pokemon_sprite,
+            texture=self.pokemon_sprite,
             rect=arcade.XYWH((sprite_size / 2) + 10,
                              (self.hauteur - (sprite_size / 2) - 10),
                              sprite_size,
@@ -231,7 +247,7 @@ class MenuView(BaseView):
                              sprite_size + 9)
         )
 
-        player_name = arcade.Text(self.manager.player.name,
+        player_name = arcade.Text(self.window.manager.player.name,
                                   sprite_size + 25,
                                   (self.hauteur - (sprite_size / 2) - 20),
                                   color=arcade.color.BLACK,
@@ -243,7 +259,7 @@ class MenuView(BaseView):
     def _draw_little_scoreboard(self):
 
         # Tri des 3 meilleurs
-        scores = sorted(self.manager.scoreboard,
+        scores = sorted(self.window.manager.scoreboard,
                         key=lambda p: p.score,
                         reverse=True)[:3]
 
@@ -259,28 +275,23 @@ class MenuView(BaseView):
             current_y = start_y - (i * line_height)
 
             # Image de rang
-            rank_tex = super().get_texture(f"assets/rank/rank_{i+1}_64.png")
+            rank_tex = arcade.load_texture(f"assets/rank/rank_{i+1}_64.png")
             arcade.draw_texture_rect(
                 texture=rank_tex,
-                rect=arcade.XYWH(start_x + (icon_size / 2), current_y,
-                                 icon_size, icon_size)
+                rect=arcade.XYWH(start_x + (icon_size / 2), current_y, icon_size, icon_size)
             )
 
             # Image du pokémon
             pokemon = player.pokemon
-            profile_tex = super().get_texture(f"assets/sprite/pokemon/"
-                                              f"{pokemon}/portraits/"
-                                              "Normal.png")
+            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}/portraits/Normal.png") 
             arcade.draw_texture_rect(
                 texture=profile_tex,
-                rect=arcade.XYWH(start_x + icon_size + 25, current_y,
-                                 icon_size, icon_size)
+                rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size, icon_size)
             )
 
             arcade.draw_texture_rect(
                 texture=self.sprite_frame,
-                rect=arcade.XYWH(start_x + icon_size + 25, current_y,
-                                 icon_size + 5, icon_size + 5)
+                rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size + 5, icon_size + 5)
             )
 
             # Nom + Score
@@ -300,25 +311,20 @@ class MenuView(BaseView):
             current_y = start_y - (i * line_height)
 
             # Image de rang
-            rank_0 = super().get_texture("assets/rank/rank_0.png")
             arcade.draw_texture_rect(
-                texture=rank_0,
-                rect=arcade.XYWH(start_x + (icon_size / 2), current_y,
-                                 icon_size, icon_size)
+                texture=self.rank_0,
+                rect=arcade.XYWH(start_x + (icon_size / 2), current_y, icon_size, icon_size)
             )
 
             # Image du pokémon
-            amogus = super().get_texture("assets/sprite/undefined/Normal.png")
             arcade.draw_texture_rect(
-                texture=amogus,
-                rect=arcade.XYWH(start_x + icon_size + 25, current_y,
-                                 icon_size, icon_size)
+                texture=self.amogus,
+                rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size, icon_size)
             )
 
             arcade.draw_texture_rect(
                 texture=self.sprite_frame,
-                rect=arcade.XYWH(start_x + icon_size + 25, current_y,
-                                 icon_size + 5, icon_size + 5)
+                rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size + 5, icon_size + 5)
             )
 
             # Nom + Score

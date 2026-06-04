@@ -18,6 +18,7 @@ import argparse
 import json
 from typing import List
 from src.parsing.config_loader import ConfigLoader
+from src.managers.texture_manager import TextureManager
 from src.models.configmodel import ConfigModel, LevelConfig
 from src.models.scoreModel import Score
 from src.models.playerModel import PlayerModel
@@ -69,6 +70,9 @@ class PacmanManager():
 
         # Récupération des settings
         self.settings = SettingsModel()
+
+        # Initialisation des textures (peu prendre du temps)
+        self.texture_manager = TextureManager()
 
     # +---------------------------------------------------------------------+
     # |                               Setters                               |

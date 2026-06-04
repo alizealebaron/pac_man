@@ -6,41 +6,22 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 16:53:13 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/04 14:46:59 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/01 11:12:29 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-# +-------------------------------------------------------------------------+
-# |                               Importation                               |
-# +-------------------------------------------------------------------------+
-
 import arcade
 from PIL import Image
-
-# +-------------------------------------------------------------------------+
-# |                                 CONST                                   |
-# +-------------------------------------------------------------------------+
 
 WALL_DIR = 'assets/sprite/wall/'
 MAP_NAME = 'tiny_wood.png'
 MAP_FILE = f'{WALL_DIR}' + f'{MAP_NAME}'
 TILE_SIZE = 64
 
-# +-------------------------------------------------------------------------+
-# |                                 Classe                                  |
-# +-------------------------------------------------------------------------+
-
-
 class MazeRenderer:
     """Gère le rendu du labyrinthe"""
 
-    # +---------------------------------------------------------------------+
-    # |                                Init                                 |
-    # +---------------------------------------------------------------------+
-
-    def __init__(self, maze: list[list[int]], window_width: float,
-                 window_height: float, hud_width_left: float = 200,
-                 hud_width_right: float = 200):
+    def __init__(self, maze: list[list[int]], window_width: float, window_height: float, hud_width_left: float = 200, hud_width_right: float = 200):
         self.maze = maze
         self.window_width = window_width
         self.window_height = window_height
@@ -54,10 +35,6 @@ class MazeRenderer:
         self.sprites = arcade.SpriteList()
         self.sprite_sheet = self._load_sprites(MAP_FILE)
         self._build_maze_sprites()
-
-    # +---------------------------------------------------------------------+
-    # |                            Init Methods                             |
-    # +---------------------------------------------------------------------+
 
     def _build_maze_sprites(self):
         nb_columns = len(self.maze[0])
@@ -96,10 +73,6 @@ class MazeRenderer:
             frames.append(frame)
 
         return frames
-
-    # +---------------------------------------------------------------------+
-    # |                            Draw Methods                             |
-    # +---------------------------------------------------------------------+
 
     def draw(self):
         """ Draw everything """
