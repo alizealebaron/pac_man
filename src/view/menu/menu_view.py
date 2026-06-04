@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 15:26:26 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 15:45:24 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,7 @@
 
 import arcade
 from src.view.view_utils.baseView import BaseView
-# from src.old_view.game_view import GameView
+from src.view.game.game_view import GameView
 # from src.old_view.scoreboard_view import ScoreboardView
 # from src.old_view.settings_view import SettingsView
 # from src.old_view.personnality.personnality_view import PersonnalityView
@@ -43,9 +43,9 @@ class MenuView(BaseView):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window: arcade.Window):
+    def __init__(self):
 
-        super().__init__(window)
+        super().__init__()
 
         # Initialisation des textures
         self.player_pokemon = self.manager.player.pokemon
@@ -56,9 +56,6 @@ class MenuView(BaseView):
 
         # Initialisation des boutons du menu
         self.init_btn_menu()
-
-        # Initialisation des textures réutilisées
-        self.sprite_frame = super().get_texture("assets/sprite/face_frame.png")
 
         # Initialisation de la musique
         self.music_player = None
@@ -121,7 +118,7 @@ class MenuView(BaseView):
     # +---------------------------------------------------------------------+
 
     def start_game(self):
-        # self.window.show_view(GameView(self.window.manager))
+        self.window.show_view(GameView())
         print("1")
 
     def open_quizz(self):

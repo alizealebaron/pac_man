@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 15:30:05 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 15:46:34 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,10 +15,11 @@
 # +-------------------------------------------------------------------------+
 
 import arcade
+from src.view.view_utils.baseView import BaseView
 from src.view.game.maze_renderer import MazeRenderer
 from src.managers.collectible_manager import CollectibleManager
-from src.view.save_score.win_view import WinView
-from src.view.save_score.gameover_view import GameoverView
+# from src.view.save_score.win_view import WinView
+# from src.view.save_score.gameover_view import GameoverView
 from src.pacmanManager import PacmanManager
 
 # +-------------------------------------------------------------------------+
@@ -39,17 +40,21 @@ TRANSITION_DISTANCE = 64
 # |                                 Classe                                  |
 # +-------------------------------------------------------------------------+
 
-class GameView(arcade.View):
+class GameView(BaseView):
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, manager: PacmanManager, music_player=None, music=None):
+    def __init__(self, music_player=None, music=None):
         """ Initializer """
 
         # === Initialisation de la classe parente ===
         super().__init__()
+
+        # === Initialisation du background et de la musique ===
+        self.background = super().get_texture(BACKGROUND_PATH)
+        self.music = arcade.Sound(MUSIC_PATH)
 
         # === Initialisation des variables ===
 
@@ -61,7 +66,6 @@ class GameView(arcade.View):
         self.is_finished = 0  # 0: Play, 1: Win, 2: GameOver
 
         # Récupération du labyrinthe et du manager
-        self.manager = manager
         num_level = self.manager.actual_level
         self.current_maze = self.manager.level[num_level].maze.maze
 
@@ -92,9 +96,6 @@ class GameView(arcade.View):
         self.music_player = music_player
         self.music = music
 
-        # === Initialisation des textures ===
-        self.init_textures()
-
         # === Initialisation du timer ===
         self.timer = float(self.manager.config.level_max_time)
 
@@ -102,29 +103,13 @@ class GameView(arcade.View):
         self.window.set_mouse_visible(False)
 
     # +---------------------------------------------------------------------+
-    # |                             Init Methods                            |
-    # +---------------------------------------------------------------------+
-
-    def init_textures(self):
-
-        self.background = arcade.load_texture(BACKGROUND_PATH)
-        pokemon = self.manager.player.pokemon.name
-        self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
-                                                  f"{pokemon}/portraits/"
-                                                  "Normal.png")
-        self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
-        self.scroll_texture = arcade.load_texture(SCROLL_PATH)
-
-    # +---------------------------------------------------------------------+
     # |                               Methods                               |
     # +---------------------------------------------------------------------+
 
     def on_draw(self):
         """ Draw everything """
-        self.clear()
 
-        # Affichage du background
-        self.draw_background()
+        super().on_draw()
 
         # Affichage du labyrinthe et des pacgums
         self.maze_renderer.draw()
@@ -156,15 +141,15 @@ class GameView(arcade.View):
             if (self.manager.actual_level == (len(self.manager.level) - 1)):
                 self.music.stop(self.music_player)
                 self.window.set_mouse_visible(True)
-                self.window.show_view(WinView(self.window))
+                # self.window.show_view(WinView(self.window))
             else:
                 self.manager.actual_level += 1
-                self.window.show_view(GameView(self.manager, self.music_player,
+                self.window.show_view(GameView(self.music_player,
                                                self.music))
         if (self.is_finished == 2):
             self.music.stop(self.music_player)
             self.window.set_mouse_visible(True)
-            self.window.show_view(GameoverView(self.window))
+            # self.window.show_view(GameoverView(self.window))
 
         vx, vy = self._player_move()
 
@@ -254,26 +239,6 @@ class GameView(arcade.View):
         elif key == dict_key["right"] or key == arcade.key.RIGHT:
             self.manager.player.next_direction = "right"
 
-        # match symbol:
-        #     case dict_key["up"]:
-        #         self.manager.player.next_direction = "up"
-        #     case arcade.key.LEFT:
-        #         self.manager.player.next_direction = "left"
-        #     case arcade.key.DOWN:
-        #         self.manager.player.next_direction = "down"
-        #     case arcade.key.RIGHT:
-        #         self.manager.player.next_direction = "right"
-
-        # match symbol:
-        #     case arcade.key.W:
-        #         self.manager.player.next_direction = "up"
-        #     case arcade.key.A:
-        #         self.manager.player.next_direction = "left"
-        #     case arcade.key.S:
-        #         self.manager.player.next_direction = "down"
-        #     case arcade.key.D:
-        #         self.manager.player.next_direction = "right"
-
     def _player_move(self) -> tuple[float, float]:
         player = self.manager.player
 
@@ -360,25 +325,17 @@ class GameView(arcade.View):
     # |                            Draw Methods                             |
     # +---------------------------------------------------------------------+
 
-    def draw_background(self):
-
-        arcade.draw_texture_rect(
-            texture=self.background,
-            rect=arcade.XYWH(
-                self.window.width / 2,
-                self.window.height / 2,
-                self.window.width,
-                self.window.height
-            )
-        )
-
     def draw_UI(self):
 
         # Affichage de la partie haut gauche de l'UI
         sprite_size = 75
 
+        pokemon = self.manager.player.pokemon.name
+        pokemon_sprite = super().get_texture(f"assets/sprite/pokemon/"
+                                             f"{pokemon}/portraits/"
+                                             "Normal.png")
         arcade.draw_texture_rect(
-            texture=self.pokemon_sprite,
+            texture=pokemon_sprite,
             rect=arcade.XYWH((sprite_size / 2) + 30,
                              (self.hauteur - (sprite_size / 2) - 10) - 20,
                              sprite_size,
@@ -394,7 +351,6 @@ class GameView(arcade.View):
         )
 
         sprite_size = 75
-
         player_life = arcade.Text(f"Live(s): {self.manager.player.nb_life}",
                                   sprite_size + 25 + 20,
                                   (self.hauteur - (sprite_size / 2) - 5) - 20,
@@ -417,8 +373,9 @@ class GameView(arcade.View):
         height = self.window.height * 0.12
         width = self.window.width * 0.2
 
+        scroll = super().get_texture(SCROLL_PATH)
         arcade.draw_texture_rect(
-            texture=self.scroll_texture,
+            texture=scroll,
             rect=arcade.XYWH(self.window.width - width / 2 - 20,
                              self.window.height - height / 2 - 25,
                              width,
@@ -433,7 +390,7 @@ class GameView(arcade.View):
                                  font_name="Comic Sans MS",
                                  anchor_x="center",
                                  anchor_y="center")
-        
+
         time_text = arcade.Text(f"Time: {int(self.timer)} second(s)",
                                  self.window.width - width / 2 - 20,
                                  self.window.height - 105,
@@ -442,6 +399,6 @@ class GameView(arcade.View):
                                  font_name="Comic Sans MS",
                                  anchor_x="center",
                                  anchor_y="center")
-        
+
         level_text.draw()
         time_text.draw()

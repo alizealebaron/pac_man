@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 14:35:28 by alebaron        #+#    #+#               #
-#  Updated: 2026/05/28 14:20:14 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 15:29:14 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,7 @@
 
 
 import arcade
-from src.view.menu_view import MenuView
+from src.view.menu.menu_view import MenuView
 from src.pacmanManager import PacmanManager
 
 

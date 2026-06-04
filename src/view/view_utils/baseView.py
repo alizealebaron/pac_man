@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/04 13:48:43 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 15:24:28 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 15:45:53 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -40,10 +40,10 @@ class BaseView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window: arcade.Window):
+    def __init__(self):
 
         # Instanciation de la classe mère
-        super().__init__(window=window)
+        super().__init__()
 
         # Récupération du manager
         self.manager: PacmanManager = self.window.manager
@@ -55,6 +55,9 @@ class BaseView(arcade.View):
         # Initialisation de la musique
         self.music_player = None
         self.music = None
+
+        # Texture récurrente
+        self.sprite_frame = self.get_texture("assets/sprite/face_frame.png")
 
     # +---------------------------------------------------------------------+
     # |                               Getter                                |
