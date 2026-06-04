@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 20:47:18 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 11:47:13 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -75,9 +75,11 @@ class WinView(arcade.View):
         """Appelé quand la vue change"""
         self.ui_manager.enable()
 
+        volume =  self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
-            self.music = arcade.Sound(MUSIC_PATH)
-            self.music_player = self.music.play(volume=1, loop=True)
+            self.music = arcade.Sound(MUSIC_PATH,
+                                      streaming=True)
+            self.music_player = self.music.play(volume=volume, loop=True)
 
     def on_hide_view(self):
         """Appelé quand on quitte la vue"""
@@ -110,11 +112,14 @@ class WinView(arcade.View):
 
     def on_key_press(self, key, modifiers):
 
-        if key == arcade.key.W:
+        dict_key = self.window.manager.settings.dict_key
+        dict_key = dict_key[self.window.manager.settings.configuration]
+
+        if key == dict_key["up"] or key == arcade.key.UP:
             self.selected_reponse = ((self.selected_reponse + 1) %
                                      len(self.reponses))
 
-        if key == arcade.key.S:
+        if key == dict_key["down"] or key == arcade.key.DOWN:
             self.selected_reponse = ((self.selected_reponse - 1) %
                                      len(self.reponses))
 
@@ -125,6 +130,7 @@ class WinView(arcade.View):
             elif self.selected_reponse == 1:
                 self.show_name_input()
             elif self.selected_reponse == 0:
+                self.window.manager.reset_level()
                 self.music.stop(self.music_player)
                 self.window.show_view(self.window.start_view)
 
@@ -143,6 +149,7 @@ class WinView(arcade.View):
         score = Score(**score)
         self.window.manager.scoreboard.append(score)
         self.window.manager.update_json_score()
+        self.window.manager.reset_level()
 
         self.music.stop(self.music_player)
         self.window.show_view(self.window.start_view)
@@ -178,10 +185,8 @@ class WinView(arcade.View):
                         # On applique le nouveau nom
                         self.window.manager.player.name = new_name
                         self.show_input_ui = False
-                        
                         # Nettoyage et suppression de l'UI
                         self.ui_manager.remove(self.anchor_layout)
-                        
                         # Lancement de la sauvegarde
                         self.save_without_name()
 

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/23 10:58:55 by alebaron        #+#    #+#               #
-#  Updated: 2026/05/29 14:30:00 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 11:08:45 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -50,10 +50,11 @@ class ScoreboardView(arcade.View):
 
     def on_show_view(self):
         """Appelé quand la vue change"""
+        volume =  self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
             self.music = arcade.Sound(MUSIC_PATH,
                                       streaming=True)
-            self.music_player = self.music.play(volume=1, loop=True)
+            self.music_player = self.music.play(volume=volume, loop=True)
 
     def on_draw(self):
         """ Draw everything """

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 23:14:09 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 11:51:53 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -177,10 +177,11 @@ class GameView(arcade.View):
 
     def on_show_view(self):
         """Appelé quand la vue change"""
+        volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
             self.music = arcade.Sound(MUSIC_PATH,
                                       streaming=True)
-            self.music_player = self.music.play(volume=1, loop=True)
+            self.music_player = self.music.play(volume=volume, loop=True)
 
     # +---------------------------------------------------------------------+
     # |                 Methods for recovering collectibles                 |
@@ -223,26 +224,39 @@ class GameView(arcade.View):
         self.manager.player.pixel_offset_x = 0.0
         self.manager.player.pixel_offset_y = 0.0
 
-    def on_key_press(self, symbol, modifiers):
-        match symbol:
-            case arcade.key.UP:
-                self.manager.player.next_direction = "up"
-            case arcade.key.LEFT:
-                self.manager.player.next_direction = "left"
-            case arcade.key.DOWN:
-                self.manager.player.next_direction = "down"
-            case arcade.key.RIGHT:
-                self.manager.player.next_direction = "right"
+    def on_key_press(self, key, modifiers):
 
-        match symbol:
-            case arcade.key.W:
-                self.manager.player.next_direction = "up"
-            case arcade.key.A:
-                self.manager.player.next_direction = "left"
-            case arcade.key.S:
-                self.manager.player.next_direction = "down"
-            case arcade.key.D:
-                self.manager.player.next_direction = "right"
+        dict_key = self.manager.settings.dict_key
+        dict_key = dict_key[self.manager.settings.configuration]
+
+        if key == dict_key["up"] or key == arcade.key.UP:
+            self.manager.player.next_direction = "up"
+        elif key == dict_key["left"] or key == arcade.key.LEFT:
+            self.manager.player.next_direction = "left"
+        elif key == dict_key["down"] or key == arcade.key.DOWN:
+            self.manager.player.next_direction = "down"
+        elif key == dict_key["right"] or key == arcade.key.RIGHT:
+            self.manager.player.next_direction = "right"
+
+        # match symbol:
+        #     case dict_key["up"]:
+        #         self.manager.player.next_direction = "up"
+        #     case arcade.key.LEFT:
+        #         self.manager.player.next_direction = "left"
+        #     case arcade.key.DOWN:
+        #         self.manager.player.next_direction = "down"
+        #     case arcade.key.RIGHT:
+        #         self.manager.player.next_direction = "right"
+
+        # match symbol:
+        #     case arcade.key.W:
+        #         self.manager.player.next_direction = "up"
+        #     case arcade.key.A:
+        #         self.manager.player.next_direction = "left"
+        #     case arcade.key.S:
+        #         self.manager.player.next_direction = "down"
+        #     case arcade.key.D:
+        #         self.manager.player.next_direction = "right"
 
     def _player_move(self) -> tuple[float, float]:
         player = self.manager.player
@@ -325,7 +339,6 @@ class GameView(arcade.View):
             "right": "left"
         }
         return opposites.get(current) == next_dir
-
 
     # +---------------------------------------------------------------------+
     # |                            Draw Methods                             |

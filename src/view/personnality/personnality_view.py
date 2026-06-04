@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 01:33:59 by alebaron        #+#    #+#               #
-#  Updated: 2026/05/29 14:57:40 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 11:46:32 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -59,9 +59,11 @@ class PersonnalityView(arcade.View):
 
     def on_show_view(self):
         """Appelé quand la vue change"""
+        volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
-            self.music = arcade.Sound(MUSIC_PATH)
-            self.music_player = self.music.play(volume=1, loop=True)
+            self.music = arcade.Sound(MUSIC_PATH,
+                                      streaming=True)
+            self.music_player = self.music.play(volume=volume, loop=True)
 
     def on_draw(self):
         """ Render the screen. """
@@ -139,11 +141,14 @@ class PersonnalityView(arcade.View):
 
     def on_key_press(self, key, modifiers):
 
-        if key == arcade.key.W:
+        dict_key = self.window.manager.settings.dict_key
+        dict_key = dict_key[self.window.manager.settings.configuration]
+
+        if key == dict_key["up"] or key == arcade.key.UP:
             self.selected_reponse = ((self.selected_reponse - 1) %
                                      len(self.reponses))
 
-        if key == arcade.key.S:
+        if key == dict_key["down"] or key == arcade.key.DOWN:
             self.selected_reponse = ((self.selected_reponse + 1) %
                                      len(self.reponses))
 
@@ -165,10 +170,10 @@ class PersonnalityView(arcade.View):
         text_box_sprite = arcade.load_texture("assets/menu/text_box.png")
         arcade.draw_texture_rect(texture=text_box_sprite,
                                  rect=arcade.XYWH(self.window.width / 2,
-                                                  (self.window.height * 0.95 / 2),
+                                                  (self.window.height * 0.95
+                                                   / 2),
                                                   self.window.width,
-                                                  self.window.height)
-        )
+                                                  self.window.height))
 
         text_content = "Vous vous apprêtez à réaliser un test de personnalité"
         text_content += " pour déterminer votre Pokémon."

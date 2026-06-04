@@ -1,18 +1,18 @@
-# ************************************************************************* #
-#                                                                           #
-#                                                      :::      ::::::::    #
-#  pacmanManager.py                                  :+:      :+:    :+:    #
-#                                                  +:+ +:+         +:+      #
-#  By: alebaron, rruiz                           +#+  +:+       +#+         #
-#                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 14:19:34 by alebaron        ###   ########.fr        #
-#                                                                           #
-# ************************************************************************* #
+# ************************************************************************** #
+#       _  _     ____                     ,~~.                               #
+#      | || |   |___  \             ,   (  ^ )>                              #
+#      | || |_    __) |             )\~~'   (       _      _      _          #
+#      |__   _|  / __/             (  .__)   )    >(.)__ <(^)__ =(o)__       #
+#         |_|   |_____| .fr         \_.____,*      (___/  (___/  (___/       #
+#                                                                            #
+# ************************************************************************** #
+# @name   : pacmanManager.py                                                 #
+# @author : alebaron <alebaron@student.42lehavre.fr>                         #
+#                                                                            #
+# @creation : Invalid date        by -----------                             #
+# @update   : 2026/06/04 08:15:40 by alebaron                                #
+# ************************************************************************** #
 
-# +-------------------------------------------------------------------------+
-# |                               Importation                               |
-# +-------------------------------------------------------------------------+
 
 import argparse
 import json
@@ -24,6 +24,7 @@ from src.models.playerModel import PlayerModel
 from src.models.levelModel import Level
 from src.models.questionModel import DataQuestionsModel
 from src.models.pokemonModel import PokemonModel
+from src.models.settingsModel import SettingsModel
 
 # +-------------------------------------------------------------------------+
 # |                                  CONST                                  |
@@ -65,6 +66,16 @@ class PacmanManager():
 
         # Récupération des questions
         self.data_questions = self.retrieve_questions_from_json()
+
+        # Récupération des settings
+        self.settings = SettingsModel()
+
+    # +---------------------------------------------------------------------+
+    # |                               Setters                               |
+    # +---------------------------------------------------------------------+
+
+    def reset_level(self):
+        self.actual_level = 0
 
     # +---------------------------------------------------------------------+
     # |                            JSON Methods                             |
