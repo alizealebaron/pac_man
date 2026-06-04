@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 11:09:39 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 12:16:40 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -47,8 +47,21 @@ class MenuView(arcade.View):
 
         super().__init__()
 
-        # Initialisation du background
+        # Initialisation des textures
+        self.player_pokemon = self.window.manager.player.pokemon
+
         self.background = arcade.load_texture(BACKGROUND_PATH)
+        self.sprite_board = arcade.load_texture("assets/menu/leaderboard.png")
+        self.sprite_qwerty = arcade.load_texture("assets/menu/keybinds.png")
+        self.sprite_azerty = arcade.load_texture("assets/menu/keybinds_azerty"
+                                                 ".png")
+        self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
+        self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
+                                                  f"{self.player_pokemon.name}"
+                                                  "/portraits/Normal.png")
+        self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
+        self.rank_0 = arcade.load_texture("assets/rank/rank_0.png")
+        self.amogus = arcade.load_texture("assets/sprite/undefined/Normal.png")
 
         # Initialisation des fonts
         arcade.load_font(MAIN_FONT_PATH)
@@ -128,11 +141,16 @@ class MenuView(arcade.View):
 
     def on_show_view(self):
         """Appelé quand la vue change"""
-        volume =  self.window.manager.settings.volume
+        volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
             self.music = arcade.Sound(MUSIC_PATH,
                                       streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
+
+        # Reload le nouveau sprite
+        self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
+                                                  f"{self.player_pokemon.name}"
+                                                  "/portraits/Normal.png")
 
     def on_draw(self):
 
@@ -162,12 +180,11 @@ class MenuView(arcade.View):
 
         # Affichage de l'encadré en bas à gauche
 
-        sprite = arcade.load_texture("assets/menu/leaderboard.png")
         sprite_height = 220
         sprite_width = 400
 
         arcade.draw_texture_rect(
-            texture=sprite,
+            texture=self.sprite_board,
             rect=arcade.XYWH((sprite_width / 2) + 10,
                              (sprite_height / 2) + 15,
                              sprite_width,
@@ -177,10 +194,13 @@ class MenuView(arcade.View):
         self._draw_little_scoreboard()
 
         # Affichage de l'encadré en bas à droite
-        sprite = arcade.load_texture("assets/menu/keybinds.png")
+        if (self.window.manager.settings.configuration == "AZERTY"):
+            sprite_keybinds = self.sprite_azerty
+        else:
+            sprite_keybinds = self.sprite_qwerty
 
         arcade.draw_texture_rect(
-            texture=sprite,
+            texture=sprite_keybinds,
             rect=arcade.XYWH(self.width - (sprite_width / 2) - 20,
                              (sprite_height / 2) + 20,
                              sprite_width,
@@ -210,22 +230,17 @@ class MenuView(arcade.View):
 
     def _draw_player(self):
 
-        pokemon = self.window.manager.player.pokemon
-        sprite = arcade.load_texture(f"assets/sprite/pokemon/{pokemon.name}"
-                                     "/portraits/Normal.png")
         sprite_size = 75
-
         arcade.draw_texture_rect(
-            texture=sprite,
+            texture=self.pokemon_sprite,
             rect=arcade.XYWH((sprite_size / 2) + 10,
                              (self.hauteur - (sprite_size / 2) - 10),
                              sprite_size,
                              sprite_size)
         )
 
-        sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         arcade.draw_texture_rect(
-            texture=sprite_frame,
+            texture=self.sprite_frame,
             rect=arcade.XYWH((sprite_size / 2) + 10,
                              (self.hauteur - (sprite_size / 2) - 10),
                              sprite_size + 9,
@@ -274,9 +289,8 @@ class MenuView(arcade.View):
                 rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size, icon_size)
             )
 
-            sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
             arcade.draw_texture_rect(
-                texture=sprite_frame,
+                texture=self.sprite_frame,
                 rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size + 5, icon_size + 5)
             )
 
@@ -297,22 +311,19 @@ class MenuView(arcade.View):
             current_y = start_y - (i * line_height)
 
             # Image de rang
-            rank_tex = arcade.load_texture("assets/rank/rank_0.png")
             arcade.draw_texture_rect(
-                texture=rank_tex,
+                texture=self.rank_0,
                 rect=arcade.XYWH(start_x + (icon_size / 2), current_y, icon_size, icon_size)
             )
 
             # Image du pokémon
-            profile_tex = arcade.load_texture(f"assets/sprite/undefined/Normal.png")
             arcade.draw_texture_rect(
-                texture=profile_tex,
+                texture=self.amogus,
                 rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size, icon_size)
             )
 
-            sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
             arcade.draw_texture_rect(
-                texture=sprite_frame,
+                texture=self.sprite_frame,
                 rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size + 5, icon_size + 5)
             )
 

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/23 10:58:55 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 11:08:45 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 12:01:55 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -37,8 +37,17 @@ class ScoreboardView(arcade.View):
 
     def __init__(self, window):
 
+        # Initialisation du composant parent
         super().__init__(window)
+
+        # Chargement des textures
         self.background = arcade.load_texture(BACKGROUND_PATH)
+        self.retour_sprite = arcade.load_texture("assets/button/retour.png")
+        self.score_sprite = arcade.load_texture("assets/menu/scoreboard.png")
+        self.rank_0 = arcade.load_texture("assets/rank/rank_0.png")
+        self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
+
+        # Récupération du score
         self.lst_score = self.window.manager.scoreboard
 
         # Initialisation de la musique
@@ -72,11 +81,10 @@ class ScoreboardView(arcade.View):
         )
 
         # Affichage du bouton retour
-        retour_sprite = arcade.load_texture("assets/button/retour.png")
         height = 90
         width = 170
         arcade.draw_texture_rect(
-            texture=retour_sprite,
+            texture=self.retour_sprite,
             rect=arcade.XYWH(45,
                              (self.window.height) - (height / 2),
                              width,
@@ -84,10 +92,9 @@ class ScoreboardView(arcade.View):
         )
 
         # Affichage du fond du scoreboard
-        score_sprite = arcade.load_texture("assets/menu/scoreboard.png")
         height = 1000
         width = 1400
-        arcade.draw_texture_rect(texture=score_sprite,
+        arcade.draw_texture_rect(texture=self.score_sprite,
                                  rect=arcade.XYWH(
                                                 x=self.window.width / 2 + 20,
                                                 y=self.window.height / 2,
@@ -132,9 +139,10 @@ class ScoreboardView(arcade.View):
 
             # Image de rang
             if (i < 12):
-                rank_tex = arcade.load_texture(f"assets/rank/rank_{i+1}_64.png")
+                rank_tex = arcade.load_texture(f"assets/rank/rank_{i+1}_64"
+                                               ".png")
             else:
-                rank_tex = arcade.load_texture("assets/rank/rank_0.png")
+                rank_tex = self.rank_0
             arcade.draw_texture_rect(
                 texture=rank_tex,
                 rect=arcade.XYWH(start_x + (icon_size / 2), current_y,
@@ -143,16 +151,17 @@ class ScoreboardView(arcade.View):
 
             # Image du pokémon
             pokemon = player.pokemon
-            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}/portraits/Normal.png") 
+            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/"
+                                              f"{pokemon}/portraits"
+                                              "/Normal.png")
             arcade.draw_texture_rect(
                 texture=profile_tex,
                 rect=arcade.XYWH(start_x + icon_size + 40, current_y,
                                  icon_size, icon_size)
             )
 
-            sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
             arcade.draw_texture_rect(
-                texture=sprite_frame,
+                texture=self.sprite_frame,
                 rect=arcade.XYWH(start_x + icon_size + 40, current_y,
                                  icon_size + 5, icon_size + 5)
             )
