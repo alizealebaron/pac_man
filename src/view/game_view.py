@@ -6,9 +6,13 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 11:51:53 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 13:26:25 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
+
+# +-------------------------------------------------------------------------+
+# |                                 Import                                  |
+# +-------------------------------------------------------------------------+
 
 import arcade
 from src.view.maze_renderer import MazeRenderer
@@ -21,6 +25,7 @@ from src.pacmanManager import PacmanManager
 # |                                 Global                                  |
 # +-------------------------------------------------------------------------+
 
+
 BACKGROUND_PATH = "assets/background/game_background.png"
 MUSIC_PATH = "assets/music/game_theme.mp3"
 SCROLL_PATH = "assets/menu/scroll.png"
@@ -28,6 +33,7 @@ SCROLL_PATH = "assets/menu/scroll.png"
 SPEED = 5.0
 TILE_SIZE = 64
 TRANSITION_DISTANCE = 64
+
 
 # +-------------------------------------------------------------------------+
 # |                                 Classe                                  |
@@ -41,19 +47,20 @@ class GameView(arcade.View):
 
     def __init__(self, manager: PacmanManager, music_player=None, music=None):
         """ Initializer """
-        # Call the parent class initializer
+
+        # === Initialisation de la classe parente ===
         super().__init__()
 
-        # Récupération de la hauteur et de la largeur
+        # === Initialisation des variables ===
+
+        # Récupération de la largeur et hauteur
         self.largeur = self.window.width
         self.hauteur = self.window.height
 
-        # Don't show the mouse cursor
-        self.window.set_mouse_visible(False)
+        # Détection de la fin d'un level
+        self.is_finished = 0  # 0: Play, 1: Win, 2: GameOver
 
-        arcade.set_background_color(arcade.color.BLACK)
-
-        # Récupération du manager et du labyrinthe
+        # Récupération du labyrinthe et du manager
         self.manager = manager
         num_level = self.manager.actual_level
         self.current_maze = self.manager.level[num_level].maze.maze
@@ -61,43 +68,52 @@ class GameView(arcade.View):
         # Récupération du labyrinthe à l'envers pour Arcade
         self.rev_maze = self._rev_maze(self.current_maze)
 
-        # Initialiser les renderers
+        # === Mise en place du labyrinthe ===
         self.maze_renderer = MazeRenderer(self.rev_maze, self.largeur,
                                           self.hauteur)
         self.scale = self.maze_renderer.scale
         self.offset_x, self.offset_y = (self.maze_renderer.offset_x,
                                         self.maze_renderer.offset_y)
 
-        # Initialisation du gestionnaire de collectibles
+        # === Initialisation des collectibles ===
         self.collectible_manager = CollectibleManager(self.rev_maze,
                                                       self.scale,
                                                       self.offset_x,
                                                       self.offset_y)
 
-        # Initialisation des coords du player et de ses sprites
+        # === Initialisation des coords du player et de ses sprites ===
         self._player_original_pos()
         self.manager.player.sprite.scale = (self.manager.player.pokemon.scale *
                                             self.scale)
         self.player_sprites = arcade.SpriteList()
         self.player_sprites.append(self.manager.player.sprite)
 
-        # Music
+        # === Gestion de la musique ===
         self.music_player = music_player
         self.music = music
 
-        self.background = arcade.load_texture(BACKGROUND_PATH)
+        # === Initialisation des textures ===
+        self.init_textures()
 
+        # === Initialisation du timer ===
+        self.timer = float(self.manager.config.level_max_time)
+
+        # === Cacher le curseur ===
+        self.window.set_mouse_visible(False)
+
+    # +---------------------------------------------------------------------+
+    # |                             Init Methods                            |
+    # +---------------------------------------------------------------------+
+
+    def init_textures(self):
+
+        self.background = arcade.load_texture(BACKGROUND_PATH)
         pokemon = self.manager.player.pokemon.name
         self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
                                                   f"{pokemon}/portraits/"
                                                   "Normal.png")
         self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         self.scroll_texture = arcade.load_texture(SCROLL_PATH)
-
-        self.timer = float(self.manager.config.level_max_time)
-
-        # Détection de la fin d'un level
-        self.is_finished = 0  # 0: Play, 1: Win, 2: GameOver
 
     # +---------------------------------------------------------------------+
     # |                               Methods                               |
@@ -359,9 +375,6 @@ class GameView(arcade.View):
     def draw_UI(self):
 
         # Affichage de la partie haut gauche de l'UI
-        pokemon = self.manager.player.pokemon
-        sprite = arcade.load_texture(f"assets/sprite/pokemon/{pokemon.name}"
-                                     "/portraits/Normal.png")
         sprite_size = 75
 
         arcade.draw_texture_rect(

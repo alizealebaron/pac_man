@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 11:47:13 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 13:32:51 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -43,9 +43,30 @@ class WinView(arcade.View):
 
     def __init__(self, window):
 
+        # Instanciation de la classe mère
         super().__init__(window)
+
+        # Initialisation des infos de la view
+        self.title = "Thanks you for playing !"
+        self.emotion = "Happy"
+
+        # Chargement des textures
+
+        pokemon = self.window.manager.player.pokemon.name
+
         self.background = arcade.load_texture(BACKGROUND_PATH)
         self.scroll_texture = arcade.load_texture(SCROLL_PATH)
+        self.sprite_q_selected = arcade.load_texture(SELECTED_PATH)
+        self.sprite_q_unselected = arcade.load_texture(UNSELECTED_PATH)
+        self.profile_tex = arcade.load_texture(f"assets/sprite/pokemon/"
+                                               f"{pokemon}/portraits/"
+                                               f"{self.emotion}.png")
+        self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
+        self.leader_sprite = arcade.load_texture("assets/menu/"
+                                                 "small_leaderboard.png")
+        self.rank_0 = arcade.load_texture("assets/rank/rank_0.png")
+
+        # Récupération des scores
         self.lst_score = self.window.manager.scoreboard
 
         # Initialisation de la musique
@@ -56,10 +77,6 @@ class WinView(arcade.View):
                          "Enregistrer sous un nouveau nom",
                          "Enregistrer le score"]
         self.selected_reponse = 2
-
-        # Initialisation des infos de la view
-        self.title = "Thanks you for playing !"
-        self.emotion = "Happy"
 
         # Gestion de l'input du pseudo
 
@@ -263,9 +280,9 @@ class WinView(arcade.View):
 
         for reponse in self.reponses:
             if (reponse is self.reponses[self.selected_reponse]):
-                question_sprite = arcade.load_texture(SELECTED_PATH)
+                question_sprite = self.sprite_q_selected
             else:
-                question_sprite = arcade.load_texture(UNSELECTED_PATH)
+                question_sprite = self.sprite_q_unselected
 
             sprite_width = self.window.width * 0.5
             sprite_height = self.window.height * 0.09
@@ -309,20 +326,16 @@ class WinView(arcade.View):
                                   bold=True)
         player_name.draw()
 
-        pokemon = self.window.manager.player.pokemon.name
-        profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}"
-                                          f"/portraits/{self.emotion}.png")
         arcade.draw_texture_rect(
-            texture=profile_tex,
+            texture=self.profile_tex,
             rect=arcade.XYWH(align_x,
                              self.window.height * 0.67,
                              icon_size,
                              icon_size)
         )
 
-        sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         arcade.draw_texture_rect(
-            texture=sprite_frame,
+            texture=self.sprite_frame,
             rect=arcade.XYWH(align_x,
                              self.window.height * 0.67,
                              icon_size + 10,
@@ -342,12 +355,10 @@ class WinView(arcade.View):
 
     def draw_mid_leaderboard(self):
 
-        leader_sprite = arcade.load_texture("assets/menu/"
-                                            "small_leaderboard.png")
         w = self.window.width * 0.3
         h = self.window.height * 0.7
         arcade.draw_texture_rect(
-            texture=leader_sprite,
+            texture=self.leader_sprite,
             rect=arcade.XYWH(
                 x=self.window.width / 2 + self.window.width / 2 * 0.6,
                 y=self.window.height * 0.45,
@@ -377,7 +388,7 @@ class WinView(arcade.View):
                 rank_tex = arcade.load_texture(f"assets/rank/rank_{i+1}_64."
                                                "png")
             else:
-                rank_tex = arcade.load_texture("assets/rank/rank_0.png")
+                rank_tex = self.rank_0
 
             arcade.draw_texture_rect(
                 texture=rank_tex,
@@ -387,7 +398,8 @@ class WinView(arcade.View):
 
             # Image du pokémon
             pokemon = player.pokemon
-            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}/portraits/Normal.png") 
+            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}"
+                                              "/portraits/Normal.png")
             arcade.draw_texture_rect(
                 texture=profile_tex,
                 rect=arcade.XYWH(start_x + icon_size + 40, current_y,
