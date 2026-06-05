@@ -5,7 +5,8 @@
         "height": 48,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Solo"
+        "comportement1": "Solo",
+        "comportement2": "Brave"
     },
     {
         "name": "Applin",
@@ -13,7 +14,8 @@
         "height": 24,
         "nb_anim": 5,
         "scale": 1.6,
-        "comportement": "Hardi.e"
+        "comportement1": "Naïf.ve",
+        "comportement2": "Brave"
     },
     {
         "name": "Axew",
@@ -21,7 +23,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.6,
-        "comportement": "Hardi.e"
+        "comportement1": "Hardi.e",
+        "comportement2": "Brave"
     },
     {
         "name": "Beldum",
@@ -29,7 +32,8 @@
         "height": 48,
         "nb_anim": 8,
         "scale": 1.5,
-        "comportement": "Calme"
+        "comportement1": "Calme",
+        "comportement2": "Bizarre"
     },
     {
         "name": "Bulbasaur",
@@ -37,7 +41,8 @@
         "height": 40,
         "nb_anim": 6,
         "scale": 1.5,
-        "comportement": "Jovial.e"
+        "comportement1": "Calme",
+        "comportement2": "Bizarre"
     },
     {
         "name": "Charmander",
@@ -45,7 +50,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Malpoli.e"
+        "comportement1": "Malpoli.e",
+        "comportement2": "Docile"
     },
     {
         "name": "Chikorita",
@@ -53,7 +59,9 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Malpoli.e"
+        "comportement1": "Docile",
+        "comportement2": "Timide"
+
     },
     {
         "name": "Chimchar",
@@ -61,7 +69,8 @@
         "height": 48,
         "nb_anim": 7,
         "scale": 1.5,
-        "comportement": "Naïf.ve"
+        "comportement1": "Malpoli.e",
+        "comportement2": "Pressé.e"
     },
     {
         "name": "Chingling",
@@ -69,7 +78,8 @@
         "height": 48,
         "nb_anim": 9,
         "scale": 1.5,
-        "comportement": "Naïf.ve"
+        "comportement1": "Pressé.e",
+        "comportement2": "Hardi.e"
     },
     {
         "name": "Clobbopus",
@@ -77,7 +87,8 @@
         "height": 40,
         "nb_anim": 5,
         "scale": 1.5,
-        "comportement": "Naïf.ve"
+        "comportement1": "Brave",
+        "comportement2": "Solo"
     },
     {
         "name": "Ditto",
@@ -85,7 +96,8 @@
         "height": 32,
         "nb_anim": 5,
         "scale": 1.5,
-        "comportement": "Bizarre"
+        "comportement1": "Bizarre",
+        "comportement2": "Relax"
     },
     {
         "name": "Ducklett",
@@ -93,7 +105,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Docile"
+        "comportement1": "Docile",
+        "comportement2": "Naïf.ve"
     },
     {
         "name": "Eevee",
@@ -101,7 +114,8 @@
         "height": 48,
         "nb_anim": 7,
         "scale": 1.5,
-        "comportement": "Jovial.e"
+        "comportement1": "Jovial.e",
+        "comportement2": "Naïf.ve"
     },
     {
         "name": "Elekid",
@@ -109,7 +123,8 @@
         "height": 48,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Jovial.e"
+        "comportement1": "Jovial.e",
+        "comportement2": "Hardi.e"
     },
     {
         "name": "Fidough",
@@ -117,7 +132,8 @@
         "height": 32,
         "nb_anim": 6,
         "scale": 1.5,
-        "comportement": "Jovial.e"
+        "comportement1": "Docile",
+        "comportement2": "Pressé.e"
     },
     {
         "name": "Froakie",
@@ -125,7 +141,8 @@
         "height": 40,
         "nb_anim": 6,
         "scale": 1.5,
-        "comportement": "Solo"
+        "comportement1": "Solo",
+        "comportement2": "Timide"
     },
     {
         "name": "Gible",
@@ -133,7 +150,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Hardi.e"
+        "comportement1": "Hardi.e",
+        "comportement2": "Relax"
     },
     {
         "name": "Hisuian_Sneasel",
@@ -141,7 +159,8 @@
         "height": 48,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Malin.e"
+        "comportement1": "Malin.e",
+        "comportement2": "Malpoli.e"
     },
     {
         "name": "Hisuian_Zorua",
@@ -149,7 +168,8 @@
         "height": 48,
         "nb_anim": 5,
         "scale": 1.5,
-        "comportement": "Timide"
+        "comportement1": "Timide",
+        "comportement2": "Calme"
     },
     {
         "name": "Kabuto",
@@ -157,7 +177,8 @@
         "height": 48,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Timide"
+        "comportement1": "Timide",
+        "comportement2": "Malin.e"
     },
     {
         "name": "Larvesta",
@@ -165,7 +186,8 @@
         "height": 40,
         "nb_anim": 3,
         "scale": 1.5,
-        "comportement": "Malin.e"
+        "comportement1": "Malin.e",
+        "comportement2": "Bizarre"
     },
     {
         "name": "Mawile",
@@ -173,7 +195,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Solo"
+        "comportement1": "Solo",
+        "comportement2": "Jovial.e"
     },
     {
         "name": "Mimikyu",
@@ -181,7 +204,8 @@
         "height": 48,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Bizarre"
+        "comportement1": "Bizarre",
+        "comportement2": "Malin.e"
     },
     {
         "name": "Munchlax",
@@ -189,7 +213,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Relax"
+        "comportement1": "Relax",
+        "comportement2": "Docile"
     },
     {
         "name": "Oricorio",
@@ -197,7 +222,8 @@
         "height": 56,
         "nb_anim": 12,
         "scale": 1.5,
-        "comportement": "Relax"
+        "comportement1": "Jovial.e",
+        "comportement2": "Pressé.e"
     },
     {
         "name": "Pikachu",
@@ -205,7 +231,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Docile"
+        "comportement1": "Jovial.e",
+        "comportement2": "Naïf.ve"
     },
     {
         "name": "Piplup",
@@ -213,7 +240,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Docile"
+        "comportement1": "Docile",
+        "comportement2": "Calme"
     },
     {
         "name": "Psyduck",
@@ -221,7 +249,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Relax"
+        "comportement1": "Relax",
+        "comportement2": "Timide"
     },
     {
         "name": "Quaxly",
@@ -229,7 +258,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Docile"
+        "comportement1": "Naïf.ve",
+        "comportement2": "Hardi.e"
     },
     {
         "name": "Ralts",
@@ -237,7 +267,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Timide"
+        "comportement1": "Timide",
+        "comportement2": "Calme"
     },
     {
         "name": "Riolu",
@@ -245,7 +276,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Pressé.e"
+        "comportement1": "Hardi.e",
+        "comportement2": "Brave"
     },
     {
         "name": "Sableye",
@@ -253,7 +285,8 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Malpoli.e"
+        "comportement1": "Solo",
+        "comportement2": "Bizarre"
     },
     {
         "name": "Seedot",
@@ -261,7 +294,8 @@
         "height": 40,
         "nb_anim": 8,
         "scale": 1.5,
-        "comportement": "Brave"
+        "comportement1": "Brave",
+        "comportement2": "Calme"
     },
     {
         "name": "Shinx",
@@ -269,7 +303,8 @@
         "height": 48,
         "nb_anim": 7,
         "scale": 1.5,
-        "comportement": "Brave"
+        "comportement1": "Docile",
+        "comportement2": "Solo"
     },
     {
         "name": "Shuppet",
@@ -277,7 +312,8 @@
         "height": 48,
         "nb_anim": 6,
         "scale": 1.5,
-        "comportement": "Solo"
+        "comportement1": "Malin.e",
+        "comportement2": "Malpoli.e"
     },
     {
         "name": "Snivy",
@@ -285,7 +321,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Solo"
+        "comportement1": "Malin.e",
+        "comportement2": "Malpoli.e"
     },
     {
         "name": "Snorunt",
@@ -293,7 +330,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Solo"
+        "comportement1": "Timide",
+        "comportement2": "Pressé.e"
     },
     {
         "name": "Spheal",
@@ -301,7 +339,8 @@
         "height": 32,
         "nb_anim": 6,
         "scale": 1.5,
-        "comportement": "Naïf.ve"
+        "comportement1": "Naïf.ve",
+        "comportement2": "Relax"
     },
     {
         "name": "Squirtle",
@@ -309,7 +348,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Brave"
+        "comportement1": "Naïf.ve",
+        "comportement2": "Relax"
     },
     {
         "name": "Treecko",
@@ -317,7 +357,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Malpoli.e"
+        "comportement1": "Malpoli.e",
+        "comportement2": "Pressé.e"
     },
     {
         "name": "Turtwig",
@@ -325,7 +366,8 @@
         "height": 32,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Calme"
+        "comportement1": "Naïf.ve",
+        "comportement2": "Calme"
     },
     {
         "name": "Wingull",
@@ -333,6 +375,7 @@
         "height": 40,
         "nb_anim": 4,
         "scale": 1.5,
-        "comportement": "Pressé.e"
+        "comportement1": "Jovial.e",
+        "comportement2": "Pressé.e"
     }
 ]

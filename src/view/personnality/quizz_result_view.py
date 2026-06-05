@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 16:28:27 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 13:58:48 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/05 14:48:08 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -125,8 +125,12 @@ class ResultQuizzView(arcade.View):
 
     def draw_pokemon(self):
 
-        possible_pokemon = [obj for obj in self.window.manager.pokemons
-                            if obj.comportement == self.caractere]
+        possible_pokemon1 = [obj for obj in self.window.manager.pokemons
+                             if obj.comportement1 == self.caractere]
+        possible_pokemon2 = [obj for obj in self.window.manager.pokemons
+                             if obj.comportement2 == self.caractere]
+
+        possible_pokemon = possible_pokemon1 + possible_pokemon2
 
         if self.random_pokemon is None:
             self.random_pokemon = random.choice(possible_pokemon)
