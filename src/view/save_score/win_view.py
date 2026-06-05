@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 13:32:51 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/05 07:59:24 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -92,7 +92,7 @@ class WinView(arcade.View):
         """Appelé quand la vue change"""
         self.ui_manager.enable()
 
-        volume =  self.window.manager.settings.volume
+        volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
             self.music = arcade.Sound(MUSIC_PATH,
                                       streaming=True)
@@ -147,7 +147,7 @@ class WinView(arcade.View):
             elif self.selected_reponse == 1:
                 self.show_name_input()
             elif self.selected_reponse == 0:
-                self.window.manager.reset_level()
+                self.window.manager.reset_game()
                 self.music.stop(self.music_player)
                 self.window.show_view(self.window.start_view)
 
@@ -166,7 +166,7 @@ class WinView(arcade.View):
         score = Score(**score)
         self.window.manager.scoreboard.append(score)
         self.window.manager.update_json_score()
-        self.window.manager.reset_level()
+        self.window.manager.reset_game()
 
         self.music.stop(self.music_player)
         self.window.show_view(self.window.start_view)
@@ -228,7 +228,7 @@ class WinView(arcade.View):
                                                   self.window.width * 0.5,
                                                   self.window.height * 0.3))
 
-        # 2. Dessin de la ligne noire sous le pseudo 
+        # Dessin de la ligne noire sous le pseudo
         line_width = 320
         center_x = self.window.width / 2
         center_y = self.window.height / 2
@@ -242,10 +242,10 @@ class WinView(arcade.View):
             line_width=3
         )
 
-        # 3. Dessin des éléments gérés par l'UI Manager (UIInputText au centre)
+        # Dessin des éléments gérés par l'UI Manager (UIInputText au centre)
         self.ui_manager.draw()
 
-        # 4. Dessin du texte explicatif sous le parchemin
+        # Dessin du texte explicatif sous le parchemin
         text = arcade.Text(
             text="Appuyez sur entrer pour valider",
             x=self.window.width / 2,

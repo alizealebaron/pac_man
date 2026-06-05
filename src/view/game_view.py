@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 13:26:25 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/05 08:37:43 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,10 +15,12 @@
 # +-------------------------------------------------------------------------+
 
 import arcade
+import arcade.gui
 from src.view.maze_renderer import MazeRenderer
 from src.managers.collectible_manager import CollectibleManager
 from src.view.save_score.win_view import WinView
 from src.view.save_score.gameover_view import GameoverView
+from src.view.pause_view import PauseView
 from src.pacmanManager import PacmanManager
 
 # +-------------------------------------------------------------------------+
@@ -96,10 +98,17 @@ class GameView(arcade.View):
         self.init_textures()
 
         # === Initialisation du timer ===
-        self.timer = float(self.manager.config.level_max_time)
+        self.timer = float(self.manager.config.level_max_time) + 1
 
         # === Cacher le curseur ===
         self.window.set_mouse_visible(False)
+
+        # === GUI manager pour le menu de pause ===
+
+        self.pause_manager = arcade.gui.UIManager()
+        self.init_btn_layout()
+        self.pause_manager.disable()
+        self.show_pause_menu = False
 
     # +---------------------------------------------------------------------+
     # |                             Init Methods                            |
@@ -114,10 +123,55 @@ class GameView(arcade.View):
                                                   "Normal.png")
         self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         self.scroll_texture = arcade.load_texture(SCROLL_PATH)
+        # self.fond_gris = arcade.load_texture("assets/background/test_gris.png")
+
+    def init_btn_layout(self):
+
+        btn_resume = arcade.gui.UIFlatButton(text="Resume", width=150)
+        btn_start_new_game = arcade.gui.UIFlatButton(text="Start New Game",
+                                                     width=150)
+        btn_exit = arcade.gui.UIFlatButton(text="Return to Menu", width=320)
+
+        self.grid = arcade.gui.UIGridLayout(
+            column_count=2, row_count=2, horizontal_spacing=20,
+            vertical_spacing=20
+        )
+
+        self.grid.add(btn_resume, column=0, row=0)
+        self.grid.add(btn_start_new_game, column=1, row=0)
+        self.grid.add(btn_exit, column=0, row=1, column_span=2)
+
+        self.anchor = self.pause_manager.add(arcade.gui.UIAnchorLayout())
+
+        self.anchor.add(
+            anchor_x="center_x",
+            anchor_y="center_y",
+            child=self.grid,
+        )
+
+        # Initialisation de l'input des boutons
+
+        @btn_resume.event("on_click")
+        def on_click_resume_button(event):
+            self.pause_manager.disable()
+            self.show_pause_menu = False
+            self.window.set_mouse_visible(False)
+
+        @btn_start_new_game.event("on_click")
+        def on_click_start_new_game_button(event):
+            self.manager.reset_game()
+            self.window.show_view(GameView(self.manager))
+
+        @btn_exit.event("on_click")
+        def on_click_exit_button(event):
+            self.window.show_view(self.window.start_view)
 
     # +---------------------------------------------------------------------+
     # |                               Methods                               |
     # +---------------------------------------------------------------------+
+
+    def on_hide_view(self):
+        self.pause_manager.disable()
 
     def on_draw(self):
         """ Draw everything """
@@ -142,10 +196,42 @@ class GameView(arcade.View):
         # Affichage de l'HUD
         self.draw_UI()
 
+        # Affichage du menu par dessus le jeu en cas de pause
+        if (self.show_pause_menu):
+
+            self.window.set_mouse_visible(True)
+
+            # Affichage d'un léger gris pour atténuer le fond
+            # arcade.draw_texture_rect(
+            #     texture=self.fond_gris,
+            #     rect=arcade.XYWH(
+            #         self.window.width / 2,
+            #         self.window.height / 2,
+            #         self.window.width,
+            #         self.window.height
+            #     )
+            # )
+
+            # Ecriture du titre de pause
+            pause_title = arcade.Text("PAUSE",
+                                      self.window.width / 2,
+                                      self.height * 0.6,
+                                      color=arcade.color.BLACK,
+                                      font_size=25,
+                                      font_name="Comic Sans MS",
+                                      anchor_x="center",
+                                      anchor_y="center")
+
+            pause_title.draw()
+            self.pause_manager.draw()
+
     def on_update(self, delta_time):
         """ Movement and game logic """
 
         # Mise à jour du timer
+        if (self.show_pause_menu is True):
+            return
+
         self.timer -= delta_time
 
         if (self.timer <= 0 or self.manager.player.nb_life == 0):
@@ -242,37 +328,29 @@ class GameView(arcade.View):
 
     def on_key_press(self, key, modifiers):
 
-        dict_key = self.manager.settings.dict_key
-        dict_key = dict_key[self.manager.settings.configuration]
+        if (self.show_pause_menu is False):
 
-        if key == dict_key["up"] or key == arcade.key.UP:
-            self.manager.player.next_direction = "up"
-        elif key == dict_key["left"] or key == arcade.key.LEFT:
-            self.manager.player.next_direction = "left"
-        elif key == dict_key["down"] or key == arcade.key.DOWN:
-            self.manager.player.next_direction = "down"
-        elif key == dict_key["right"] or key == arcade.key.RIGHT:
-            self.manager.player.next_direction = "right"
+            dict_key = self.manager.settings.dict_key
+            dict_key = dict_key[self.manager.settings.configuration]
 
-        # match symbol:
-        #     case dict_key["up"]:
-        #         self.manager.player.next_direction = "up"
-        #     case arcade.key.LEFT:
-        #         self.manager.player.next_direction = "left"
-        #     case arcade.key.DOWN:
-        #         self.manager.player.next_direction = "down"
-        #     case arcade.key.RIGHT:
-        #         self.manager.player.next_direction = "right"
+            if key == dict_key["up"] or key == arcade.key.UP:
+                self.manager.player.next_direction = "up"
+            elif key == dict_key["left"] or key == arcade.key.LEFT:
+                self.manager.player.next_direction = "left"
+            elif key == dict_key["down"] or key == arcade.key.DOWN:
+                self.manager.player.next_direction = "down"
+            elif key == dict_key["right"] or key == arcade.key.RIGHT:
+                self.manager.player.next_direction = "right"
 
-        # match symbol:
-        #     case arcade.key.W:
-        #         self.manager.player.next_direction = "up"
-        #     case arcade.key.A:
-        #         self.manager.player.next_direction = "left"
-        #     case arcade.key.S:
-        #         self.manager.player.next_direction = "down"
-        #     case arcade.key.D:
-        #         self.manager.player.next_direction = "right"
+        # Afficher le menu de pause
+        if key == arcade.key.ESCAPE:
+            if self.show_pause_menu is False:
+                self.pause_manager.enable()
+                self.show_pause_menu = True
+            else:
+                self.pause_manager.disable()
+                self.show_pause_menu = False
+                self.window.set_mouse_visible(False)
 
     def _player_move(self) -> tuple[float, float]:
         player = self.manager.player

@@ -74,8 +74,9 @@ class PacmanManager():
     # |                               Setters                               |
     # +---------------------------------------------------------------------+
 
-    def reset_level(self):
+    def reset_game(self):
         self.actual_level = 0
+        self.player.score = 0
 
     # +---------------------------------------------------------------------+
     # |                            JSON Methods                             |
