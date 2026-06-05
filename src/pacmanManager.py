@@ -77,6 +77,9 @@ class PacmanManager():
     def reset_game(self):
         self.actual_level = 0
         self.player.score = 0
+        self.player.direction = None
+        self.player.next_direction = None
+        self.player.sprite.current_direction = "down"
 
     # +---------------------------------------------------------------------+
     # |                            JSON Methods                             |
