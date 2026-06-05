@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/05 08:37:43 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/05 09:04:33 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -211,6 +211,19 @@ class GameView(arcade.View):
             #         self.window.height
             #     )
             # )
+
+            ecran_rect = arcade.rect.Rect(
+                left=0,
+                right=self.window.width,
+                bottom=0,
+                top=self.window.height,
+                x=self.window.width / 2,
+                y=self.window.height / 2,
+                width=self.window.width,
+                height=self.window.height
+            )
+
+            arcade.draw_rect_filled(rect=ecran_rect, color=(0, 0, 0, 127))
 
             # Ecriture du titre de pause
             pause_title = arcade.Text("PAUSE",
