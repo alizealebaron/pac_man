@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/06 15:29:19 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/06 17:33:30 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -90,6 +90,9 @@ class GameView(arcade.View):
                                             self.scale)
         self.player_sprites = arcade.SpriteList()
         self.player_sprites.append(self.manager.player.sprite)
+
+        for enemy in self.enemy_manager.enemies:
+            enemy.sprite.scale = enemy.scale * self.scale
 
         # === Gestion de la musique ===
         self.music_player = music_player
@@ -198,7 +201,7 @@ class GameView(arcade.View):
             pixel_x = enemy.x * TILE_SIZE + 32 + enemy.pixel_offset_x
             pixel_y = enemy.y * TILE_SIZE + 32 + enemy.pixel_offset_y
             enemy.sprite.center_x = pixel_x * self.scale + self.offset_x
-            enemy.sprite.center_y = pixel_y * self.scale + self.offset_y
+            enemy.sprite.center_y = pixel_y * self.scale + self.offset_y - enemy.offset_y
 
         self.enemy_manager.draw()
 
@@ -220,6 +223,19 @@ class GameView(arcade.View):
             #         self.window.height
             #     )
             # )
+
+            ecran_rect = arcade.rect.Rect(
+                left=0,
+                right=self.window.width,
+                bottom=0,
+                top=self.window.height,
+                x=self.window.width / 2,
+                y=self.window.height / 2,
+                width=self.window.width,
+                height=self.window.height
+            )
+
+            arcade.draw_rect_filled(rect=ecran_rect, color=(0, 0, 0, 127))
 
             # Ecriture du titre de pause
             pause_title = arcade.Text("PAUSE",

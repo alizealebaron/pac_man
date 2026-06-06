@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 01:07:26 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/01 17:39:25 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/05 14:43:47 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -29,4 +29,5 @@ class PokemonModel(BaseModel):
     height: int = Field(ge=1)
     nb_anim: int = Field(ge=1)
     scale: float = Field(ge=1)
-    comportement: str
+    comportement1: str
+    comportement2: str

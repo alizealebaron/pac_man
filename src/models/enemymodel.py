@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/06 17:05:51 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/06 17:33:07 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -36,6 +36,7 @@ class EnemyModel:
 
         enemy_data = self._get_enemy_data(mon)
 
+        self.scale = enemy_data.scale
         self.sprite = AnimatedSprite(mon, enemy_data.width, enemy_data.height, enemy_data.nb_anim, is_enemy=True)
         self.sprite.center_x = self.x
         self.sprite.center_y = self.y
@@ -45,6 +46,7 @@ class EnemyModel:
         self.last_direction = None
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
+        self.offset_y = self._get_offset_y()
 
     def on_update(self, delta_time):
         if self.pixel_offset_x == 0 and self.pixel_offset_y == 0:
@@ -186,3 +188,14 @@ class EnemyModel:
             if enemy_data.name == enemy_name:
                 return enemy_data
         raise ValueError(f"Enemy {enemy_name} not found in enemy_data.json")
+
+    def _get_offset_y(self):
+        match self.mon:
+            case 'Drifloon':
+                return 15
+            case 'Duskull':
+                return 10
+            case 'Haunter':
+                return 10
+            case 'Misdreavus':
+                return 10

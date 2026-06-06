@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 12:16:40 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/05 09:54:33 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -148,6 +148,7 @@ class MenuView(arcade.View):
             self.music_player = self.music.play(volume=volume, loop=True)
 
         # Reload le nouveau sprite
+        self.player_pokemon = self.window.manager.player.pokemon
         self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
                                                   f"{self.player_pokemon.name}"
                                                   "/portraits/Normal.png")
