@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Drifloon",
+        "width": 24,
+        "height": 64,
+        "nb_anim": 8,
+        "scale": 1.5
+    },
+    {
+        "name": "Duskull",
+        "width": 24,
+        "height": 48,
+        "nb_anim": 8,
+        "scale": 1.6
+    },
+    {
+        "name": "Haunter",
+        "width": 32,
+        "height": 56,
+        "nb_anim": 10,
+        "scale": 1.5
+    },
+    {
+        "name": "Misdreavus",
+        "width": 24,
+        "height": 48,
+        "nb_anim": 8,
+        "scale": 1.5 
+    }
+]

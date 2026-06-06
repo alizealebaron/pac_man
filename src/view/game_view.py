@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/05 09:04:33 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/06 17:33:30 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -64,6 +64,7 @@ class GameView(arcade.View):
 
         # Récupération du labyrinthe et du manager
         self.manager = manager
+        self.enemy_manager = manager.enemy_manager
         num_level = self.manager.actual_level
         self.current_maze = self.manager.level[num_level].maze.maze
 
@@ -89,6 +90,9 @@ class GameView(arcade.View):
                                             self.scale)
         self.player_sprites = arcade.SpriteList()
         self.player_sprites.append(self.manager.player.sprite)
+
+        for enemy in self.enemy_manager.enemies:
+            enemy.sprite.scale = enemy.scale * self.scale
 
         # === Gestion de la musique ===
         self.music_player = music_player
@@ -193,6 +197,14 @@ class GameView(arcade.View):
         self.manager.player.sprite.center_y = pixel_y * self.scale + self.offset_y - 10
         self.player_sprites.draw()
 
+        for enemy in self.enemy_manager.enemies:
+            pixel_x = enemy.x * TILE_SIZE + 32 + enemy.pixel_offset_x
+            pixel_y = enemy.y * TILE_SIZE + 32 + enemy.pixel_offset_y
+            enemy.sprite.center_x = pixel_x * self.scale + self.offset_x
+            enemy.sprite.center_y = pixel_y * self.scale + self.offset_y - enemy.offset_y
+
+        self.enemy_manager.draw()
+
         # Affichage de l'HUD
         self.draw_UI()
 
@@ -289,6 +301,7 @@ class GameView(arcade.View):
             self.get_collectibles()
 
         self.manager.player.sprite.on_update(delta_time)
+        self.enemy_manager.on_update(delta_time)
 
     def on_show_view(self):
         """Appelé quand la vue change"""
@@ -432,8 +445,6 @@ class GameView(arcade.View):
                     return True
             case "left":
                 if not (self.rev_maze[grid_y][grid_x] & 8):
-                    if self.offset_x != 0:
-                        return True
                     return True
             case _:
                 return False
