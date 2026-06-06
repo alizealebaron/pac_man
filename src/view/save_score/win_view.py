@@ -1,12 +1,12 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  save_score_view.py                                :+:      :+:    :+:    #
+#  win_view.py                                       :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/01 11:13:53 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/05 07:59:24 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -28,13 +28,14 @@ MUSIC_PATH = "assets/music/save_score_theme.mp3"
 
 SELECTED_PATH = "assets/quizz/question_selected.png"
 UNSELECTED_PATH = "assets/quizz/question_unselected.png"
+SCROLL_PATH = "assets/menu/scroll.png"
 
 
 # +-------------------------------------------------------------------------+
 # |                                 Classe                                  |
 # +-------------------------------------------------------------------------+
 
-class SaveScoreView(arcade.View):
+class WinView(arcade.View):
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
@@ -42,8 +43,30 @@ class SaveScoreView(arcade.View):
 
     def __init__(self, window):
 
+        # Instanciation de la classe mère
         super().__init__(window)
+
+        # Initialisation des infos de la view
+        self.title = "Thanks you for playing !"
+        self.emotion = "Happy"
+
+        # Chargement des textures
+
+        pokemon = self.window.manager.player.pokemon.name
+
         self.background = arcade.load_texture(BACKGROUND_PATH)
+        self.scroll_texture = arcade.load_texture(SCROLL_PATH)
+        self.sprite_q_selected = arcade.load_texture(SELECTED_PATH)
+        self.sprite_q_unselected = arcade.load_texture(UNSELECTED_PATH)
+        self.profile_tex = arcade.load_texture(f"assets/sprite/pokemon/"
+                                               f"{pokemon}/portraits/"
+                                               f"{self.emotion}.png")
+        self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
+        self.leader_sprite = arcade.load_texture("assets/menu/"
+                                                 "small_leaderboard.png")
+        self.rank_0 = arcade.load_texture("assets/rank/rank_0.png")
+
+        # Récupération des scores
         self.lst_score = self.window.manager.scoreboard
 
         # Initialisation de la musique
@@ -69,9 +92,11 @@ class SaveScoreView(arcade.View):
         """Appelé quand la vue change"""
         self.ui_manager.enable()
 
+        volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
-            self.music = arcade.Sound(MUSIC_PATH)
-            self.music_player = self.music.play(volume=1, loop=True)
+            self.music = arcade.Sound(MUSIC_PATH,
+                                      streaming=True)
+            self.music_player = self.music.play(volume=volume, loop=True)
 
     def on_hide_view(self):
         """Appelé quand on quitte la vue"""
@@ -94,20 +119,24 @@ class SaveScoreView(arcade.View):
 
         if self.show_input_ui:
             # Si on saisit le nom, on dessine l'interface par-dessus le fond
-            self.ui_manager.draw()
+            self.draw_input_box()
         else:
             # Sinon, on dessine le menu normal
+            self.draw_title()
             self.draw_mid_leaderboard()
             self.draw_profile_icone()
             self.draw_choice()
 
     def on_key_press(self, key, modifiers):
 
-        if key == arcade.key.W:
+        dict_key = self.window.manager.settings.dict_key
+        dict_key = dict_key[self.window.manager.settings.configuration]
+
+        if key == dict_key["up"] or key == arcade.key.UP:
             self.selected_reponse = ((self.selected_reponse + 1) %
                                      len(self.reponses))
 
-        if key == arcade.key.S:
+        if key == dict_key["down"] or key == arcade.key.DOWN:
             self.selected_reponse = ((self.selected_reponse - 1) %
                                      len(self.reponses))
 
@@ -118,6 +147,7 @@ class SaveScoreView(arcade.View):
             elif self.selected_reponse == 1:
                 self.show_name_input()
             elif self.selected_reponse == 0:
+                self.window.manager.reset_game()
                 self.music.stop(self.music_player)
                 self.window.show_view(self.window.start_view)
 
@@ -136,57 +166,113 @@ class SaveScoreView(arcade.View):
         score = Score(**score)
         self.window.manager.scoreboard.append(score)
         self.window.manager.update_json_score()
+        self.window.manager.reset_game()
 
         self.music.stop(self.music_player)
         self.window.show_view(self.window.start_view)
 
     def show_name_input(self):
-        """Crée et affiche les éléments de saisie du pseudo"""
+        """Crée et positionne le champ de saisie du pseudo"""
         self.show_input_ui = True
 
-        anchor_layout = arcade.gui.UIAnchorLayout(
+        # Layout pour ancrer au milieu de l'écran
+        self.anchor_layout = arcade.gui.UIAnchorLayout(
             width=self.window.width,
             height=self.window.height
         )
 
-        v_box = arcade.gui.UIBoxLayout()
-
+        # Création de la boîte de texte
         self.input_field = arcade.gui.UIInputText(
             text=self.window.manager.player.name,
             width=300,
             height=40,
-            text_color=arcade.color.BLACK
+            text_color=arcade.color.BLACK,
+            font_size=20,
+            font_name="FOT-Humming Pro",
+            border_width=0
         )
 
-        submit_button = arcade.gui.UIFlatButton(
-            text="Valider et Enregistrer",
-            width=200
-        )
+        # Interception des touches clavier
+        @self.input_field.event("on_event")
+        def on_text_event(event):
+            if isinstance(event, arcade.gui.events.UIKeyPressEvent):
+                if event.symbol in (arcade.key.ENTER, arcade.key.ENTER):
+                    new_name = self.input_field.text.strip()
+                    if new_name:
+                        # On applique le nouveau nom
+                        self.window.manager.player.name = new_name
+                        self.show_input_ui = False
+                        # Nettoyage et suppression de l'UI
+                        self.ui_manager.remove(self.anchor_layout)
+                        # Lancement de la sauvegarde
+                        self.save_without_name()
 
-        @submit_button.event("on_click")
-        def on_click_submit(event):
-            new_name = self.input_field.text.strip()
-            if new_name:
-                self.window.manager.player.name = new_name
-                self.save_without_name()
-
-        v_box.add(self.input_field, space_around=(0, 0, 20, 0))
-        v_box.add(submit_button)
-
-        anchor_layout.add(
+        # Alignement au centre parfait (sur l'axe X et Y)
+        self.anchor_layout.add(
             anchor_x="center_x",
             anchor_y="center_y",
-            child=v_box
+            child=self.input_field
         )
 
-        self.ui_manager.add(anchor_layout)
+        self.ui_manager.add(self.anchor_layout)
 
     # +---------------------------------------------------------------------+
     # |                            Draw Methods                             |
     # +---------------------------------------------------------------------+
 
+    def draw_input_box(self):
+
+        arcade.draw_texture_rect(texture=self.scroll_texture,
+                                 rect=arcade.XYWH(self.window.width / 2,
+                                                  self.window.height / 2,
+                                                  self.window.width * 0.5,
+                                                  self.window.height * 0.3))
+
+        # Dessin de la ligne noire sous le pseudo
+        line_width = 320
+        center_x = self.window.width / 2
+        center_y = self.window.height / 2
+
+        arcade.draw_line(
+            start_x=center_x - (line_width / 2),
+            start_y=center_y - 30,
+            end_x=center_x + (line_width / 2),
+            end_y=center_y - 30,
+            color=arcade.color.BLACK,
+            line_width=3
+        )
+
+        # Dessin des éléments gérés par l'UI Manager (UIInputText au centre)
+        self.ui_manager.draw()
+
+        # Dessin du texte explicatif sous le parchemin
+        text = arcade.Text(
+            text="Appuyez sur entrer pour valider",
+            x=self.window.width / 2,
+            y=(self.window.height / 2) - (self.window.height * 0.15) - 35,
+            color=arcade.color.BLACK,
+            font_size=14,
+            font_name="FOT-Humming Pro",
+            anchor_x="center"
+        )
+
+        text.draw()
+
+    def draw_title(self):
+
+        titre = arcade.Text(text=self.title,
+                            x=self.window.width / 2,
+                            y=self.window.height * 0.9,
+                            color=arcade.color.BLACK,
+                            bold=True,
+                            font_size=30,
+                            anchor_x="center",
+                            anchor_y="center")
+
+        titre.draw()
+
     def draw_choice(self):
-        start_y = self.window.height * 0.25
+        start_y = self.window.height * 0.20
         space_between = 150
 
         # L'axe X central pour tout le bloc de gauche
@@ -194,9 +280,9 @@ class SaveScoreView(arcade.View):
 
         for reponse in self.reponses:
             if (reponse is self.reponses[self.selected_reponse]):
-                question_sprite = arcade.load_texture(SELECTED_PATH)
+                question_sprite = self.sprite_q_selected
             else:
-                question_sprite = arcade.load_texture(UNSELECTED_PATH)
+                question_sprite = self.sprite_q_unselected
 
             sprite_width = self.window.width * 0.5
             sprite_height = self.window.height * 0.09
@@ -231,7 +317,7 @@ class SaveScoreView(arcade.View):
 
         player_name = arcade.Text(self.window.manager.player.name,
                                   align_x,
-                                  self.window.height * 0.72 + icon_size,
+                                  self.window.height * 0.67 + icon_size,
                                   color=arcade.color.BLACK,
                                   font_size=22,
                                   font_name="FOT-UDKakugoC80 Pro",
@@ -240,21 +326,18 @@ class SaveScoreView(arcade.View):
                                   bold=True)
         player_name.draw()
 
-        pokemon = self.window.manager.player.pokemon.name
-        profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}/portraits/Happy.png") 
         arcade.draw_texture_rect(
-            texture=profile_tex,
+            texture=self.profile_tex,
             rect=arcade.XYWH(align_x,
-                             self.window.height * 0.72,
+                             self.window.height * 0.67,
                              icon_size,
                              icon_size)
         )
 
-        sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         arcade.draw_texture_rect(
-            texture=sprite_frame,
+            texture=self.sprite_frame,
             rect=arcade.XYWH(align_x,
-                             self.window.height * 0.72,
+                             self.window.height * 0.67,
                              icon_size + 10,
                              icon_size + 10)
         )
@@ -262,7 +345,7 @@ class SaveScoreView(arcade.View):
         score = f"Score: {self.window.manager.player.score}"
         player_score = arcade.Text(score,
                                    align_x,
-                                   self.window.height * 0.63,
+                                   self.window.height * 0.58,
                                    color=arcade.color.BLACK,
                                    font_size=18,
                                    font_name="FOT-UDKakugoC80 Pro",
@@ -272,15 +355,13 @@ class SaveScoreView(arcade.View):
 
     def draw_mid_leaderboard(self):
 
-        leader_sprite = arcade.load_texture("assets/menu/"
-                                            "small_leaderboard.png")
         w = self.window.width * 0.3
         h = self.window.height * 0.7
         arcade.draw_texture_rect(
-            texture=leader_sprite,
+            texture=self.leader_sprite,
             rect=arcade.XYWH(
                 x=self.window.width / 2 + self.window.width / 2 * 0.6,
-                y=self.window.height / 2,
+                y=self.window.height * 0.45,
                 width=w,
                 height=h
             )
@@ -293,7 +374,7 @@ class SaveScoreView(arcade.View):
 
         # Configuration des positions
         start_x = self.window.height + 225
-        start_y = (self.window.width / 2) - 175
+        start_y = (self.window.width * 0.45) - 135
         line_height = 70
         icon_size = 50
 
@@ -307,7 +388,7 @@ class SaveScoreView(arcade.View):
                 rank_tex = arcade.load_texture(f"assets/rank/rank_{i+1}_64."
                                                "png")
             else:
-                rank_tex = arcade.load_texture("assets/rank/rank_0.png")
+                rank_tex = self.rank_0
 
             arcade.draw_texture_rect(
                 texture=rank_tex,
@@ -317,7 +398,8 @@ class SaveScoreView(arcade.View):
 
             # Image du pokémon
             pokemon = player.pokemon
-            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}/portraits/Normal.png") 
+            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}"
+                                              "/portraits/Normal.png")
             arcade.draw_texture_rect(
                 texture=profile_tex,
                 rect=arcade.XYWH(start_x + icon_size + 40, current_y,
@@ -355,7 +437,7 @@ class SaveScoreView(arcade.View):
             )
 
             # Image du pokémon
-            profile_tex = arcade.load_texture(f"assets/sprite/undefined/Normal.png") 
+            profile_tex = arcade.load_texture(f"assets/sprite/undefined/Normal.png")
             arcade.draw_texture_rect(
                 texture=profile_tex,
                 rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size, icon_size)

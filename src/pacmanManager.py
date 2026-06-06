@@ -6,13 +6,10 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 13:02:37 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/06 09:59:55 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-# +-------------------------------------------------------------------------+
-# |                               Importation                               |
-# +-------------------------------------------------------------------------+
 
 import argparse
 import json
@@ -24,6 +21,7 @@ from src.models.playerModel import PlayerModel
 from src.models.levelModel import Level
 from src.models.questionModel import DataQuestionsModel
 from src.models.pokemonModel import PokemonModel
+from src.models.settingsModel import SettingsModel
 from src.managers.enemy_manager import EnemyManager
 
 # +-------------------------------------------------------------------------+
@@ -60,17 +58,32 @@ class PacmanManager():
 
         # Generation des maps et stockage dans une liste
         self.level: list[Level] = self.create_maps(self.config.level)
+        self.actual_level = 0
 
-        self.current_level = self.level[0]
+        self.current_level = self.level[self.actual_level]
 
         # Génération des ennemies
-        # self.enemy_manager = EnemyManager(self.config, self.current_level)
+        self.enemy_manager = EnemyManager(self.config, self.current_level)
 
         # Récupération du scoreboard
         self.scoreboard = self.retrieve_score_from_json()
 
         # Récupération des questions
         self.data_questions = self.retrieve_questions_from_json()
+
+        # Récupération des settings
+        self.settings = SettingsModel()
+
+    # +---------------------------------------------------------------------+
+    # |                               Setters                               |
+    # +---------------------------------------------------------------------+
+
+    def reset_game(self):
+        self.actual_level = 0
+        self.player.score = 0
+        self.player.direction = None
+        self.player.next_direction = None
+        self.player.sprite.current_direction = "down"
 
     # +---------------------------------------------------------------------+
     # |                            JSON Methods                             |

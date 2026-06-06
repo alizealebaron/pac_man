@@ -68,5 +68,40 @@
     "name": "Tueur_de_poussin",
     "score": 1095,
     "pokemon": "Eevee"
+  },
+  {
+    "name": "Mild_Beldum",
+    "score": 0,
+    "pokemon": "Beldum"
+  },
+  {
+    "name": "Super_Beldum78",
+    "score": 0,
+    "pokemon": "Beldum"
+  },
+  {
+    "name": "Impish_Ditto",
+    "score": 910,
+    "pokemon": "Ditto"
+  },
+  {
+    "name": "Super_Trico",
+    "score": 910,
+    "pokemon": "Treecko"
+  },
+  {
+    "name": "Am\u00e9lie",
+    "score": 910,
+    "pokemon": "Hisuian_Sneasel"
+  },
+  {
+    "name": "Comment",
+    "score": 910,
+    "pokemon": "Hisuian_Sneasel"
+  },
+  {
+    "name": "Relaxed_Psyduck",
+    "score": 1820,
+    "pokemon": "Psyduck"
   }
 ]

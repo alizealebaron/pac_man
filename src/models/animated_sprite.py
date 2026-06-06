@@ -6,20 +6,23 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/01 14:38:04 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/01 17:34:12 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/06 12:00:53 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import arcade
 
 class AnimatedSprite(arcade.Sprite):
-    def __init__(self, pokemon_name: str, pokemon_width: int, pokemon_height: int, nb_anim: int):
+    def __init__(self, pokemon_name: str, pokemon_width: int, pokemon_height: int, nb_anim: int, is_enemy: bool = None):
         super().__init__()
 
         self.pokemon_width = pokemon_width
         self.pokemon_height = pokemon_height
         self.pokemon_nb_anim = nb_anim
-        self.sprite_sheet = arcade.SpriteSheet(f'assets/sprite/pokemon/{pokemon_name}/animations/Walk-Anim.png')
+        if not is_enemy:
+            self.sprite_sheet = arcade.SpriteSheet(f'assets/sprite/pokemon/{pokemon_name}/animations/Walk-Anim.png')
+        else:
+            self.sprite_sheet = arcade.SpriteSheet(f'assets/sprite/enemy/{pokemon_name}/animations/Walk-Anim.png')
         self.all_animations = self._load_walk_anim()
         self.current_direction = 'down'
         self.current_frame = 0

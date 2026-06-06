@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 09:14:00 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/02 13:51:45 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -65,3 +65,7 @@ class PlayerModel():
                    "Lonely", "Timid", "Chaotic"]
 
         return random.choice(prefixe) + "_" + self.pokemon.name
+
+    def update_pokemon_sprite(self):
+        self.sprite = AnimatedSprite(self.pokemon.name, self.pokemon.width,
+                                     self.pokemon.height, self.pokemon.nb_anim)

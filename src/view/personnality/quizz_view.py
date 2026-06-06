@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 04:44:09 by alebaron        #+#    #+#               #
-#  Updated: 2026/05/29 14:58:15 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/04 11:45:38 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -137,11 +137,14 @@ class QuizzView(arcade.View):
 
     def on_key_press(self, key, modifiers):
 
-        if key == arcade.key.Q:
+        dict_key = self.window.manager.settings.dict_key
+        dict_key = dict_key[self.window.manager.settings.configuration]
+
+        if key == dict_key["up"] or key == arcade.key.UP:
             self.selected_reponse = ((self.selected_reponse + 1) %
                                      len(self.reponses))
 
-        if key == arcade.key.S:
+        if key == dict_key["down"] or key == arcade.key.DOWN:
             self.selected_reponse = ((self.selected_reponse - 1) %
                                      len(self.reponses))
 
@@ -175,7 +178,7 @@ class QuizzView(arcade.View):
 
         # Récupération des données
         act_q = self.lst_questions[self.index_question]
-        self.reponses = act_q.reponses
+        self.reponses = act_q.reponses[::-1]
         nb_reponses = len(self.reponses)
 
         # Initialisation des positions initiales

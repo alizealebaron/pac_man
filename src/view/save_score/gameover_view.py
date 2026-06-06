@@ -5,8 +5,8 @@
 #                                                  +:+ +:+         +:+      #
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/05/20 13:03:16 by alebaron        #+#    #+#               #
-#  Updated: 2026/05/20 13:58:13 by alebaron        ###   ########.fr        #
+#  Created: 2026/06/02 08:06:31 by alebaron        #+#    #+#               #
+#  Updated: 2026/06/02 08:49:03 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,30 +14,45 @@
 # |                               Importation                               |
 # +-------------------------------------------------------------------------+
 
-
 import arcade
+from src.view.save_score.win_view import WinView
+
+# +-------------------------------------------------------------------------+
+# |                                 CONST                                   |
+# +-------------------------------------------------------------------------+
+
+
+BACKGROUND_PATH = "assets/background/gameover_background.png"
+MUSIC_PATH = "assets/music/gameover_theme.mp3"
 
 
 # +-------------------------------------------------------------------------+
 # |                                 Classe                                  |
 # +-------------------------------------------------------------------------+
 
-class GameoverView(arcade.View):
+class GameoverView(WinView):
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, window):
+        super().__init__(window)
+
+        self.background = arcade.load_texture(BACKGROUND_PATH)
+
+        # Initialisation des infos de la view
+        self.title = "Game Over !"
+        self.emotion = "Sad"
+
+    # +---------------------------------------------------------------------+
+    # |                            View Methods                             |
+    # +---------------------------------------------------------------------+
 
     def on_show_view(self):
-        """ This is run once when we switch to this view """
-        arcade.set_background_color(arcade.color.DARK_BLUE_GRAY)
+        """Appelé quand la vue change"""
+        self.ui_manager.enable()
 
-    def on_draw(self):
-        """ Render the screen. """
-        # Clear the screen
-        self.clear()
-        arcade.draw_text("Game over !", self.window.width / 2, self.window.height / 2,
-                         arcade.color.WHITE, font_size=50, anchor_x="center")
+        if not (self.music_player and self.music_player.playing):
+            self.music = arcade.Sound(MUSIC_PATH)
+            self.music_player = self.music.play(volume=1, loop=True)
