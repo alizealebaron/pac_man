@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/05 09:54:33 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/08 13:41:13 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -19,6 +19,7 @@ from src.view.game_view import GameView
 from src.view.scoreboard_view import ScoreboardView
 from src.view.settings_view import SettingsView
 from src.view.personnality.personnality_view import PersonnalityView
+from src.view.credits_view import CreditsView
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -62,6 +63,7 @@ class MenuView(arcade.View):
         self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         self.rank_0 = arcade.load_texture("assets/rank/rank_0.png")
         self.amogus = arcade.load_texture("assets/sprite/undefined/Normal.png")
+        self.credit = arcade.load_texture("assets/button/credits.png")
 
         # Initialisation des fonts
         arcade.load_font(MAIN_FONT_PATH)
@@ -169,7 +171,7 @@ class MenuView(arcade.View):
         )
 
         # Affichage des boutons du menu
-        for nom, data in self.boutons.items():
+        for _, data in self.boutons.items():
             x, y = data["pos"]
             arcade.draw_texture_rect(
                 texture=data["texture"],
@@ -208,8 +210,28 @@ class MenuView(arcade.View):
                              sprite_height)
         )
 
+        sprite_height = 100
+        sprite_width = 200
+        # Affichage de l'encadré en haut à droite
+        arcade.draw_texture_rect(
+            texture=self.credit,
+            rect=arcade.XYWH(self.width - (sprite_width / 2) + 35,
+                             self.height - (sprite_height / 2) + 5,
+                             sprite_width,
+                             sprite_height)
+        )
+
+        credit_txt = arcade.Text("Credits",
+                                 self.width - (sprite_width) - 10,
+                                 self.height - (sprite_height / 2),
+                                 color=arcade.color.BLACK,
+                                 font_size=15,
+                                 font_name="FOT-Humming Pro",
+                                 bold=True)
+        credit_txt.draw()
+
     def on_mouse_press(self, x, y, button, modifiers):
-        # La détection s'adapte aussi aux dimensions proportionnelles
+
         for nom, data in self.boutons.items():
             bx, by = data["pos"]
 
@@ -219,11 +241,16 @@ class MenuView(arcade.View):
                 data["action"]()
                 break
 
+        volume = self.window.manager.settings.volume
         if (x > 1670 and x < 1720 and y > 110 and y < 155):
             self.music.stop(self.music_player)
             self.music = arcade.Sound("assets/music/easter_egg.mp3",
                                       streaming=True)
-            self.music_player = self.music.play(volume=1, loop=True)
+            self.music_player = self.music.play(volume=volume, loop=True)
+
+        if (x > 1700 and x < 1920 and y > 1015 and y < 1075):
+            self.music.stop(self.music_player)
+            self.window.show_view(CreditsView(self.window))
 
     # +---------------------------------------------------------------------+
     # |                           Custom Methods                            |

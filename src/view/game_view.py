@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/06 17:33:30 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/08 12:14:23 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -20,7 +20,6 @@ from src.view.maze_renderer import MazeRenderer
 from src.managers.collectible_manager import CollectibleManager
 from src.view.save_score.win_view import WinView
 from src.view.save_score.gameover_view import GameoverView
-from src.view.pause_view import PauseView
 from src.pacmanManager import PacmanManager
 
 # +-------------------------------------------------------------------------+
@@ -213,17 +212,6 @@ class GameView(arcade.View):
 
             self.window.set_mouse_visible(True)
 
-            # Affichage d'un léger gris pour atténuer le fond
-            # arcade.draw_texture_rect(
-            #     texture=self.fond_gris,
-            #     rect=arcade.XYWH(
-            #         self.window.width / 2,
-            #         self.window.height / 2,
-            #         self.window.width,
-            #         self.window.height
-            #     )
-            # )
-
             ecran_rect = arcade.rect.Rect(
                 left=0,
                 right=self.window.width,
@@ -303,6 +291,8 @@ class GameView(arcade.View):
         self.manager.player.sprite.on_update(delta_time)
         self.enemy_manager.on_update(delta_time)
 
+        self.check_enemy_collisions()
+
     def on_show_view(self):
         """Appelé quand la vue change"""
         volume = self.window.manager.settings.volume
@@ -312,8 +302,24 @@ class GameView(arcade.View):
             self.music_player = self.music.play(volume=volume, loop=True)
 
     # +---------------------------------------------------------------------+
-    # |                 Methods for recovering collectibles                 |
+    # |                        Methods for collisions                       |
     # +---------------------------------------------------------------------+
+
+    def check_enemy_collisions(self):
+
+        lst_collisions = []
+
+        for player in self.player_sprites:
+
+            ennemy = self.enemy_manager.enemies_sprite
+            lst_collisions += arcade.check_for_collision_with_list(player,
+                                                                   ennemy)
+
+        if (lst_collisions):
+            pass
+            # TODO: Consequence d'être touché
+            # self.manager.player.nb_life -= 1
+            # self.manager.reset_player_position()
 
     def get_collectibles(self):
 
@@ -535,7 +541,7 @@ class GameView(arcade.View):
                                  font_name="Comic Sans MS",
                                  anchor_x="center",
                                  anchor_y="center")
-        
+    
         time_text = arcade.Text(f"Time: {int(self.timer)} second(s)",
                                  self.window.width - width / 2 - 20,
                                  self.window.height - 105,
@@ -544,6 +550,6 @@ class GameView(arcade.View):
                                  font_name="Comic Sans MS",
                                  anchor_x="center",
                                  anchor_y="center")
-        
+
         level_text.draw()
         time_text.draw()
