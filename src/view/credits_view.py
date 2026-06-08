@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/08 13:19:29 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/08 16:30:33 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/08 21:54:27 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -22,7 +22,7 @@ import arcade
 
 
 BACKGROUND_PATH = "assets/background/credits_background.png"
-MUSIC_PATH = "assets/music/mainMenu_theme.mp3"
+MUSIC_PATH = "assets/music/credits_theme.mp3"
 
 
 # +-------------------------------------------------------------------------+
@@ -42,7 +42,7 @@ class CreditsView(arcade.View):
 
         self.background = arcade.load_texture(BACKGROUND_PATH)
         self.retour_sprite = arcade.load_texture("assets/button/retour.png")
-        self.settings_sprite = arcade.load_texture("assets/menu/settings.png")
+        self.settings_sprite = arcade.load_texture("assets/menu/credits.png")
 
         # Instanciation des liste de crédits
         self.lst_artist = ["CHUNSOFT", "Emmuffin", "G〜", "FrivolousAqua",
@@ -100,37 +100,152 @@ class CreditsView(arcade.View):
             rect=arcade.XYWH(
                 x=self.window.width / 2 + 20,
                 y=self.window.height / 2,
-                width=1400,
-                height=1000
+                width=1500,
+                height=1050
             )
         )
 
         sprite_title = "Sprite & Animations"
-        player_name = arcade.Text(sprite_title,
-                                  self.window.width / 2,
-                                  self.window.height * 0.8,
-                                  color=arcade.color.BLACK,
-                                  font_size=18,
-                                  font_name="FOT-Humming Pro",
-                                  bold=True,
-                                  anchor_x="center",
-                                  anchor_y="center")
-        player_name.draw()
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.8,
+                                    color=arcade.color.BLACK,
+                                    font_size=18,
+                                    font_name="FOT-Humming Pro",
+                                    bold=True,
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
 
-        i = 1
-        for artist in self.lst_artist:
-            start_y = (self.window.height * 0.8 - (50 * i))
+        nb_colonnes = 4
+        espacement_x = self.window.width / (nb_colonnes + 1)
+        espacement_y = 50
+        y_initial = self.window.height * 0.8 - 75
 
+        for index, artist in enumerate(self.lst_artist):
+            # Calcul de la colonne et de la ligne
+            colonne = index % nb_colonnes
+            ligne = index // nb_colonnes
+
+            # Calcul des coordonnées X et Y
+            start_x = (colonne + 1) * espacement_x
+            start_y = y_initial - (ligne * espacement_y)
+
+            # Affichage du texte
             player_name = arcade.Text(artist,
-                                      self.window.width / 2,
-                                      start_y,
-                                      color=arcade.color.BLACK,
-                                      font_size=15,
-                                      font_name="FOT-Humming Pro",
-                                      anchor_x="center",
-                                      anchor_y="center")
+                                    start_x,
+                                    start_y,
+                                    color=arcade.color.BLACK,
+                                    font_size=12,
+                                    font_name="FOT-Humming Pro",
+                                    anchor_x="center",
+                                    anchor_y="center")
             player_name.draw()
-            i += 1
+
+        sprite_title = "Musiques"
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.48,
+                                    color=arcade.color.BLACK,
+                                    font_size=18,
+                                    font_name="FOT-Humming Pro",
+                                    bold=True,
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
+
+        sprite_title = ("Pokémon Donjon mystère : Équipe de Secours DX"
+                        " (Compositeur: Keisuke Ito)")
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.48 - 50,
+                                    color=arcade.color.BLACK,
+                                    font_size=12,
+                                    font_name="FOT-Humming Pro",
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
+
+        sprite_title = "Assets"
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.38,
+                                    color=arcade.color.BLACK,
+                                    font_size=18,
+                                    font_name="FOT-Humming Pro",
+                                    bold=True,
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
+
+        sprite_title = ("Pokémon Donjon mystère : Équipe de Secours DX"
+                        " (Développeur: Spike Chunsoft)")
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.38 - 50,
+                                    color=arcade.color.BLACK,
+                                    font_size=12,
+                                    font_name="FOT-Humming Pro",
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
+
+        sprite_title = ("Pokémon Donjon mystère : Équipe de Secours bleu & rouge"
+                        " (Développeur: Chunsoft)")
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.38 - 100,
+                                    color=arcade.color.BLACK,
+                                    font_size=12,
+                                    font_name="FOT-Humming Pro",
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
+
+        sprite_title = "Disclaimer"
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.23,
+                                    color=arcade.color.BLACK,
+                                    font_size=18,
+                                    font_name="FOT-Humming Pro",
+                                    bold=True,
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
+
+        sprite_title = ("Ce jeu est un fangame crée dans le cadre d'un projet scolaire.")
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.23 - 50,
+                                    color=arcade.color.BLACK,
+                                    font_size=12,
+                                    font_name="FOT-Humming Pro",
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
+
+        sprite_title = ("Pokémon appartient à Nintendo, Game Freak et Creatures.")
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.23 - 100,
+                                    color=arcade.color.BLACK,
+                                    font_size=12,
+                                    font_name="FOT-Humming Pro",
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
+
+        sprite_title = ("Merci de supporter les oeuvres officielles.")
+        artiste_title = arcade.Text(sprite_title,
+                                    self.window.width / 2,
+                                    self.window.height * 0.23 - 150,
+                                    color=arcade.color.BLACK,
+                                    font_size=12,
+                                    font_name="FOT-Humming Pro",
+                                    anchor_x="center",
+                                    anchor_y="center")
+        artiste_title.draw()
 
     def on_mouse_press(self, x, y, _, __):
 
