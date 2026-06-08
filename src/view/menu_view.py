@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/08 13:41:13 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/08 16:09:04 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -232,7 +232,7 @@ class MenuView(arcade.View):
 
     def on_mouse_press(self, x, y, button, modifiers):
 
-        for nom, data in self.boutons.items():
+        for _, data in self.boutons.items():
             bx, by = data["pos"]
 
             if (bx - self.btn_width / 2 < x < bx + self.btn_width / 2 and

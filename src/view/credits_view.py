@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/08 13:19:29 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/08 13:40:37 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/08 16:30:33 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -42,6 +42,14 @@ class CreditsView(arcade.View):
 
         self.background = arcade.load_texture(BACKGROUND_PATH)
         self.retour_sprite = arcade.load_texture("assets/button/retour.png")
+        self.settings_sprite = arcade.load_texture("assets/menu/settings.png")
+
+        # Instanciation des liste de crédits
+        self.lst_artist = ["CHUNSOFT", "Emmuffin", "G〜", "FrivolousAqua",
+                           "baronessfaron", "chime", "anomalocaris", "Uni",
+                           "Emboarger", "Angels-Snack", "Morei", "ShyStarryRain",
+                           "Ichor", "Frostdrop1", "Caitemis", "JFain",
+                           "NickOnimura", "NeroIntruder"]
 
         # Initialisation de la musique
         self.music_player = None
@@ -85,6 +93,44 @@ class CreditsView(arcade.View):
                 height
             )
         )
+
+        # Affichage du fond des settings
+        arcade.draw_texture_rect(
+            texture=self.settings_sprite,
+            rect=arcade.XYWH(
+                x=self.window.width / 2 + 20,
+                y=self.window.height / 2,
+                width=1400,
+                height=1000
+            )
+        )
+
+        sprite_title = "Sprite & Animations"
+        player_name = arcade.Text(sprite_title,
+                                  self.window.width / 2,
+                                  self.window.height * 0.8,
+                                  color=arcade.color.BLACK,
+                                  font_size=18,
+                                  font_name="FOT-Humming Pro",
+                                  bold=True,
+                                  anchor_x="center",
+                                  anchor_y="center")
+        player_name.draw()
+
+        i = 1
+        for artist in self.lst_artist:
+            start_y = (self.window.height * 0.8 - (50 * i))
+
+            player_name = arcade.Text(artist,
+                                      self.window.width / 2,
+                                      start_y,
+                                      color=arcade.color.BLACK,
+                                      font_size=15,
+                                      font_name="FOT-Humming Pro",
+                                      anchor_x="center",
+                                      anchor_y="center")
+            player_name.draw()
+            i += 1
 
     def on_mouse_press(self, x, y, _, __):
 
