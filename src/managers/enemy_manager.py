@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/09 09:05:40 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/09 09:31:25 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -59,14 +59,11 @@ class EnemyManager:
     def _create_enemies(self) -> list[EnemyModel]:
 
         enemies = []
-        # width = self.level.maze._width
-        height = self.level.maze._height
-        # enemies_infos = [(blinky, 0, 0), (clyde, 0, height - 1), (inky, width - 1, 0), (pinky, width - 1, height - 1)]
-        enemies_infos = [(blinky, 0, 0), (clyde, 0, height - 1)]
+        enemies_infos = [blinky, clyde]
 
         for info in enemies_infos:
-            mon, x, y = info
-            enemy = EnemyModel(mon, x, y, self.level.maze.maze, self.player)
+            mon = info
+            enemy = EnemyModel(mon, self.level.maze.maze, self.player)
             enemies.append(enemy)
         return enemies
 
