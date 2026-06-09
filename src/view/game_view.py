@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 08:34:10 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 08:48:16 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -128,7 +128,6 @@ class GameView(arcade.View):
                                                   "Normal.png")
         self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         self.scroll_texture = arcade.load_texture(SCROLL_PATH)
-        # self.fond_gris = arcade.load_texture("assets/background/test_gris.png")
 
     def init_btn_layout(self):
 
@@ -169,6 +168,7 @@ class GameView(arcade.View):
 
         @btn_exit.event("on_click")
         def on_click_exit_button(event):
+            self.manager.reset_game()
             self.window.show_view(self.window.start_view)
 
     # +---------------------------------------------------------------------+
@@ -545,13 +545,13 @@ class GameView(arcade.View):
                                  anchor_y="center")
     
         time_text = arcade.Text(f"Time: {int(self.timer)} second(s)",
-                                 self.window.width - width / 2 - 20,
-                                 self.window.height - 105,
-                                 color=arcade.color.BLACK,
-                                 font_size=15,
-                                 font_name="Comic Sans MS",
-                                 anchor_x="center",
-                                 anchor_y="center")
+                                self.window.width - width / 2 - 20,
+                                self.window.height - 105,
+                                color=arcade.color.BLACK,
+                                font_size=15,
+                                font_name="Comic Sans MS",
+                                anchor_x="center",
+                                anchor_y="center")
 
         level_text.draw()
         time_text.draw()
