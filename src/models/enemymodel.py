@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/09 09:05:11 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/09 09:33:27 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -48,12 +48,12 @@ class EnemyModel:
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, mon: str, x: int, y: int, maze: list[list[int]], player: PlayerModel):
+    def __init__(self, mon: str, maze: list[list[int]], player: PlayerModel):
 
         self.mon = mon
-        self.start_pos = (x, y)
-        self.x = x
-        self.y = y
+        self.maze = self._rev_maze(maze)
+        self.start_pos = self._get_start_pos()
+        self.x, self.y = self.start_pos
         self.player = player
 
         enemy_data = self._get_enemy_data(mon)
@@ -62,7 +62,6 @@ class EnemyModel:
         self.sprite = AnimatedSprite(mon, enemy_data.width, enemy_data.height, enemy_data.nb_anim, is_enemy=True)
         self.sprite.center_x = self.x
         self.sprite.center_y = self.y
-        self.maze = self._rev_maze(maze)
         self.algo = self._asign_algo()
         self.current_direction = None
         self.last_direction = None
@@ -79,7 +78,7 @@ class EnemyModel:
         self.current_direction = None
         self.last_direction = None
         self.maze = self._rev_maze(maze)
-        x, y = self.start_pos
+        x, y = self._get_start_pos()
         self.x = x
         self.y = y
         self.pixel_offset_x = 0
@@ -263,3 +262,14 @@ class EnemyModel:
                 return 10
             case 'Misdreavus':
                 return 10
+
+    def _get_start_pos(self) -> Tuple[int]:
+        match self.mon:
+            case 'Drifloon':
+                return (0, 0)
+            case 'Duskull':
+                return (0, len(self.maze) - 1)
+            case 'Haunter':
+                return (len(len(self.maze)) - 1, 0)
+            case 'Misdreavus':
+                return (len(len(self.maze)) - 1, len(self.maze) - 1)
