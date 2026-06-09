@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/08 12:06:15 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 10:42:20 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -48,13 +48,13 @@ class PacmanManager():
 
         # Récupération de la config
         self.config: ConfigModel = ConfigLoader.load_config(arg.config_file)
+        self.config.lives += 1
 
         # Récupérations des datas de pokémons
         self.pokemons = self.retrieve_pokemon_data_from_json()
 
         # Génération aléatoire du joueur
         self.player = PlayerModel(self.config, self.pokemons)
-
 
         # Generation des maps et stockage dans une liste
         self.level: list[Level] = self.create_maps(self.config.level)
@@ -82,11 +82,6 @@ class PacmanManager():
         self.actual_level = 0
         self.player.score = 0
         self.player.nb_life = self.config.lives
-        self.player.direction = None
-        self.player.next_direction = None
-        self.player.sprite.current_direction = "down"
-
-    def reset_player_position(self):
         self.player.direction = None
         self.player.next_direction = None
         self.player.sprite.current_direction = "down"

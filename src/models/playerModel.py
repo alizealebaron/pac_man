@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/02 13:51:45 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 10:34:26 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,6 @@
 
 
 import random
-import arcade
 from typing import List
 from src.models.configmodel import ConfigModel
 from src.models.pokemonModel import PokemonModel
@@ -45,7 +44,22 @@ class PlayerModel():
         self.next_direction = None
         self.nb_life = config.lives
         self.score = 0
-        self.sprite = AnimatedSprite(self.pokemon.name, self.pokemon.width, self.pokemon.height, self.pokemon.nb_anim)
+        self.sprite = AnimatedSprite(self.pokemon.name, self.pokemon.width,
+                                     self.pokemon.height, self.pokemon.nb_anim)
+
+    # +---------------------------------------------------------------------+
+    # |                                Init                                 |
+    # +---------------------------------------------------------------------+
+
+    def reset_position(self):
+
+        self.x = 0
+        self.y = 0
+        self.pixel_offset_x = 0.0
+        self.pixel_offset_y = 0.0
+        self.direction = None
+        self.next_direction = None
+        self.sprite.current_direction = "down"
 
     # +---------------------------------------------------------------------+
     # |                              Methods                                |
