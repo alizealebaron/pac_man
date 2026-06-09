@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 10:46:18 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 13:42:49 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -78,12 +78,14 @@ class PacmanManager():
     # +---------------------------------------------------------------------+
 
     def reset_game(self):
+
         self.actual_level = 0
         self.player.score = 0
         self.player.nb_life = self.config.lives
-        self.player.direction = None
-        self.player.next_direction = None
-        self.player.sprite.current_direction = "down"
+        self.actual_level = 0
+        self.current_level = self.level[self.actual_level]
+        self.reset_player_position()
+        self.enemy_manager.set_current_level(self.current_level)
 
     def update_new_level(self):
         self.actual_level += 1
