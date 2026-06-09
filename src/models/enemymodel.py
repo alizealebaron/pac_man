@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/06 17:33:07 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/08 17:41:59 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,6 +15,7 @@ import json
 from typing import Tuple
 from src.models.animated_sprite import AnimatedSprite
 from src.models.enemydatamodel import EnemyDataModel
+from src.models.playerModel import PlayerModel
 
 SPEED = 1
 TRANSITION_DISTANCE = 64
@@ -28,11 +29,12 @@ OPPOSITES = {
 }
 
 class EnemyModel:
-    def __init__(self, mon: str, x: int, y: int, maze: list[list[int]]):
+    def __init__(self, mon: str, x: int, y: int, maze: list[list[int]], player: PlayerModel):
         self.mon = mon
         self.start_pos = (x, y)
         self.x = x
         self.y = y
+        self.player = player
 
         enemy_data = self._get_enemy_data(mon)
 
@@ -87,7 +89,7 @@ class EnemyModel:
             case 'Drifloon':
                 return 'random'
             case 'Duskull':
-                return 'random'
+                return 'behind'
             case 'Haunter':
                 return 'random'
             case 'Misdreavus':
@@ -100,6 +102,8 @@ class EnemyModel:
         match self.algo:
             case 'random':
                 return self._random_move()
+            case 'behind':
+                return self._behind_move()
             case _:
                 return (0, 0)
 
@@ -117,6 +121,31 @@ class EnemyModel:
                 possible_dir = filtered_dir
 
         return self._direction_to_velocity(random.choice(possible_dir))
+
+    def _behind_move(self) -> Tuple[int]:
+        possible_dir = self._get_direction()
+        min_dist = None
+
+        for direction in possible_dir:
+            match direction:
+                case 'up':
+                    distance = abs(self.x - self.player.x) + abs((self.y + 1) - self.player.y)
+                case 'right':
+                    distance = abs((self.x + 1) - self.player.x) + abs(self.y - self.player.y)
+                case 'down':
+                    distance = abs(self.x - self.player.x) + abs((self.y - 1) - self.player.y)
+                case 'left':
+                    distance = abs((self.x - 1) - self.player.x) + abs(self.y - self.player.y)
+
+            if min_dist is None:
+                min_dist = distance
+                next_direction = direction
+
+            if distance < min_dist:
+                min_dist = distance
+                next_direction = direction
+
+        return self._direction_to_velocity(next_direction)
 
     def _get_direction(self) -> list[str]:
         possible_dir = []
@@ -146,7 +175,7 @@ class EnemyModel:
                 return (-1, 0)
             case _:
                 return (0, 0)
-            
+
 
     def _velocity_to_direction(self, velocity: Tuple[int]) -> Tuple[int]:
         match velocity:
