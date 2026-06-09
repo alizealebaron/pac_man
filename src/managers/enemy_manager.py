@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/09 09:31:25 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/09 13:00:50 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -59,7 +59,7 @@ class EnemyManager:
     def _create_enemies(self) -> list[EnemyModel]:
 
         enemies = []
-        enemies_infos = [blinky, clyde]
+        enemies_infos = [blinky, clyde, inky]
 
         for info in enemies_infos:
             mon = info
