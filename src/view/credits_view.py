@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/08 13:19:29 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/08 21:54:27 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 08:24:11 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -145,7 +145,7 @@ class CreditsView(arcade.View):
         sprite_title = "Musiques"
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.48,
+                                    self.window.height * 0.49,
                                     color=arcade.color.BLACK,
                                     font_size=18,
                                     font_name="FOT-Humming Pro",
@@ -158,7 +158,7 @@ class CreditsView(arcade.View):
                         " (Compositeur: Keisuke Ito)")
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.48 - 50,
+                                    self.window.height * 0.49 - 50,
                                     color=arcade.color.BLACK,
                                     font_size=12,
                                     font_name="FOT-Humming Pro",
@@ -169,7 +169,7 @@ class CreditsView(arcade.View):
         sprite_title = "Assets"
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.38,
+                                    self.window.height * 0.39,
                                     color=arcade.color.BLACK,
                                     font_size=18,
                                     font_name="FOT-Humming Pro",
@@ -182,7 +182,7 @@ class CreditsView(arcade.View):
                         " (Développeur: Spike Chunsoft)")
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.38 - 50,
+                                    self.window.height * 0.39 - 50,
                                     color=arcade.color.BLACK,
                                     font_size=12,
                                     font_name="FOT-Humming Pro",
@@ -190,11 +190,11 @@ class CreditsView(arcade.View):
                                     anchor_y="center")
         artiste_title.draw()
 
-        sprite_title = ("Pokémon Donjon mystère : Équipe de Secours bleu & rouge"
-                        " (Développeur: Chunsoft)")
+        sprite_title = ("Pokémon Donjon mystère : Équipe de Secours bleu "
+                        " & rouge (Développeur: Chunsoft)")
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.38 - 100,
+                                    self.window.height * 0.39 - 100,
                                     color=arcade.color.BLACK,
                                     font_size=12,
                                     font_name="FOT-Humming Pro",
@@ -205,7 +205,7 @@ class CreditsView(arcade.View):
         sprite_title = "Disclaimer"
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.23,
+                                    self.window.height * 0.24,
                                     color=arcade.color.BLACK,
                                     font_size=18,
                                     font_name="FOT-Humming Pro",
@@ -217,7 +217,7 @@ class CreditsView(arcade.View):
         sprite_title = ("Ce jeu est un fangame crée dans le cadre d'un projet scolaire.")
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.23 - 50,
+                                    self.window.height * 0.24 - 50,
                                     color=arcade.color.BLACK,
                                     font_size=12,
                                     font_name="FOT-Humming Pro",
@@ -225,10 +225,11 @@ class CreditsView(arcade.View):
                                     anchor_y="center")
         artiste_title.draw()
 
-        sprite_title = ("Pokémon appartient à Nintendo, Game Freak et Creatures.")
+        sprite_title = ("Pokémon appartient à Nintendo, Game Freak, Creatures "
+                        "et The Pokemon Compagny.")
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.23 - 100,
+                                    self.window.height * 0.24 - 100,
                                     color=arcade.color.BLACK,
                                     font_size=12,
                                     font_name="FOT-Humming Pro",
@@ -239,7 +240,7 @@ class CreditsView(arcade.View):
         sprite_title = ("Merci de supporter les oeuvres officielles.")
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
-                                    self.window.height * 0.23 - 150,
+                                    self.window.height * 0.24 - 150,
                                     color=arcade.color.BLACK,
                                     font_size=12,
                                     font_name="FOT-Humming Pro",
