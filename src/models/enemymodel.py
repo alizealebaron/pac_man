@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/09 10:49:17 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 13:25:43 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -132,7 +132,7 @@ class EnemyModel:
             case 'Duskull':
                 return 'behind'
             case 'Haunter':
-                return 'random'
+                return 'bfs'
             case 'Misdreavus':
                 return 'random'
             case _:
@@ -144,11 +144,13 @@ class EnemyModel:
                 return self._random_move()
             case 'behind':
                 return self._behind_move()
+            case 'bfs':
+                return self._in_front_move()
             case _:
                 return (0, 0)
 
     def _random_move(self) -> Tuple[int]:
-        possible_dir = self._get_direction()
+        possible_dir = self._get_direction(self.x, self.y)
 
         if self.last_direction:
             opposite = OPPOSITES.get(self.last_direction)
@@ -163,7 +165,7 @@ class EnemyModel:
         return self._direction_to_velocity(random.choice(possible_dir))
 
     def _behind_move(self) -> Tuple[int]:
-        possible_dir = self._get_direction()
+        possible_dir = self._get_direction(self.x, self.y)
         min_dist = None
 
         for direction in possible_dir:
@@ -187,15 +189,69 @@ class EnemyModel:
 
         return self._direction_to_velocity(next_direction)
 
-    def _get_direction(self) -> list[str]:
+    def _in_front_move(self) -> Tuple[int]:
+        parent = self._bfs_algo()
+
+        if parent is None:
+            return (0, 0)
+
+        node = (self.player.x, self.player.y)
+        while parent[node] != (self.x, self.y):
+            node = parent[node]
+
+        if node == (self.x, self.y + 1):
+            return self._direction_to_velocity('up')
+        if node == (self.x + 1, self.y):
+            return self._direction_to_velocity('right')
+        if node == (self.x, self.y - 1):
+            return self._direction_to_velocity('down')
+        if node == (self.x - 1, self.y):
+            return self._direction_to_velocity('left')
+
+        return (0, 0)
+
+    def _bfs_algo(self):
+        visited = set()
+        queue = [(self.x, self.y)]
+        parent = {}
+
+        while len(queue) > 0:
+            current = queue.pop(0)
+            visited.add(current)
+
+            possible_dir = self._get_direction(current[0], current[1])
+            neighbor = []
+            for dir in possible_dir:
+                x, y = current
+                match dir:
+                    case 'up':
+                        neighbor.append((x, y + 1))
+                    case 'right':
+                        neighbor.append((x + 1, y))
+                    case 'down':
+                        neighbor.append((x, y - 1))
+                    case 'left':
+                        neighbor.append((x - 1, y))
+
+            for n in neighbor:
+                if n not in visited:
+                    visited.add(n)
+                    parent[n] = current
+                    if n == (self.player.x, self.player.y):
+                        return parent
+                    queue.append(n)
+
+        return None
+
+    def _get_direction(self, x: int, y: int) -> list[str]:
         possible_dir = []
-        if not self.maze[self.y][self.x] & 1:
+        if not self.maze[y][x] & 1:
             possible_dir.append('up')
-        if not self.maze[self.y][self.x] & 2:
+        if not self.maze[y][x] & 2:
             possible_dir.append('right')
-        if not self.maze[self.y][self.x] & 4:
+        if not self.maze[y][x] & 4:
             possible_dir.append('down')
-        if not self.maze[self.y][self.x] & 8:
+        if not self.maze[y][x] & 8:
             possible_dir.append('left')
         return possible_dir
 
@@ -274,6 +330,6 @@ class EnemyModel:
             case 'Duskull':
                 return (0, len(self.maze) - 1)
             case 'Haunter':
-                return (len(len(self.maze)) - 1, 0)
+                return (len(self.maze[0]) - 1, 0)
             case 'Misdreavus':
-                return (len(len(self.maze)) - 1, len(self.maze) - 1)
+                return (len(self.maze[0]) - 1, len(self.maze) - 1)
