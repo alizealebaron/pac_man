@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/08 12:14:23 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 08:34:10 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -64,6 +64,8 @@ class GameView(arcade.View):
         # Récupération du labyrinthe et du manager
         self.manager = manager
         self.enemy_manager = manager.enemy_manager
+        self.enemy_manager.set_current_level(self.manager.current_level)
+
         num_level = self.manager.actual_level
         self.current_maze = self.manager.level[num_level].maze.maze
 

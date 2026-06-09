@@ -6,15 +6,24 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/06 17:33:07 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/09 08:41:48 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
+
+# +-------------------------------------------------------------------------+
+# |                                 Import                                  |
+# +-------------------------------------------------------------------------+
 
 import random
 import json
 from typing import Tuple
 from src.models.animated_sprite import AnimatedSprite
 from src.models.enemydatamodel import EnemyDataModel
+
+# +-------------------------------------------------------------------------+
+# |                                 CONST                                   |
+# +-------------------------------------------------------------------------+
+
 
 SPEED = 1
 TRANSITION_DISTANCE = 64
@@ -27,8 +36,19 @@ OPPOSITES = {
     'left': 'right'
 }
 
+
+# +-------------------------------------------------------------------------+
+# |                                 Classe                                  |
+# +-------------------------------------------------------------------------+
+
 class EnemyModel:
+
+    # +---------------------------------------------------------------------+
+    # |                                Init                                 |
+    # +---------------------------------------------------------------------+
+
     def __init__(self, mon: str, x: int, y: int, maze: list[list[int]]):
+
         self.mon = mon
         self.start_pos = (x, y)
         self.x = x
@@ -47,6 +67,25 @@ class EnemyModel:
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
         self.offset_y = self._get_offset_y()
+
+    # +---------------------------------------------------------------------+
+    # |                            Reset Method                             |
+    # +---------------------------------------------------------------------+
+
+    def reset_pos_and_maze(self, maze: list[list[int]]):
+
+        self.current_direction = None
+        self.last_direction = None
+        self.maze = self._rev_maze(maze)
+        x, y = self.start_pos
+        self.x = x
+        self.y = y
+        self.pixel_offset_x = 0
+        self.pixel_offset_y = 0
+
+    # +---------------------------------------------------------------------+
+    # |                            View Method                              |
+    # +---------------------------------------------------------------------+
 
     def on_update(self, delta_time):
         if self.pixel_offset_x == 0 and self.pixel_offset_y == 0:
@@ -81,7 +120,6 @@ class EnemyModel:
 
         self.sprite.on_update(delta_time)
 
-
     def _asign_algo(self) -> str:
         match self.mon:
             case 'Drifloon':
@@ -94,7 +132,6 @@ class EnemyModel:
                 return 'random'
             case _:
                 return 'random'
-
 
     def _enemy_move(self) -> Tuple[int, int]:
         match self.algo:
@@ -146,7 +183,6 @@ class EnemyModel:
                 return (-1, 0)
             case _:
                 return (0, 0)
-            
 
     def _velocity_to_direction(self, velocity: Tuple[int]) -> Tuple[int]:
         match velocity:
@@ -160,7 +196,6 @@ class EnemyModel:
                 return 'left'
             case _:
                 return (0, 0)
-
 
     def _rev_maze(self, maze: list[list[int]]) -> list[list[int]]:
         rev_maze: list[list[int]] = []
@@ -181,7 +216,7 @@ class EnemyModel:
             raise (e)
 
         return lst_enemy
-    
+
     def _get_enemy_data(self, enemy_name: str) -> EnemyDataModel:
         enemies_data = self._retrieve_enemy_data_from_json()
         for enemy_data in enemies_data:
