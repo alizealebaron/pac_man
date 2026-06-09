@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 13:32:00 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 14:53:14 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 15:04:13 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -75,6 +75,17 @@ class CheatView(arcade.View):
                              (self.window.height) - (height / 2),
                              width,
                              height)
+        )
+
+        # Affichage du fond des settings
+        arcade.draw_texture_rect(
+            texture=self.score_sprite,
+            rect=arcade.XYWH(
+                x=self.window.width / 2 + 20,
+                y=self.window.height / 2,
+                width=1400,
+                height=1000
+            )
         )
 
     def on_mouse_press(self, x, y, _, __):

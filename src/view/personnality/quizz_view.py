@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 04:44:09 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 11:45:38 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 15:14:19 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -182,7 +182,7 @@ class QuizzView(arcade.View):
         nb_reponses = len(self.reponses)
 
         # Initialisation des positions initiales
-        center_height = self.height * 0.7
+        center_height = self.height * 0.81
         space_between = 150
 
         sprite_width = self.window.width * 0.6
