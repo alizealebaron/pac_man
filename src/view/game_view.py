@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 10:52:22 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 14:55:05 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -20,6 +20,7 @@ from src.view.maze_renderer import MazeRenderer
 from src.managers.collectible_manager import CollectibleManager
 from src.view.save_score.win_view import WinView
 from src.view.save_score.gameover_view import GameoverView
+from src.view.cheat_view import CheatView
 from src.pacmanManager import PacmanManager
 
 # +-------------------------------------------------------------------------+
@@ -128,22 +129,27 @@ class GameView(arcade.View):
                                                   "Normal.png")
         self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         self.scroll_texture = arcade.load_texture(SCROLL_PATH)
+        self.cheat_scroll = arcade.load_texture("assets/menu/small_leader"
+                                                "board.png")
 
     def init_btn_layout(self):
 
         btn_resume = arcade.gui.UIFlatButton(text="Resume", width=150)
         btn_start_new_game = arcade.gui.UIFlatButton(text="Start New Game",
                                                      width=150)
+        btn_cheat = arcade.gui.UIFlatButton(text="Cheat",
+                                            width=320)
         btn_exit = arcade.gui.UIFlatButton(text="Return to Menu", width=320)
 
         self.grid = arcade.gui.UIGridLayout(
-            column_count=2, row_count=2, horizontal_spacing=20,
+            column_count=2, row_count=3, horizontal_spacing=20,
             vertical_spacing=20
         )
 
         self.grid.add(btn_resume, column=0, row=0)
         self.grid.add(btn_start_new_game, column=1, row=0)
-        self.grid.add(btn_exit, column=0, row=1, column_span=2)
+        self.grid.add(btn_cheat, column=0, row=1, column_span=2)
+        self.grid.add(btn_exit, column=0, row=2, column_span=2)
 
         self.anchor = self.pause_manager.add(arcade.gui.UIAnchorLayout())
 
@@ -165,6 +171,10 @@ class GameView(arcade.View):
         def on_click_start_new_game_button(event):
             self.manager.reset_game()
             self.window.show_view(GameView(self.manager))
+
+        @btn_cheat.event("on_click")
+        def on_click_cheat(event):
+            self.window.show_view(CheatView(self.window, self))
 
         @btn_exit.event("on_click")
         def on_click_exit_button(event):
@@ -260,6 +270,7 @@ class GameView(arcade.View):
                 self.window.show_view(WinView(self.window))
             else:
                 self.manager.update_new_level()
+                self.manager.player.reset_position()
                 self.window.show_view(GameView(self.manager, self.music_player,
                                                self.music))
         if (self.is_finished == 2):
@@ -297,6 +308,10 @@ class GameView(arcade.View):
 
     def on_show_view(self):
         """Appelé quand la vue change"""
+
+        if (self.show_pause_menu is True):
+            self.pause_manager.enable()
+
         volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
             self.music = arcade.Sound(MUSIC_PATH,
@@ -546,7 +561,7 @@ class GameView(arcade.View):
                                  font_name="Comic Sans MS",
                                  anchor_x="center",
                                  anchor_y="center")
-    
+
         time_text = arcade.Text(f"Time: {int(self.timer)} second(s)",
                                 self.window.width - width / 2 - 20,
                                 self.window.height - 105,
