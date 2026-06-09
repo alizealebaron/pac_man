@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 08:57:31 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 09:05:21 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -62,7 +62,7 @@ class PacmanManager():
         self.current_level = self.level[self.actual_level]
 
         # Génération des ennemies
-        self.enemy_manager = EnemyManager(self.config, self.current_level)
+        self.enemy_manager = EnemyManager(self.config, self.current_level, self.player)
 
         # Récupération du scoreboard
         self.scoreboard = self.retrieve_score_from_json()
