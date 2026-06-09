@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/08 12:06:15 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 08:57:31 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -59,7 +59,6 @@ class PacmanManager():
         # Generation des maps et stockage dans une liste
         self.level: list[Level] = self.create_maps(self.config.level)
         self.actual_level = 0
-
         self.current_level = self.level[self.actual_level]
 
         # Génération des ennemies
@@ -85,6 +84,10 @@ class PacmanManager():
         self.player.direction = None
         self.player.next_direction = None
         self.player.sprite.current_direction = "down"
+
+    def update_new_level(self):
+        self.actual_level += 1
+        self.current_level = self.level[self.actual_level]
 
     def reset_player_position(self):
         self.player.direction = None

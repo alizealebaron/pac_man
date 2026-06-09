@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 08:48:16 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 08:57:52 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -259,7 +259,7 @@ class GameView(arcade.View):
                 self.window.set_mouse_visible(True)
                 self.window.show_view(WinView(self.window))
             else:
-                self.manager.actual_level += 1
+                self.manager.update_new_level()
                 self.window.show_view(GameView(self.manager, self.music_player,
                                                self.music))
         if (self.is_finished == 2):
