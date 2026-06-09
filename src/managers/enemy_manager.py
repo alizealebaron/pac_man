@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/09 09:31:25 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/09 10:46:25 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -76,6 +76,10 @@ class EnemyManager:
         self.level = current_level
         for enemy in self.enemies:
             enemy.reset_pos_and_maze(self.level.maze.maze)
+
+    def reset_enemy(self):
+        for enemy in self.enemies:
+            enemy.reset_pos()
 
     # +---------------------------------------------------------------------+
     # |                            View Method                              |

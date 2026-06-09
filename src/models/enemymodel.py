@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/09 09:33:27 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/09 10:46:31 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -78,7 +78,7 @@ class EnemyModel:
         self.current_direction = None
         self.last_direction = None
         self.maze = self._rev_maze(maze)
-        x, y = self._get_start_pos()
+        x, y = self.start_pos
         self.x = x
         self.y = y
         self.pixel_offset_x = 0
