@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 08:57:52 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 10:52:22 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -318,10 +318,12 @@ class GameView(arcade.View):
                                                                    ennemy)
 
         if (lst_collisions):
-            pass
-            # TODO: Consequence d'être touché
-            # self.manager.player.nb_life -= 1
-            # self.manager.reset_player_position()
+            self.manager.player.nb_life -= 1
+            if (self.manager.player.nb_life) == 0:
+                return
+            self.manager.player.reset_position()
+            self._player_original_pos()
+            self.enemy_manager.reset_enemy()
 
     def get_collectibles(self):
 
@@ -348,6 +350,7 @@ class GameView(arcade.View):
         return rev_maze
 
     def _player_original_pos(self):
+
         nb_columns = len(self.rev_maze[0])
         nb_lines = len(self.rev_maze)
 

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 09:05:21 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/09 10:46:18 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -48,13 +48,13 @@ class PacmanManager():
 
         # Récupération de la config
         self.config: ConfigModel = ConfigLoader.load_config(arg.config_file)
+        self.config.lives += 1
 
         # Récupérations des datas de pokémons
         self.pokemons = self.retrieve_pokemon_data_from_json()
 
         # Génération aléatoire du joueur
         self.player = PlayerModel(self.config, self.pokemons)
-
 
         # Generation des maps et stockage dans une liste
         self.level: list[Level] = self.create_maps(self.config.level)

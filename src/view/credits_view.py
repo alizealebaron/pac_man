@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/08 13:19:29 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 08:24:11 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/09 09:51:16 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -45,11 +45,11 @@ class CreditsView(arcade.View):
         self.settings_sprite = arcade.load_texture("assets/menu/credits.png")
 
         # Instanciation des liste de crédits
-        self.lst_artist = ["CHUNSOFT", "Emmuffin", "G〜", "FrivolousAqua",
+        self.lst_artist = ["CHUNSOFT", "Emmuffin", "G~", "FrivolousAqua",
                            "baronessfaron", "chime", "anomalocaris", "Uni",
-                           "Emboarger", "Angels-Snack", "Morei", "ShyStarryRain",
-                           "Ichor", "Frostdrop1", "Caitemis", "JFain",
-                           "NickOnimura", "NeroIntruder"]
+                           "Emboarger", "Angels-Snack", "Morei",
+                           "ShyStarryRain", "Ichor", "Frostdrop1", "Caitemis",
+                           "JFain", "NickOnimura", "NeroIntruder"]
 
         # Initialisation de la musique
         self.music_player = None

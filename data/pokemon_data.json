@@ -173,8 +173,8 @@
     },
     {
         "name": "Kabuto",
-        "width": 32,
-        "height": 48,
+        "width": 24,
+        "height": 24,
         "nb_anim": 4,
         "scale": 1.5,
         "comportement1": "Timide",
