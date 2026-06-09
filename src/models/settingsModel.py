@@ -34,7 +34,7 @@ class SettingsModel():
     def __init__(self):
 
         self.configuration = "QWERTY"
-        self.volume = 1
+        self.volume = 0.5
 
         self.dict_key = {
             "QWERTY": {
