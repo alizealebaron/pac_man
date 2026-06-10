@@ -166,7 +166,12 @@ class EnemyModel:
         return self._direction_to_velocity(random.choice(possible_dir))
 
     def _behind_move(self) -> Tuple[int]:
-        tx, ty = self._get_behind_player()
+        distance = abs(self.x - self.player.x) + abs(self.y - self.player.y)
+
+        if distance <= 1:
+            tx, ty = self.player.x, self.player.y
+        else:
+            tx, ty = self._get_behind_player()
         parent = self._bfs_algo(tx, ty)
 
         if parent is None:
