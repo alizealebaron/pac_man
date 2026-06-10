@@ -68,6 +68,7 @@ class EnemyModel:
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
         self.offset_y = self._get_offset_y()
+        self.is_fleeing = False
 
     # +---------------------------------------------------------------------+
     # |                            Reset Method                             |
@@ -126,6 +127,10 @@ class EnemyModel:
 
         self.sprite.on_update(delta_time)
 
+    # +---------------------------------------------------------------------+
+    # |                                Algo                                 |
+    # +---------------------------------------------------------------------+
+
     def _asign_algo(self) -> str:
         match self.mon:
             case 'Drifloon':
@@ -140,6 +145,8 @@ class EnemyModel:
                 return 'random'
 
     def _enemy_move(self) -> Tuple[int, int]:
+        if self.is_fleeing:
+            return self._escape_move()
         match self.algo:
             case 'random':
                 return self._random_move()
@@ -245,6 +252,45 @@ class EnemyModel:
                     queue.append(n)
 
         return None
+
+    def _escape_move(self) -> Tuple[int]:
+        possible_dir = self._get_direction(self.x, self.y)
+ 
+        if self.last_direction:
+            opposite = OPPOSITES.get(self.last_direction)
+            filtered_dir = [d for d in possible_dir if d != opposite]
+            if filtered_dir:
+                possible_dir = filtered_dir
+ 
+        best_dir = None
+        best_distance = -1
+ 
+        for dir in possible_dir:
+            match dir:
+                case 'up':
+                    x, y = self.x, self.y + 1
+                case 'right':
+                    x, y = self.x + 1, self.y
+                case 'down':
+                    x, y = self.x, self.y - 1
+                case 'left':
+                    x, y = self.x - 1, self.y
+ 
+            distance = abs(self.player.x - x) + abs(self.player.y - y)
+ 
+            if distance > best_distance:
+                best_dir = dir
+                best_distance = distance
+            elif distance == best_distance:
+                if random.choice([True, False]):
+                    best_dir = dir
+
+        return self._direction_to_velocity(best_dir)
+
+
+    # +---------------------------------------------------------------------+
+    # |                                Utils                                |
+    # +---------------------------------------------------------------------+
 
     def _get_behind_player(self) -> Tuple[int, int]:
         match self.player.direction:
