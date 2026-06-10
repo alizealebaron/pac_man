@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 14:55:05 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/10 18:00:27 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -134,12 +134,12 @@ class GameView(arcade.View):
 
     def init_btn_layout(self):
 
-        btn_resume = arcade.gui.UIFlatButton(text="Resume", width=150)
-        btn_start_new_game = arcade.gui.UIFlatButton(text="Start New Game",
+        btn_resume = arcade.gui.UIFlatButton(text="Retour au jeu", width=150)
+        btn_start_new_game = arcade.gui.UIFlatButton(text="Nouvelle partie",
                                                      width=150)
         btn_cheat = arcade.gui.UIFlatButton(text="Cheat",
                                             width=320)
-        btn_exit = arcade.gui.UIFlatButton(text="Return to Menu", width=320)
+        btn_exit = arcade.gui.UIFlatButton(text="Retour au menu principal", width=320)
 
         self.grid = arcade.gui.UIGridLayout(
             column_count=2, row_count=3, horizontal_spacing=20,
@@ -240,10 +240,10 @@ class GameView(arcade.View):
             # Ecriture du titre de pause
             pause_title = arcade.Text("PAUSE",
                                       self.window.width / 2,
-                                      self.height * 0.6,
+                                      self.height * 0.65,
                                       color=arcade.color.BLACK,
                                       font_size=25,
-                                      font_name="Comic Sans MS",
+                                      font_name="FOT-Humming Pro",
                                       anchor_x="center",
                                       anchor_y="center")
 
@@ -523,7 +523,7 @@ class GameView(arcade.View):
 
         sprite_size = 75
 
-        player_life = arcade.Text(f"Live(s): {self.manager.player.nb_life}",
+        player_life = arcade.Text(f"Vie(s): {self.manager.player.nb_life}",
                                   sprite_size + 25 + 20,
                                   (self.hauteur - (sprite_size / 2) - 5) - 20,
                                   color=arcade.color.WHITE,
@@ -553,7 +553,7 @@ class GameView(arcade.View):
                              height)
         )
 
-        level_text = arcade.Text(f"Floor: {self.manager.actual_level + 1}F",
+        level_text = arcade.Text(f"Étage: {self.manager.actual_level + 1}",
                                  self.window.width - width / 2 - 20,
                                  self.window.height - 70,
                                  color=arcade.color.BLACK,
@@ -562,7 +562,7 @@ class GameView(arcade.View):
                                  anchor_x="center",
                                  anchor_y="center")
 
-        time_text = arcade.Text(f"Time: {int(self.timer)} second(s)",
+        time_text = arcade.Text(f"Temps: {int(self.timer)} seconde(s)",
                                 self.window.width - width / 2 - 20,
                                 self.window.height - 105,
                                 color=arcade.color.BLACK,

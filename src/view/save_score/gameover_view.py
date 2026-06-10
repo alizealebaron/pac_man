@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 08:06:31 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 08:30:12 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/10 17:53:31 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -42,7 +42,7 @@ class GameoverView(WinView):
         self.background = arcade.load_texture(BACKGROUND_PATH)
 
         # Initialisation des infos de la view
-        self.title = "Game Over !"
+        self.title = "Vous avez perdu !"
         self.emotion = "Sad"
         pokemon = self.window.manager.player.pokemon.name
         self.profile_tex = arcade.load_texture(f"assets/sprite/pokemon/"
