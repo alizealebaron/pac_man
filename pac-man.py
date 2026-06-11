@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/18 16:14:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 11:54:17 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 15:35:55 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -30,12 +30,17 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Pacmon Mystery Dungeon"
 
+
 # +-------------------------------------------------------------------------+
 # |                                  Main                                   |
 # +-------------------------------------------------------------------------+
 
-
 def main() -> None:
+
+    """
+    Fonction principale du jeu, initialise la fenêtre et le manager, puis
+    démarre le jeu.
+    """
 
     try:
         sys.setrecursionlimit(2000)
@@ -54,8 +59,8 @@ def main() -> None:
     except KeyboardInterrupt:
         print('Program interrupt by user.', file=sys.stderr)
 
-    # except Exception as e:
-    #     print(f'Unexpected error: {e}', file=sys.stderr)
+    except Exception as e:
+        print(f'Unexpected error: {e}', file=sys.stderr)
 
 
 if __name__ == '__main__':

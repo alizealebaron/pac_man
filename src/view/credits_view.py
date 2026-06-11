@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/08 13:19:29 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 09:51:16 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 14:50:49 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -31,11 +31,31 @@ MUSIC_PATH = "assets/music/credits_theme.mp3"
 
 class CreditsView(arcade.View):
 
+    """
+    Vue des crédits, affiche les crédits du jeu.
+
+    Attributs:
+        background (arcade.Texture): Le background de la vue.
+        retour_sprite (arcade.Texture): Le sprite du bouton de retour.
+        settings_sprite (arcade.Texture): Le sprite du fond des settings.
+        lst_artist (list): La liste des artistes ayant créer les sprites.
+        music_player (arcade.SoundPlayer): Le lecteur de musique pour la
+            musique de la vue.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, window):
+
+        """
+        Initialise la vue des crédits.
+
+        Args:
+            window (arcade.Window): La fenêtre de jeu, pour pouvoir y accéder
+                depuis la vue.
+        """
 
         # Instanciation de la classe mère
         super().__init__(window)
@@ -58,16 +78,20 @@ class CreditsView(arcade.View):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_show_view(self):
-        """Appelé quand la vue change"""
+    def on_show_view(self) -> None:
+        """Appelé quand la vue est affichée."""
         volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
             self.music = arcade.Sound(MUSIC_PATH,
                                       streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
 
-    def on_draw(self):
-        """ Draw everything """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
+
         self.clear()
 
         # Affichage du background
@@ -133,13 +157,13 @@ class CreditsView(arcade.View):
 
             # Affichage du texte
             player_name = arcade.Text(artist,
-                                    start_x,
-                                    start_y,
-                                    color=arcade.color.BLACK,
-                                    font_size=12,
-                                    font_name="FOT-Humming Pro",
-                                    anchor_x="center",
-                                    anchor_y="center")
+                                      start_x,
+                                      start_y,
+                                      color=arcade.color.BLACK,
+                                      font_size=12,
+                                      font_name="FOT-Humming Pro",
+                                      anchor_x="center",
+                                      anchor_y="center")
             player_name.draw()
 
         sprite_title = "Musiques"
@@ -214,7 +238,8 @@ class CreditsView(arcade.View):
                                     anchor_y="center")
         artiste_title.draw()
 
-        sprite_title = ("Ce jeu est un fangame crée dans le cadre d'un projet scolaire.")
+        sprite_title = ("Ce jeu est un fangame crée dans le cadre d'un projet"
+                        " scolaire.")
         artiste_title = arcade.Text(sprite_title,
                                     self.window.width / 2,
                                     self.window.height * 0.24 - 50,
@@ -248,7 +273,11 @@ class CreditsView(arcade.View):
                                     anchor_y="center")
         artiste_title.draw()
 
-    def on_mouse_press(self, x, y, _, __):
+    def on_mouse_press(self, x, y, _, __) -> None:
+
+        """
+        Méthode appelée lorsque l'on clique sur la souris.
+        """
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):

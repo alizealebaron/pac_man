@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 14:35:28 by alebaron        #+#    #+#               #
-#  Updated: 2026/05/28 14:20:14 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 14:51:23 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -26,11 +26,30 @@ from src.pacmanManager import PacmanManager
 
 class MainWindow(arcade.Window):
 
+    """
+    Classe principale de la fenêtre du jeu, gère les différentes vues et le
+    manager du jeu.
+
+    Attributs:
+        manager (PacmanManager): Le manager du jeu, gère la logique du jeu et
+            les données.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, title: str, fullscreen: bool, manager: PacmanManager):
+
+        """
+        Initialise la fenêtre principale du jeu.
+
+        Args:
+            title (str): Le titre de la fenêtre.
+            fullscreen (bool): Si la fenêtre doit être en plein écran ou non.
+            manager (PacmanManager): Le manager du jeu, gère la logique du jeu
+                et les données.
+        """
 
         super().__init__(title=title, fullscreen=fullscreen)
         self.manager = manager

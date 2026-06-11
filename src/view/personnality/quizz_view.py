@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 04:44:09 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 15:14:19 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 14:21:34 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -39,11 +39,40 @@ UNSELECTED_PATH = "assets/quizz/question_unselected.png"
 
 class QuizzView(arcade.View):
 
+    """
+    Vue pour le quizz de personnalité.
+
+    Attributes:
+        window (arcade.Window): La fenêtre de jeu.
+        background (arcade.Texture): La texture de fond de la vue.
+        music_player (arcade.SoundPlayer): Le lecteur de musique pour la vue.
+        lst_questions (List[QuestionModel]): La liste des questions du quizz.
+        index_question (int): L'index de la question actuellement affichée.
+        reponses (List[ReponseModel]): La liste des réponses possibles à la
+            question actuelle.
+        selected_reponse (int): L'index de la réponse actuellement
+            sélectionnée.
+        dict_caracteres (Dict[str, int]): Un dictionnaire associant les
+            caractères à leurs scores respectifs.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, window: arcade.Window, music_player: Any, music: Any):
+
+        """
+        Initialise la vue du quizz de personnalité.
+
+        Args:
+            window (arcade.Window): La fenêtre de jeu.
+            music_player (Any): Le lecteur de musique pour la vue.
+            music (Any): La musique à jouer dans la vue.
+        """
+
+        # Appelle à la fonction d'initialisation parente
+
         super().__init__()
 
         self.window = window
@@ -69,7 +98,15 @@ class QuizzView(arcade.View):
     # |                            Init Methods                             |
     # +---------------------------------------------------------------------+
 
-    def get_dict_caracteres(self):
+    def get_dict_caracteres(self) -> dict[str, int]:
+
+        """
+        Initialise le dictionnaire des caractères avec des scores à 0.
+
+        Returns:
+            dict[str, int]: Un dictionnaire associant les caractères à leurs
+            scores respectifs, initialisés à 0.
+        """
 
         dict_carac = {}
         lst_carac = self.window.manager.data_questions.caracteres
@@ -80,6 +117,15 @@ class QuizzView(arcade.View):
         return dict_carac
 
     def random_question(self) -> List[QuestionModel]:
+
+        """
+        Mélange les questions du quizz et retourne une liste de 10 questions
+        aléatoires, avec la dernière question à la fin de la liste.
+
+        Returns:
+            List[QuestionModel]: Une liste de 10 questions aléatoires, avec la
+                dernière question à la fin de la liste.
+        """
 
         random.seed(int(time.time()))
 
@@ -96,8 +142,12 @@ class QuizzView(arcade.View):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_draw(self):
-        """ Render the screen. """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
+
         # Clear the screen
         self.clear()
 
@@ -128,14 +178,22 @@ class QuizzView(arcade.View):
         if self.index_question < len(self.lst_questions):
             self.draw_actual_question()
 
-    def on_mouse_press(self, x, y, _, __):
+    def on_mouse_press(self, x, y, _, __) -> None:
+
+        """
+        Méthode appelée lorsque l'on clique sur la souris.
+        """
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
             self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key, _) -> None:
+
+        """
+        Méthode appelée lorsque l'on appuie sur une touche du clavier.
+        """
 
         dict_key = self.window.manager.settings.dict_key
         dict_key = dict_key[self.window.manager.settings.configuration]
@@ -163,7 +221,11 @@ class QuizzView(arcade.View):
     # |                           Update Methods                            |
     # +---------------------------------------------------------------------+
 
-    def update_score(self):
+    def update_score(self) -> None:
+
+        """
+        Met à jour le score selon la réponse sélectionnée.
+        """
 
         reponse = self.reponses[self.selected_reponse]
 
@@ -174,7 +236,11 @@ class QuizzView(arcade.View):
     # |                            Draw Methods                             |
     # +---------------------------------------------------------------------+
 
-    def draw_actual_question(self):
+    def draw_actual_question(self) -> None:
+
+        """
+        Affiche la question actuelle et ses réponses.
+        """
 
         # Récupération des données
         act_q = self.lst_questions[self.index_question]
