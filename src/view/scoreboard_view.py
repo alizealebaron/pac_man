@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/23 10:58:55 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 12:01:55 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 15:06:18 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -31,11 +31,26 @@ MUSIC_PATH = "assets/music/scoreboard_theme.mp3"
 
 class ScoreboardView(arcade.View):
 
+    """
+    Vue du scoreboard, affiche les meilleurs scores du jeu.
+
+    Attributs:
+        background (arcade.Texture): Le background de la vue.
+        music_player (arcade.SoundPlayer): Le lecteur de musique pour la vue.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, window):
+
+        """
+        Initialise la vue du scoreboard.
+
+        Args:
+            window (arcade.Window): La fenêtre du jeu.
+        """
 
         # Initialisation du composant parent
         super().__init__(window)
@@ -57,16 +72,25 @@ class ScoreboardView(arcade.View):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_show_view(self):
-        """Appelé quand la vue change"""
-        volume =  self.window.manager.settings.volume
+    def on_show_view(self) -> None:
+
+        """
+        Méthode appelée lorsque la vue est affichée. Elle démarre la
+        musique de la vue.
+        """
+
+        volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
             self.music = arcade.Sound(MUSIC_PATH,
                                       streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
 
-    def on_draw(self):
-        """ Draw everything """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
+
         self.clear()
 
         # Affichage du background
@@ -104,7 +128,11 @@ class ScoreboardView(arcade.View):
         # Affichage des scores
         self.draw_big_scoreboard()
 
-    def on_mouse_press(self, x, y, _, __):
+    def on_mouse_press(self, x, y, _, __) -> None:
+
+        """
+        Méthode appelée lorsque l'on clique sur la souris.
+        """
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
@@ -115,7 +143,11 @@ class ScoreboardView(arcade.View):
     # |                            Draw Methods                             |
     # +---------------------------------------------------------------------+
 
-    def draw_big_scoreboard(self):
+    def draw_big_scoreboard(self) -> None:
+
+        """
+        Affiche les meilleurs scores du jeu, avec les pokémons et les rangs.
+        """
 
         # Tri des 3 meilleurs
         scores = sorted(self.lst_score,

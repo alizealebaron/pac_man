@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 09:57:55 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 14:44:54 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -37,11 +37,28 @@ SCROLL_PATH = "assets/menu/scroll.png"
 
 class WinView(arcade.View):
 
+    """
+    View affichée lorsque le joueur gagne la partie.
+    Attributs:
+        background (arcade.Texture): Texture de fond de la view.
+        title (str): Titre affiché sur la view.
+        emotion (str): Emotion affichée sur le portrait du pokemon.
+        profile_tex (arcade.Texture): Texture du portrait du pokemon.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, window):
+
+        """
+        Initialise la view de victoire.
+
+        Args:
+            window (arcade.Window): La fenêtre de jeu.
+
+        """
 
         # Instanciation de la classe mère
         super().__init__(window)
@@ -88,8 +105,13 @@ class WinView(arcade.View):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_show_view(self):
-        """Appelé quand la vue change"""
+    def on_show_view(self) -> None:
+
+        """
+        Méthode appelée lorsque la vue est affichée. Elle démarre la
+        musique de la vue.
+        """
+
         self.ui_manager.enable()
 
         volume = self.window.manager.settings.volume
@@ -98,12 +120,18 @@ class WinView(arcade.View):
                                       streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
 
-    def on_hide_view(self):
-        """Appelé quand on quitte la vue"""
+    def on_hide_view(self) -> None:
+
+        """Méthode appelée lorsque la vue est cachée."""
+
         self.ui_manager.disable()
 
-    def on_draw(self):
-        """ Draw everything """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
+
         self.clear()
 
         # Affichage du background
@@ -127,7 +155,11 @@ class WinView(arcade.View):
             self.draw_profile_icone()
             self.draw_choice()
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key, _) -> None:
+
+        """
+        Méthode appelée lorsque l'on appuie sur une touche du clavier.
+        """
 
         dict_key = self.window.manager.settings.dict_key
         dict_key = dict_key[self.window.manager.settings.configuration]
@@ -155,7 +187,12 @@ class WinView(arcade.View):
     # |                           Choice Methods                            |
     # +---------------------------------------------------------------------+
 
-    def save_without_name(self):
+    def save_without_name(self) -> None:
+
+        """
+        Enregistre le score du joueur sans changer son nom, puis retourne à
+        l'écran titre.
+        """
 
         score = {
             "name": self.window.manager.player.name,
@@ -171,8 +208,13 @@ class WinView(arcade.View):
         self.music.stop(self.music_player)
         self.window.show_view(self.window.start_view)
 
-    def show_name_input(self):
-        """Crée et positionne le champ de saisie du pseudo"""
+    def show_name_input(self) -> None:
+
+        """
+        Affiche une interface de saisie pour que le joueur puisse entrer un
+        nouveau nom avant d'enregistrer son score.
+        """
+
         self.show_input_ui = True
 
         # Layout pour ancrer au milieu de l'écran
@@ -220,7 +262,11 @@ class WinView(arcade.View):
     # |                            Draw Methods                             |
     # +---------------------------------------------------------------------+
 
-    def draw_input_box(self):
+    def draw_input_box(self) -> None:
+
+        """
+        Dessine l'interface de saisie du nom du joueur.
+        """
 
         arcade.draw_texture_rect(texture=self.scroll_texture,
                                  rect=arcade.XYWH(self.window.width / 2,
@@ -258,7 +304,7 @@ class WinView(arcade.View):
 
         text.draw()
 
-    def draw_title(self):
+    def draw_title(self) -> None:
 
         titre = arcade.Text(text=self.title,
                             x=self.window.width / 2,
@@ -271,7 +317,13 @@ class WinView(arcade.View):
 
         titre.draw()
 
-    def draw_choice(self):
+    def draw_choice(self) -> None:
+
+        """
+        Dessine les différentes options que le joueur peut sélectionner après
+        avoir gagné pour enregistrer son score.
+        """
+
         start_y = self.window.height * 0.20
         space_between = 150
 
@@ -310,7 +362,11 @@ class WinView(arcade.View):
 
             start_y += space_between
 
-    def draw_profile_icone(self):
+    def draw_profile_icone(self) -> None:
+
+        """
+        Dessine l'icône du profil du joueur, son nom et son score.
+        """
 
         icon_size = 100
         align_x = self.window.width * 0.30
@@ -353,7 +409,12 @@ class WinView(arcade.View):
                                    anchor_y="center")
         player_score.draw()
 
-    def draw_mid_leaderboard(self):
+    def draw_mid_leaderboard(self) -> None:
+
+        """
+        Dessine la section du milieu de la vue, qui affiche les 9 meilleurs
+        scores du classement.
+        """
 
         w = self.window.width * 0.3
         h = self.window.height * 0.7
@@ -398,8 +459,9 @@ class WinView(arcade.View):
 
             # Image du pokémon
             pokemon = player.pokemon
-            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/{pokemon}"
-                                              "/portraits/Normal.png")
+            profile_tex = arcade.load_texture(f"assets/sprite/pokemon/"
+                                              f"{pokemon}/portraits/"
+                                              "Normal.png")
             arcade.draw_texture_rect(
                 texture=profile_tex,
                 rect=arcade.XYWH(start_x + icon_size + 40, current_y,

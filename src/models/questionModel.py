@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 00:33:59 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 12:04:47 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 13:49:46 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -25,6 +25,15 @@ from pydantic import BaseModel, Field
 
 class ReponseModel(BaseModel):
 
+    """
+    Modèle de données pour les réponses d'une question.
+
+    Attributes:
+        reponse (str): Le texte de la réponse.
+        scores (Dict[str, int]): Un dictionnaire associant les personnages à
+            leurs scores respectifs pour cette réponse.
+    """
+
     # +---------------------------------------------------------------------+
     # |                             Attributs                               |
     # +---------------------------------------------------------------------+
@@ -35,6 +44,15 @@ class ReponseModel(BaseModel):
 
 class QuestionModel(BaseModel):
 
+    """
+    Modèle de données pour les questions du jeu.
+
+    Attributes:
+        texte (str): Le texte de la question.
+        reponses (List[ReponseModel]): La liste des réponses possibles à la
+            question.
+    """
+
     # +---------------------------------------------------------------------+
     # |                             Attributs                               |
     # +---------------------------------------------------------------------+
@@ -44,6 +62,15 @@ class QuestionModel(BaseModel):
 
 
 class DataQuestionsModel(BaseModel):
+
+    """
+    Modèle de données pour l'ensemble des questions du jeu.
+    Attributes:
+        caracteres (Dict[str, str]): Un dictionnaire associant les personnages
+            à leurs caractéristiques.
+        questions (Dict[str, QuestionModel]): Un dictionnaire associant les
+            identifiants de questions à leurs modèles respectifs.
+    """
 
     # +---------------------------------------------------------------------+
     # |                             Attributs                               |
