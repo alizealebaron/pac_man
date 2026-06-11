@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 13:32:00 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 09:51:19 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 10:30:01 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -96,6 +96,24 @@ class CheatView(arcade.View):
         inv_row.add(self.btn_ghost)
         self.v_box.add(inv_row)
 
+        # === Gelé les fantôme ===
+
+        inv_row = arcade.gui.UIBoxLayout(vertical=False, space_between=20)
+        inv_label = arcade.gui.UILabel(
+            text="Vitesse du joueur",
+            text_color=arcade.color.WHITE,
+            font_size=18
+        )
+        inv_row.add(inv_label)
+
+        self.btn_player_speed = arcade.gui.UIFlatButton(
+            text=f"{self.manager.player.speed}",
+            width=200
+        )
+        self.btn_player_speed.on_click = self.manage_player_speed
+        inv_row.add(self.btn_player_speed)
+        self.v_box.add(inv_row)
+
         # === Création des derniers éléments et ajouts au manager ===
 
         anchor_layout = arcade.gui.UIAnchorLayout()
@@ -131,6 +149,12 @@ class CheatView(arcade.View):
         else:
             self.btn_ghost.text = "Oui"
             self.manager.cheat.ghost_freeze = True
+
+    def manage_player_speed(self, _):
+
+        new_speed = (self.manager.player.speed % 10) + 1
+        self.btn_player_speed.text = f"{new_speed}"
+        self.manager.player.speed = new_speed
 
     # +---------------------------------------------------------------------+
     # |                            View Methods                             |
@@ -188,4 +212,10 @@ class CheatView(arcade.View):
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
+            self.window.show_view(self.game_view)
+
+    def on_key_press(self, key, modifiers):
+
+        # Afficher le menu de pause
+        if key == arcade.key.ESCAPE:
             self.window.show_view(self.game_view)

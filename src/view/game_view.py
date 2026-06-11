@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 10:06:33 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 10:19:18 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -32,7 +32,6 @@ BACKGROUND_PATH = "assets/background/game_background.png"
 MUSIC_PATH = "assets/music/game_theme.mp3"
 SCROLL_PATH = "assets/menu/scroll.png"
 
-SPEED = 5.0
 TILE_SIZE = 64
 TRANSITION_DISTANCE = 64
 
@@ -280,8 +279,8 @@ class GameView(arcade.View):
 
         vx, vy = self._player_move()
 
-        self.manager.player.pixel_offset_x += vx * SPEED
-        self.manager.player.pixel_offset_y += vy * SPEED
+        self.manager.player.pixel_offset_x += vx * self.manager.player.speed
+        self.manager.player.pixel_offset_y += vy * self.manager.player.speed
 
         if self.manager.player.pixel_offset_x >= TRANSITION_DISTANCE:
             self.manager.player.x += 1
