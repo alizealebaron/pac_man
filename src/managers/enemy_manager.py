@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 11:28:10 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 15:12:38 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -87,7 +87,8 @@ class EnemyManager:
         """
 
         enemies = []
-        enemies_infos = [blinky, clyde, inky]
+        # enemies_infos = [blinky, clyde, inky, pinky]
+        enemies_infos = [clyde]
 
         for info in enemies_infos:
             mon = info
@@ -112,6 +113,10 @@ class EnemyManager:
         for enemy in self.enemies:
             enemy.reset_pos_and_maze(self.level.maze.maze)
 
+        self.enemies_sprite.clear()
+        for enemy in self.enemies:
+            self.enemies_sprite.append(enemy.sprite)
+
     def reset_enemy(self) -> None:
         """Réinitialise les ennemis."""
         for enemy in self.enemies:
@@ -130,3 +135,11 @@ class EnemyManager:
     def draw(self) -> None:
         """Dessine les ennemis."""
         self.enemies_sprite.draw()
+
+    def get_respawning_enemies(self):
+        respawning = []
+        for enemy in self.enemies:
+            if enemy.is_dead is True:
+                respawning.append(enemy)
+
+        return respawning

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 13:47:51 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 15:40:05 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -74,6 +74,9 @@ class PlayerModel():
         self.next_direction = None
         self.nb_life = config.lives
         self.score = 0
+        self.is_super = False
+        self.time_super_max = 10
+        self.super_timer = 0.0
         self.sprite = AnimatedSprite(self.pokemon.name, self.pokemon.width,
                                      self.pokemon.height, self.pokemon.nb_anim)
         self.speed = 3.0
@@ -87,13 +90,13 @@ class PlayerModel():
         Réinitialise la position du joueur au point de départ.
         """
 
-        self.x = 0
-        self.y = 0
         self.pixel_offset_x = 0.0
         self.pixel_offset_y = 0.0
         self.direction = None
         self.next_direction = None
         self.sprite.current_direction = "down"
+        self.is_super = False
+        self.super_timer = 0.0
 
     # +---------------------------------------------------------------------+
     # |                              Methods                                |
@@ -113,7 +116,8 @@ class PlayerModel():
             PokemonModel: Un pokémon aléatoire sélectionné dans la liste.
         """
 
-        return (random.choice(lst_pokemons))
+        return (lst_pokemons[14])
+        # return (random.choice(lst_pokemons.name))
 
     def _get_random_name(self) -> str:
 
