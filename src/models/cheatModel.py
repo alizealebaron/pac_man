@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/11 08:28:59 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 08:30:34 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 12:01:13 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,11 +16,23 @@
 
 class CheatModel():
 
+    """
+    Modèle pour les cheats du jeu.
+
+    Attributes:
+        invicibility (bool): Indique si le cheat d'invincibilité est activé.
+        ghost_freeze (bool): Indique si le cheat de gel des fantômes est
+            activé.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self):
+        """
+        Initialise le modèle de cheats avec les cheats désactivés par défaut.
+        """
 
         self.invicibility = False
         self.ghost_freeze = False

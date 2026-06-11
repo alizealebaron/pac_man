@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 10:19:18 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 11:21:25 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -344,13 +344,8 @@ class GameView(arcade.View):
 
     def get_collectibles(self):
 
-        x = self.manager.player.x
-        y = self.manager.player.y
-
         p = self.collectible_manager.remove_pacgum(self.player_sprites,
-                                                   self.manager.config,
-                                                   x,
-                                                   y)
+                                                   self.manager.config)
 
         points, self.is_finished = p
         self.manager.player.score += points

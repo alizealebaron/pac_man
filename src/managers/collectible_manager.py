@@ -6,14 +6,17 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 08:30:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 08:30:02 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 11:24:28 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-
+# +-------------------------------------------------------------------------+
+# |                                 Import                                  |
+# +-------------------------------------------------------------------------+
 
 import arcade
 from src.models.configmodel import ConfigModel
+from typing import Tuple
 
 # +-------------------------------------------------------------------------+
 # |                                  CONST                                  |
@@ -30,7 +33,20 @@ TILE_SIZE = 64
 # +-------------------------------------------------------------------------+
 
 class CollectibleManager:
-    """Gère le placement et l'affichage des pacgums"""
+    """
+    Manager pour les pacgums et super pacgums.
+
+    Attributes:
+        maze (list[list[int]]): Le labyrinthe du niveau.
+        scale (float): Le facteur de mise à l'échelle pour les sprites.
+        offset_x (float): Décalage horizontal pour le positionnement des
+            sprites.
+        offset_y (float): Décalage vertical pour le positionnement des
+            sprites.
+        pg_sprites (arcade.SpriteList): Liste de sprites pour les pacgums.
+        spg_sprites (arcade.SpriteList): Liste de sprites pour les super
+            pacgums.
+    """
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
@@ -38,6 +54,20 @@ class CollectibleManager:
 
     def __init__(self, maze: list[list[int]], scale: float = 1.0,
                  offset_x: float = 0.0, offset_y: float = 0.0):
+
+        """
+        Initialise le manager de collectibles.
+
+        Args:
+            maze (list[list[int]]): Le labyrinthe du niveau.
+            scale (float, optional): Le facteur de mise à l'échelle pour les
+                sprites. Par défaut à 1.0.
+            offset_x (float, optional): Décalage horizontal pour le
+                positionnement des sprites. Par défaut à 0.0.
+            offset_y (float, optional): Décalage vertical pour le
+                positionnement des sprites. Par défaut à 0.0.
+        """
+
         self.maze = maze
         self.scale = scale
         self.offset_x = offset_x
@@ -54,6 +84,10 @@ class CollectibleManager:
     # +---------------------------------------------------------------------+
 
     def _place_collectibles(self):
+        """
+        Place les pacgums et super pacgums sur le labyrinthe en fonction
+        de la configuration du maze.
+        """
 
         nb_columns = len(self.maze[0])
         nb_lines = len(self.maze)
@@ -63,8 +97,10 @@ class CollectibleManager:
                                (nb_columns, nb_lines)]
 
         # Pas de pacgum au centre du maze
-        x_center = (nb_columns) // 2 if nb_columns % 2 == 0 else (nb_columns + 1) // 2
-        y_center = (nb_lines) // 2 + 1 if nb_lines % 2 == 0 else (nb_lines + 1) // 2
+        x_center = ((nb_columns) // 2 if nb_columns % 2 == 0 else
+                    (nb_columns + 1) // 2)
+        y_center = ((nb_lines) // 2 + 1 if nb_lines % 2 == 0 else
+                    (nb_lines + 1) // 2)
         center = (x_center, y_center)
 
         for y in range(1, nb_lines + 1):
@@ -76,10 +112,16 @@ class CollectibleManager:
                 center_y = (y - 0.5) * TILE_SIZE * self.scale + self.offset_y
 
                 if curr_coord in super_pacgum_coords:
-                    sprite = arcade.Sprite(SUPER_PACGUM_PATH, center_x=center_x, center_y=center_y, scale=self.scale)
+                    sprite = arcade.Sprite(SUPER_PACGUM_PATH,
+                                           center_x=center_x,
+                                           center_y=center_y,
+                                           scale=self.scale)
                     self.spg_sprites.append(sprite)
                 else:
-                    sprite = arcade.Sprite(PACGUM_PATH, center_x=center_x, center_y=center_y, scale=self.scale)
+                    sprite = arcade.Sprite(PACGUM_PATH,
+                                           center_x=center_x,
+                                           center_y=center_y,
+                                           scale=self.scale)
                     self.pg_sprites.append(sprite)
 
     # +---------------------------------------------------------------------+
@@ -88,9 +130,23 @@ class CollectibleManager:
 
     def remove_pacgum(self,
                       player_list: arcade.SpriteList,
-                      config: ConfigModel,
-                      x: int,
-                      y: int) -> int:
+                      config: ConfigModel) -> Tuple[int, bool]:
+
+        """
+        Vérifie les collisions entre le joueur et les collectibles,
+        les supprime si nécessaire, et retourne les points gagnés
+        et si tous les collectibles ont été collectés.
+
+        Args:
+            player_list (arcade.SpriteList): La liste de sprites du joueur.
+            config (ConfigModel): La configuration du jeu, utilisée pour
+                déterminer les points à attribuer.
+
+        Returns:
+            Tuple[int, bool]: Un tuple contenant les points gagnés et un
+            booléen indiquant si tous les collectibles ont été collectés.
+        """
+
         total_points = 0
 
         # Checking de collision
@@ -119,6 +175,6 @@ class CollectibleManager:
     # +---------------------------------------------------------------------+
 
     def draw(self):
-        """ Draw everything """
+        """Dessine les sprites des pacgums et super pacgums."""
         self.spg_sprites.draw()
         self.pg_sprites.draw()

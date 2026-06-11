@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 00:33:59 by alebaron        #+#    #+#               #
-#  Updated: 2026/05/27 13:03:31 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 12:04:47 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -26,7 +26,7 @@ from pydantic import BaseModel, Field
 class ReponseModel(BaseModel):
 
     # +---------------------------------------------------------------------+
-    # |                                Init                                 |
+    # |                             Attributs                               |
     # +---------------------------------------------------------------------+
 
     reponse: str = Field(min_length=1)
@@ -36,7 +36,7 @@ class ReponseModel(BaseModel):
 class QuestionModel(BaseModel):
 
     # +---------------------------------------------------------------------+
-    # |                                Init                                 |
+    # |                             Attributs                               |
     # +---------------------------------------------------------------------+
 
     texte: str = Field(min_length=1)
@@ -46,7 +46,7 @@ class QuestionModel(BaseModel):
 class DataQuestionsModel(BaseModel):
 
     # +---------------------------------------------------------------------+
-    # |                                Init                                 |
+    # |                             Attributs                               |
     # +---------------------------------------------------------------------+
 
     caracteres: Dict[str, str]

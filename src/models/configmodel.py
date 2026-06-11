@@ -6,28 +6,80 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 11:08:47 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 09:03:23 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 12:07:36 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
+
+# +-------------------------------------------------------------------------+
+# |                                 Import                                  |
+# +-------------------------------------------------------------------------+
 
 from pydantic import BaseModel, Field, ValidationError
 from typing import Optional, Any, Self
 import sys
 
+# +-------------------------------------------------------------------------+
+# |                                 CONST                                   |
+# +-------------------------------------------------------------------------+
+
+
 mandatory_keys: list[str] = ['highscore_filename', 'level', 'lives', 'pacgum',
                              'points_per_pacgum', 'points_per_super_pacgum',
                              'points_per_ghost', 'level_max_time', 'seed']
-
 optional_keys: list[str] = []
 
 
+# +-------------------------------------------------------------------------+
+# |                                 Classe                                  |
+# +-------------------------------------------------------------------------+
+
+
 class LevelConfig(BaseModel):
+
+    """
+    Configuration d'un niveau.
+
+    Attributes:
+        id (int): L'identifiant du niveau.
+        width (int): La largeur du labyrinthe.
+        height (int): La hauteur du labyrinthe.
+    """
+
+    # +---------------------------------------------------------------------+
+    # |                             Attributs                               |
+    # +---------------------------------------------------------------------+
+
     id: int = Field(ge=1)
     width: int = Field(ge=1, le=500, default=10)
     height: int = Field(ge=1, le=500, default=10)
 
 
 class ConfigModel(BaseModel):
+
+    """
+    Configuration globale du jeu.
+
+    Attributes:
+        highscore_filename (str): Le nom du fichier de sauvegarde des
+            scores.
+        level (list[LevelConfig]): La liste des configurations de niveaux.
+        lives (int): Le nombre de vies du joueur.
+        pacgum (int): Le nombre de pacgums dans le niveau.
+        points_per_pacgum (int): Le nombre de points gagnés par pacgum.
+        points_per_super_pacgum (int): Le nombre de points gagnés par super
+            pacgum.
+        points_per_ghost (int): Le nombre de points gagnés par fantôme
+            mangé.
+        level_max_time (int): Le temps maximum pour compléter un niveau en
+            secondes.
+        seed (Optional[int]): La graine pour la génération aléatoire du
+            jeu. Si None, une graine aléatoire sera utilisée.
+    """
+
+    # +---------------------------------------------------------------------+
+    # |                             Attributs                               |
+    # +---------------------------------------------------------------------+
+
     highscore_filename: Optional[str] = Field(default="highscores.json",
                                               min_length=1)
     level: list[LevelConfig] = Field(min_length=1, default_factory=list)
@@ -39,8 +91,23 @@ class ConfigModel(BaseModel):
     level_max_time: int = Field(ge=1, le=3600, default=90)
     seed: Optional[int] = Field(default=42)
 
+    # +---------------------------------------------------------------------+
+    # |                              Methods                                |
+    # +---------------------------------------------------------------------+
+
     @classmethod
     def build_config(cls, config: dict[str, Any]) -> Self:
+
+        """
+        Construit une instance de ConfigModel à partir d'un dictionnaire de
+        configuration, en validant les données et en utilisant les valeurs
+        par défaut en cas de données invalides.
+
+        Args:
+            config (dict[str, Any]): Le dictionnaire de configuration à
+                valider.
+        """
+
         clean: dict[str, Any] = {}
 
         for field_name, field_info in cls.model_fields.items():
@@ -56,7 +123,7 @@ class ConfigModel(BaseModel):
                 else:
                     print(
                         f"Warning: invalid value for '{field_name}': {data}"
-                        f"; using default value",file=sys.stderr)
+                        f"; using default value", file=sys.stderr)
                 continue
 
             try:
@@ -66,6 +133,6 @@ class ConfigModel(BaseModel):
                 default = field_info.default
                 print(
                     f"Warning: invalid value for '{field_name}': {data}"
-                    f"; using default ({default})",file=sys.stderr)
+                    f"; using default ({default})", file=sys.stderr)
 
         return cls(**clean)
