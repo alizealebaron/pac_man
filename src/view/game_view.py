@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/10 18:00:27 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 10:06:33 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -137,7 +137,7 @@ class GameView(arcade.View):
         btn_resume = arcade.gui.UIFlatButton(text="Retour au jeu", width=150)
         btn_start_new_game = arcade.gui.UIFlatButton(text="Nouvelle partie",
                                                      width=150)
-        btn_cheat = arcade.gui.UIFlatButton(text="Cheat",
+        btn_cheat = arcade.gui.UIFlatButton(text="Triche",
                                             width=320)
         btn_exit = arcade.gui.UIFlatButton(text="Retour au menu principal", width=320)
 
@@ -302,9 +302,12 @@ class GameView(arcade.View):
             self.get_collectibles()
 
         self.manager.player.sprite.on_update(delta_time)
-        self.enemy_manager.on_update(delta_time)
 
-        self.check_enemy_collisions()
+        if (self.manager.cheat.ghost_freeze is False):
+            self.enemy_manager.on_update(delta_time)
+
+        if (self.manager.cheat.invicibility is False and int(self.timer) != self.manager.config.level_max_time):
+            self.check_enemy_collisions()
 
     def on_show_view(self):
         """Appelé quand la vue change"""

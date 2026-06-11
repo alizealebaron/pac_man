@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 13:42:49 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 10:00:15 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -22,6 +22,7 @@ from src.models.levelModel import Level
 from src.models.questionModel import DataQuestionsModel
 from src.models.pokemonModel import PokemonModel
 from src.models.settingsModel import SettingsModel
+from src.models.cheatModel import CheatModel
 from src.managers.enemy_manager import EnemyManager
 
 # +-------------------------------------------------------------------------+
@@ -29,7 +30,6 @@ from src.managers.enemy_manager import EnemyManager
 # +-------------------------------------------------------------------------+
 
 
-SCORE_FILE = "data/score.json"
 QUESTIONS_FILE = "data/question_data.json"
 POKEMONS_FILE = "data/pokemon_data.json"
 
@@ -48,7 +48,6 @@ class PacmanManager():
 
         # Récupération de la config
         self.config: ConfigModel = ConfigLoader.load_config(arg.config_file)
-        self.config.lives += 1
 
         # Récupérations des datas de pokémons
         self.pokemons = self.retrieve_pokemon_data_from_json()
@@ -72,6 +71,9 @@ class PacmanManager():
 
         # Récupération des settings
         self.settings = SettingsModel()
+
+        # Récupération des options de triche
+        self.cheat = CheatModel()
 
     # +---------------------------------------------------------------------+
     # |                               Setters                               |
@@ -104,8 +106,9 @@ class PacmanManager():
 
         lst_score = []
 
+        score_file = self.config.highscore_filename
         try:
-            with open(SCORE_FILE, "r") as file:
+            with open(score_file, "r") as file:
                 data = json.load(file)
                 lst_score = [Score(**arg) for arg in data]
         except json.JSONDecodeError as e:
@@ -119,13 +122,15 @@ class PacmanManager():
 
         dict_data = [obj.__dict__ for obj in self.scoreboard]
 
-        with open(SCORE_FILE, "w") as f:
+        score_file = self.config.highscore_filename
+        with open(score_file, "w") as f:
             json.dump(dict_data, f, indent=2)
 
     def create_maps(self, level: list[LevelConfig]) -> list[Level]:
         level_list: list[Level] = []
         for map in level:
-            level_list.append(Level(map.id, map.width, map.height))
+            level_list.append(Level(map.id, map.width, map.height,
+                                    self.config.seed))
         return level_list
 
     def retrieve_questions_from_json(self):

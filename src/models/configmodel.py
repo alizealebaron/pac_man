@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 11:08:47 by rruiz           #+#    #+#               #
-#  Updated: 2026/05/29 09:51:00 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/11 09:03:23 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,7 @@ import sys
 
 mandatory_keys: list[str] = ['highscore_filename', 'level', 'lives', 'pacgum',
                              'points_per_pacgum', 'points_per_super_pacgum',
-                             'points_per_ghost', 'level_max_time']
+                             'points_per_ghost', 'level_max_time', 'seed']
 
 optional_keys: list[str] = []
 
@@ -37,6 +37,7 @@ class ConfigModel(BaseModel):
     points_per_super_pacgum: int = Field(ge=1, le=1000, default=50)
     points_per_ghost: int = Field(ge=1, le=1000, default=100)
     level_max_time: int = Field(ge=1, le=3600, default=90)
+    seed: Optional[int] = Field(default=42)
 
     @classmethod
     def build_config(cls, config: dict[str, Any]) -> Self:

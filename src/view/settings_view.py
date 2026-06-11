@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/23 13:56:54 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 11:55:08 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 08:09:09 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -125,6 +125,10 @@ class SettingsView(arcade.View):
             self.music = arcade.Sound(MUSIC_PATH,
                                       streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
+
+    def on_hide_view(self):
+        """Appelé quand la vue change"""
+        self.ui_manager.disable()
 
     def on_draw(self):
         """ Draw everything """
