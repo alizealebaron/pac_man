@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 13:59:35 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/11 15:16:22 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -43,12 +43,42 @@ OPPOSITES = {
 # +-------------------------------------------------------------------------+
 
 class EnemyModel:
+    """
+    Modèle pour les ennemis du jeu.
+
+    Attributes:
+        mon (str): Le nom de l'ennemi.
+        maze (list[list[int]]): Le labyrinthe du niveau.
+        start_pos (Tuple[int, int]): La position de départ de l'ennemi.
+        x (int): La position x actuelle de l'ennemi.
+        y (int): La position y actuelle de l'ennemi.
+        player (PlayerModel): Le modèle du joueur.
+        scale (float): L'échelle du sprite de l'ennemi.
+        sprite (AnimatedSprite): Le sprite animé de l'ennemi.
+        algo (str): L'algorithme de déplacement de l'ennemi.
+        current_direction (str): La direction actuelle de l'ennemi.
+        last_direction (str): La dernière direction de l'ennemi.
+        pixel_offset_x (int): Le décalage en pixels sur l'axe x pour
+            l'animation de déplacement.
+        pixel_offset_y (int): Le décalage en pixels sur l'axe y pour
+            l'animation de déplacement.
+        offset_y (int): Le décalage vertical pour le positionnement du sprite.
+    """
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, mon: str, maze: list[list[int]], player: PlayerModel):
+
+        """
+        Initialise le modèle de l'ennemi.
+
+        Args:
+            mon (str): Le nom de l'ennemi.
+            maze (list[list[int]]): Le labyrinthe du niveau.
+            player (PlayerModel): Le modèle du joueur.
+        """
 
         self.mon = mon
         self.maze = self._rev_maze(maze)
@@ -80,6 +110,12 @@ class EnemyModel:
     # +---------------------------------------------------------------------+
 
     def reset_pos_and_maze(self, maze: list[list[int]]):
+        """
+        Réinitialise la position de l'ennemi et met à jour le labyrinthe.
+
+        Args:
+            maze (list[list[int]]): Le nouveau labyrinthe du niveau.
+        """
 
         self.current_direction = None
         self.last_direction = None
@@ -89,6 +125,10 @@ class EnemyModel:
         self._reset_death()
 
     def reset_pos(self):
+        """
+        Réinitialise la position de l'ennemi à sa position de départ et
+        réinitialise les offsets pour l'animation de déplacement.
+        """
 
         x, y = self.start_pos
         self.x = x
@@ -107,6 +147,14 @@ class EnemyModel:
     # +---------------------------------------------------------------------+
 
     def on_update(self, delta_time):
+        """
+        Met à jour la position de l'ennemi en fonction de son algorithme de
+        déplacement et met à jour son sprite.
+
+        Args:
+            delta_time (float): Le temps écoulé depuis la dernière mise à jour.
+        """
+
         if self.pixel_offset_x == 0 and self.pixel_offset_y == 0:
             self.current_direction = self._enemy_move()
 
@@ -118,23 +166,26 @@ class EnemyModel:
         if self.pixel_offset_x >= TRANSITION_DISTANCE:
             self.x += 1
             self.pixel_offset_x = 0
-            self.last_direction = self._velocity_to_direction(self.current_direction)
+            self.last_direction = (self._velocity_to_direction(
+                self.current_direction))
             self.current_direction = None
         elif self.pixel_offset_x <= -TRANSITION_DISTANCE:
             self.x -= 1
             self.pixel_offset_x = 0
-            self.last_direction = self._velocity_to_direction(self.current_direction)
+            self.last_direction = (self._velocity_to_direction(
+                self.current_direction))
             self.current_direction = None
 
         if self.pixel_offset_y >= TRANSITION_DISTANCE:
             self.y += 1
             self.pixel_offset_y = 0
-            self.last_direction = self._velocity_to_direction(self.current_direction)
-            self.current_direction = None
+            self.last_direction = (self._velocity_to_direction(
+                self.current_direction))
         elif self.pixel_offset_y <= -TRANSITION_DISTANCE:
             self.y -= 1
             self.pixel_offset_y = 0
-            self.last_direction = self._velocity_to_direction(self.current_direction)
+            self.last_direction = (self._velocity_to_direction(
+                self.current_direction))
             self.current_direction = None
 
         if self.is_dead:
@@ -160,6 +211,13 @@ class EnemyModel:
     # +---------------------------------------------------------------------+
 
     def _asign_algo(self) -> str:
+        """
+        Assigne l'algorithme de déplacement en fonction du type d'ennemi.
+
+        Returns:
+            str: Le nom de l'algorithme de déplacement assigné à l'ennemi.
+        """
+
         match self.mon:
             case 'Drifloon':
                 return 'random'
@@ -173,6 +231,15 @@ class EnemyModel:
                 return 'random'
 
     def _enemy_move(self) -> Tuple[int, int]:
+        """
+        Détermine la direction de déplacement de l'ennemi en fonction de son
+        algorithme de déplacement.
+
+        Returns:
+            Tuple[int, int]: Un tuple représentant la direction de déplacement
+            de l'ennemi sous la forme (vx, vy), où vx est la composante
+            horizontale et vy est la composante verticale.
+        """
         if self.is_fleeing:
             return self._escape_move()
         match self.algo:
@@ -186,6 +253,17 @@ class EnemyModel:
                 return (0, 0)
 
     def _random_move(self) -> Tuple[int]:
+
+        """
+        Détermine une direction de déplacement aléatoire pour l'ennemi parmi
+        les directions possibles, en évitant de revenir en arrière.
+
+        Returns:
+            Tuple[int]: Un tuple représentant la direction de déplacement de
+            l'ennemi sous la forme (vx, vy), où vx est la composante
+            horizontale et vy est la composante verticale.
+        """
+
         possible_dir = self._get_direction(self.x, self.y)
 
         if self.last_direction:
@@ -228,6 +306,17 @@ class EnemyModel:
         return (0, 0)
 
     def _in_front_move(self) -> Tuple[int]:
+        """
+        Détermine la direction de déplacement de l'ennemi en utilisant un
+        algorithme de recherche en largeur (BFS) pour trouver le chemin le plus
+        court vers le joueur, puis choisit la direction qui rapproche l'ennemi
+        du joueur en suivant ce chemin.
+
+        Returns:
+            Tuple[int]: Un tuple représentant la direction de déplacement de
+            l'ennemi sous la forme (vx, vy), où vx est la composante
+            horizontale et vy est la composante verticale.
+        """
         parent = self._bfs_algo(self.player.x, self.player.y)
 
         if parent is None:
@@ -249,6 +338,18 @@ class EnemyModel:
         return (0, 0)
 
     def _bfs_algo(self, target_x: int, target_y: int):
+        """
+        Implémente un algorithme de recherche en largeur (BFS) pour trouver le
+        chemin le plus court entre la position actuelle de l'ennemi et la
+        position du joueur dans le labyrinthe, en tenant compte des murs et des
+        passages.
+
+        Returns:
+            dict: Un dictionnaire où les clés sont les coordonnées des nœuds
+            visités et les valeurs sont les coordonnées du nœud parent,
+            permettant de reconstruire le chemin de l'ennemi vers le joueur.
+        """
+
         visited = set()
         queue = [(self.x, self.y)]
         parent = {}
@@ -334,6 +435,21 @@ class EnemyModel:
         return self.player.x, self.player.y
 
     def _get_direction(self, x: int, y: int) -> list[str]:
+
+        """
+        Détermine les directions de déplacement possibles pour l'ennemi à
+        partir de sa position actuelle dans le labyrinthe, en vérifiant les
+        murs et les passages.
+
+        Args:
+            x (int): La position x actuelle de l'ennemi.
+            y (int): La position y actuelle de l'ennemi.
+
+        Returns:
+            list[str]: Une liste de directions possibles parmi 'up', 'right',
+            'down', 'left'.
+        """
+
         possible_dir = []
         if not self.maze[y][x] & 1:
             possible_dir.append('up')
@@ -346,6 +462,21 @@ class EnemyModel:
         return possible_dir
 
     def _direction_to_velocity(self, direction: str) -> Tuple[int]:
+
+        """
+        Convertit une direction de déplacement en une composante de vitesse
+        correspondante.
+
+        Args:
+            direction (str): La direction de déplacement, parmi 'up', 'right',
+            'down', 'left'.
+
+        Returns:
+            Tuple[int]: Un tuple représentant la composante de vitesse
+            correspondante à la direction donnée, sous la forme (vx, vy), où
+            vx est la composante horizontale et vy est la composante verticale.
+        """
+
         match direction:
             case 'up':
                 self.sprite.current_direction = 'up'
@@ -363,6 +494,21 @@ class EnemyModel:
                 return (0, 0)
 
     def _velocity_to_direction(self, velocity: Tuple[int]) -> Tuple[int]:
+
+        """
+        Convertit une composante de vitesse en une direction de déplacement
+        correspondante.
+
+        Args:
+            velocity (Tuple[int]): Un tuple représentant la composante de
+            vitesse sous la forme (vx, vy), où vx est la composante
+            horizontale et vy est la composante verticale.
+
+        Returns:
+            Tuple[int]: La direction de déplacement correspondante à la
+            composante de vitesse donnée, parmi 'up', 'right', 'down', 'left'.
+        """
+
         match velocity:
             case (0, 1):
                 return 'up'
@@ -376,6 +522,18 @@ class EnemyModel:
                 return (0, 0)
 
     def _rev_maze(self, maze: list[list[int]]) -> list[list[int]]:
+
+        """
+        Inverse le labyrinthe pour que les coordonnées soient dans le bon ordre
+        pour les ennemis.
+
+        Args:
+            maze (list[list[int]]): Le labyrinthe à inverser.
+
+        Returns:
+            list[list[int]]: Le labyrinthe inversé.
+        """
+
         rev_maze: list[list[int]] = []
         for i in range(len(maze) - 1, -1, -1):
             rev_maze.append(maze[i])
@@ -383,6 +541,16 @@ class EnemyModel:
         return rev_maze
 
     def _retrieve_enemy_data_from_json(self) -> list[EnemyDataModel]:
+
+        """
+        Récupère les données des ennemis à partir d'un fichier JSON et les
+        convertit en une liste d'instances de EnemyDataModel.
+
+        Returns:
+            list[EnemyDataModel]: Une liste d'instances de EnemyDataModel
+            contenant les données des ennemis.
+        """
+
         lst_enemy = []
         try:
             with open(ENEMY_FILE, "r") as file:
@@ -396,13 +564,39 @@ class EnemyModel:
         return lst_enemy
 
     def _get_enemy_data(self, enemy_name: str) -> EnemyDataModel:
+
+        """
+        Récupère les données d'un ennemi spécifique à partir du fichier JSON
+        en fonction de son nom.
+
+        Args:
+            enemy_name (str): Le nom de l'ennemi dont les données doivent être
+                récupérées.
+        Returns:
+            EnemyDataModel: Une instance de EnemyDataModel contenant les
+                données de l'ennemi spécifié.
+        Raises:
+            ValueError: Si l'ennemi spécifié n'est pas trouvé dans le fichier
+                JSON.
+        """
+
         enemies_data = self._retrieve_enemy_data_from_json()
         for enemy_data in enemies_data:
             if enemy_data.name == enemy_name:
                 return enemy_data
         raise ValueError(f"Enemy {enemy_name} not found in enemy_data.json")
 
-    def _get_offset_y(self):
+    def _get_offset_y(self) -> int:
+
+        """
+        Détermine le décalage vertical pour le positionnement du sprite de
+        l'ennemi en fonction de son type.
+
+        Returns:
+            int: Le décalage vertical en pixels pour le positionnement du
+                sprite de l'ennemi.
+        """
+
         match self.mon:
             case 'Drifloon':
                 return 15
@@ -414,6 +608,14 @@ class EnemyModel:
                 return 10
 
     def _get_start_pos(self) -> Tuple[int]:
+
+        """
+        Détermine la position de départ de l'ennemi en fonction de son type.
+        Returns:
+            Tuple[int]: Un tuple représentant les coordonnées de la position de
+                départ de l'ennemi sous la forme (x, y).
+        """
+
         match self.mon:
             case 'Drifloon':
                 return (0, 0)

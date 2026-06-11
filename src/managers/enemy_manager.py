@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 13:54:08 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/11 15:12:38 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -38,11 +38,33 @@ TILE_SIZE = 64
 
 class EnemyManager:
 
+    """
+    Manager pour les ennemis.
+
+    Attributes:
+        config (ConfigModel): La configuration du jeu.
+        level (Level): Le niveau actuel du jeu.
+        player (PlayerModel): Le modèle du joueur.
+        enemies (list[EnemyModel]): La liste des ennemis du niveau.
+        enemies_sprite (arcade.SpriteList): La liste de sprites des ennemis.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, config: ConfigModel, curr_level: Level, player: PlayerModel):
+    def __init__(self, config: ConfigModel, curr_level: Level,
+                 player: PlayerModel):
+
+        """
+        Initialise le manager des ennemis.
+
+        Args:
+            config (ConfigModel): La configuration du jeu.
+            curr_level (Level): Le niveau actuel du jeu.
+            player (PlayerModel): Le modèle du joueur.
+        """
+
         self.config = config
         self.level = curr_level
         self.player = player
@@ -57,6 +79,12 @@ class EnemyManager:
     # +---------------------------------------------------------------------+
 
     def _create_enemies(self) -> list[EnemyModel]:
+        """
+        Crée les ennemis du niveau.
+
+        Returns:
+            list[EnemyModel]: La liste des ennemis du niveau.
+        """
 
         enemies = []
         # enemies_infos = [blinky, clyde, inky, pinky]
@@ -72,7 +100,14 @@ class EnemyManager:
     # |                               Setter                                |
     # +---------------------------------------------------------------------+
 
-    def set_current_level(self, current_level: Level):
+    def set_current_level(self, current_level: Level) -> None:
+        """
+        Met à jour le niveau actuel pour les ennemis.
+
+        Args:
+            current_level (Level): Le nouveau niveau actuel.
+
+        """
 
         self.level = current_level
         for enemy in self.enemies:
@@ -82,7 +117,8 @@ class EnemyManager:
         for enemy in self.enemies:
             self.enemies_sprite.append(enemy.sprite)
 
-    def reset_enemy(self):
+    def reset_enemy(self) -> None:
+        """Réinitialise les ennemis."""
         for enemy in self.enemies:
             enemy.reset_pos()
 
@@ -90,11 +126,14 @@ class EnemyManager:
     # |                            View Method                              |
     # +---------------------------------------------------------------------+
 
-    def on_update(self, delta_time):
+    def on_update(self, delta_time) -> None:
+        """Met à jour les ennemis."""
+
         for enemy in self.enemies:
             enemy.on_update(delta_time)
 
-    def draw(self):
+    def draw(self) -> None:
+        """Dessine les ennemis."""
         self.enemies_sprite.draw()
 
     def get_respawning_enemies(self):

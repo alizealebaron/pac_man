@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 14:54:23 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/11 15:16:35 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -49,6 +49,7 @@ class PlayerModel():
         self.super_timer = 0.0
         self.sprite = AnimatedSprite(self.pokemon.name, self.pokemon.width,
                                      self.pokemon.height, self.pokemon.nb_anim)
+        self.speed = 3.0
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |

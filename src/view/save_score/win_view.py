@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/05 07:59:24 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 09:57:55 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -47,7 +47,7 @@ class WinView(arcade.View):
         super().__init__(window)
 
         # Initialisation des infos de la view
-        self.title = "Thanks you for playing !"
+        self.title = "Félicitations ! Vous avez gagné !"
         self.emotion = "Happy"
 
         # Chargement des textures
@@ -422,35 +422,3 @@ class WinView(arcade.View):
                                       font_size=12,
                                       font_name="FOT-Humming Pro")
             player_name.draw()
-
-        i = len(scores)
-
-        while (i < 3):
-
-            current_y = start_y - (i * line_height)
-
-            # Image de rang
-            rank_tex = arcade.load_texture("assets/rank/rank_0.png")
-            arcade.draw_texture_rect(
-                texture=rank_tex,
-                rect=arcade.XYWH(start_x + (icon_size / 2), current_y, icon_size, icon_size)
-            )
-
-            # Image du pokémon
-            profile_tex = arcade.load_texture(f"assets/sprite/undefined/Normal.png")
-            arcade.draw_texture_rect(
-                texture=profile_tex,
-                rect=arcade.XYWH(start_x + icon_size + 25, current_y, icon_size, icon_size)
-            )
-
-            # Nom + Score
-            text_content = "..."
-            player_name = arcade.Text(text_content,
-                                      start_x + (icon_size * 2) + 20,
-                                      current_y - 5,
-                                      color=arcade.color.BLACK,
-                                      font_size=11,
-                                      font_name="FOT-Humming Pro")
-            player_name.draw()
-
-            i += 1
