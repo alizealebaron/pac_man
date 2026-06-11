@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 14:55:05 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 15:06:10 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -35,7 +35,6 @@ SCROLL_PATH = "assets/menu/scroll.png"
 SPEED = 5.0
 TILE_SIZE = 64
 TRANSITION_DISTANCE = 64
-
 
 # +-------------------------------------------------------------------------+
 # |                                 Classe                                  |
@@ -205,7 +204,7 @@ class GameView(arcade.View):
 
         # Affichage du joueur au centre du labyrinthe
         self.manager.player.sprite.center_x = pixel_x * self.scale + self.offset_x
-        self.manager.player.sprite.center_y = pixel_y * self.scale + self.offset_y - 10
+        self.manager.player.sprite.center_y = pixel_y * self.scale + self.offset_y
         self.player_sprites.draw()
 
         for enemy in self.enemy_manager.enemies:
@@ -213,6 +212,16 @@ class GameView(arcade.View):
             pixel_y = enemy.y * TILE_SIZE + 32 + enemy.pixel_offset_y
             enemy.sprite.center_x = pixel_x * self.scale + self.offset_x
             enemy.sprite.center_y = pixel_y * self.scale + self.offset_y - enemy.offset_y
+
+        for enemy in self.enemy_manager.get_respawning_enemies():
+            countdown = enemy.death_timer - int(enemy.respawn_timer)
+            arcade.Text(
+                str(countdown),
+                enemy.sprite.center_x - 13,
+                enemy.sprite.center_y - 5,
+                arcade.color.RED,
+                font_size=30 * self.scale
+            ).draw()
 
         self.enemy_manager.draw()
 
@@ -301,8 +310,29 @@ class GameView(arcade.View):
             self.manager.player.pixel_offset_y = 0
             self.get_collectibles()
 
+        if self.manager.player.is_super:
+            self.manager.player.super_timer += delta_time
+
+            if not self.manager.enemy_manager.enemies[0].is_fleeing:
+                for enemy in self.manager.enemy_manager.enemies:
+                    enemy.is_fleeing = True
+
+            if self.manager.player.super_timer >= self.manager.player.time_super_max:
+                self.manager.player.is_super = False
+                for enemy in self.manager.enemy_manager.enemies:
+                    enemy.is_fleeing = False
+                    self.manager.player.super_timer = 0.0
+
         self.manager.player.sprite.on_update(delta_time)
-        self.enemy_manager.on_update(delta_time)
+
+        for enemy in self.enemy_manager.enemies:
+            enemy.on_update(delta_time)
+            if enemy.just_respawned:
+                self.enemy_manager.enemies_sprite.append(enemy.sprite)
+                enemy.just_respawned = False
+            if enemy.is_dead:
+                if enemy.sprite in self.enemy_manager.enemies_sprite:
+                    self.enemy_manager.enemies_sprite.remove(enemy.sprite)
 
         self.check_enemy_collisions()
 
@@ -332,23 +362,28 @@ class GameView(arcade.View):
             lst_collisions += arcade.check_for_collision_with_list(player,
                                                                    ennemy)
 
-        if (lst_collisions):
-            self.manager.player.nb_life -= 1
-            if (self.manager.player.nb_life) == 0:
-                return
-            self.manager.player.reset_position()
-            self._player_original_pos()
-            self.enemy_manager.reset_enemy()
+        if not self.manager.player.is_super:
+            if (lst_collisions):
+                self.manager.player.nb_life -= 1
+                if (self.manager.player.nb_life) == 0:
+                    return
+                self.manager.player.reset_position()
+                self._player_original_pos()
+                self.enemy_manager.reset_enemy()
+
+        elif self.manager.player.is_super:
+            if (lst_collisions):
+                for collision in lst_collisions:
+                    enemy = collision.owner
+                    self.manager.enemy_manager.enemies_sprite.remove(enemy.sprite)
+                    enemy.die()
+                    self.manager.player.score += self.manager.config.points_per_ghost
 
     def get_collectibles(self):
 
-        x = self.manager.player.x
-        y = self.manager.player.y
-
         p = self.collectible_manager.remove_pacgum(self.player_sprites,
                                                    self.manager.config,
-                                                   x,
-                                                   y)
+                                                   self.manager.player)
 
         points, self.is_finished = p
         self.manager.player.score += points

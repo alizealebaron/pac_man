@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 08:30:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/09 08:30:02 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 15:02:51 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,6 +14,7 @@
 
 import arcade
 from src.models.configmodel import ConfigModel
+from src.models.playerModel import PlayerModel
 
 # +-------------------------------------------------------------------------+
 # |                                  CONST                                  |
@@ -89,16 +90,15 @@ class CollectibleManager:
     def remove_pacgum(self,
                       player_list: arcade.SpriteList,
                       config: ConfigModel,
-                      x: int,
-                      y: int) -> int:
+                      player: PlayerModel) -> int:
         total_points = 0
 
         # Checking de collision
 
-        for player in player_list:
-            lst_pg = arcade.check_for_collision_with_list(player,
+        for player_sprite in player_list:
+            lst_pg = arcade.check_for_collision_with_list(player_sprite,
                                                           self.pg_sprites)
-            lst_spg = arcade.check_for_collision_with_list(player,
+            lst_spg = arcade.check_for_collision_with_list(player_sprite,
                                                            self.spg_sprites)
 
         for collectible in lst_pg:
@@ -108,6 +108,8 @@ class CollectibleManager:
         for collectible in lst_spg:
             self.spg_sprites.remove(collectible)
             total_points += config.points_per_super_pacgum
+            player.is_super = True
+            player.super_timer = 0.0
 
         is_all_collected = (len(self.spg_sprites) == 0 and
                             len(self.pg_sprites) == 0)

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/09 13:25:43 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/11 13:59:35 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -17,6 +17,7 @@
 import random
 import json
 from typing import Tuple
+import arcade
 from src.models.animated_sprite import AnimatedSprite
 from src.models.enemydatamodel import EnemyDataModel
 from src.models.playerModel import PlayerModel
@@ -36,7 +37,6 @@ OPPOSITES = {
     'down': 'up',
     'left': 'right'
 }
-
 
 # +-------------------------------------------------------------------------+
 # |                                 Classe                                  |
@@ -60,6 +60,7 @@ class EnemyModel:
 
         self.scale = enemy_data.scale
         self.sprite = AnimatedSprite(mon, enemy_data.width, enemy_data.height, enemy_data.nb_anim, is_enemy=True)
+        self.sprite.owner = self
         self.sprite.center_x = self.x
         self.sprite.center_y = self.y
         self.algo = self._asign_algo()
@@ -69,6 +70,10 @@ class EnemyModel:
         self.pixel_offset_y = 0
         self.offset_y = self._get_offset_y()
         self.is_fleeing = False
+        self.is_dead = False
+        self.respawn_timer = 0.0
+        self.just_respawned = False
+        self.death_timer = 3
 
     # +---------------------------------------------------------------------+
     # |                            Reset Method                             |
@@ -81,6 +86,7 @@ class EnemyModel:
         self.maze = self._rev_maze(maze)
         self.start_pos = self._get_start_pos()
         self.reset_pos()
+        self._reset_death()
 
     def reset_pos(self):
 
@@ -89,6 +95,12 @@ class EnemyModel:
         self.y = y
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
+
+    def _reset_death(self):
+        self.is_fleeing = False
+        self.is_dead = False
+        self.respawn_timer = 0.0
+        self.just_respawned = False
 
     # +---------------------------------------------------------------------+
     # |                            View Method                              |
@@ -124,6 +136,22 @@ class EnemyModel:
             self.pixel_offset_y = 0
             self.last_direction = self._velocity_to_direction(self.current_direction)
             self.current_direction = None
+
+        if self.is_dead:
+            self.respawn_timer += delta_time
+            self.reset_pos()
+            if self.respawn_timer >= self.death_timer:
+                self.is_dead = False
+                self.just_respawned = True
+                self.respawn_timer = 0.0
+                self.is_fleeing = False
+
+        if self.is_fleeing:
+            if self.sprite.color != arcade.color.BLEU_DE_FRANCE:
+                self.sprite.color = arcade.color.BLEU_DE_FRANCE
+        else:
+            if self.sprite.color != arcade.color.WHITE:
+                self.sprite.color = arcade.color.WHITE
 
         self.sprite.on_update(delta_time)
 
@@ -255,12 +283,6 @@ class EnemyModel:
 
     def _escape_move(self) -> Tuple[int]:
         possible_dir = self._get_direction(self.x, self.y)
- 
-        if self.last_direction:
-            opposite = OPPOSITES.get(self.last_direction)
-            filtered_dir = [d for d in possible_dir if d != opposite]
-            if filtered_dir:
-                possible_dir = filtered_dir
  
         best_dir = None
         best_distance = -1
@@ -401,3 +423,6 @@ class EnemyModel:
                 return (len(self.maze[0]) - 1, 0)
             case 'Misdreavus':
                 return (len(self.maze[0]) - 1, len(self.maze) - 1)
+
+    def die(self):
+        self.is_dead = True
