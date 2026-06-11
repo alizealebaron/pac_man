@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 20:26:02 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 20:30:21 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -236,6 +236,7 @@ class GameView(arcade.View):
         @btn_exit.event("on_click")
         def on_click_exit_button(event):
             self.manager.reset_game()
+            self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
     # +---------------------------------------------------------------------+

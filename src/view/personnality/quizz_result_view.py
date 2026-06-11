@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 16:28:27 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 20:25:06 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 20:27:14 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -159,7 +159,7 @@ class ResultQuizzView(arcade.View):
                 self.window.manager.player.pokemon = self.random_pokemon
                 self.window.manager.player.update_pokemon_sprite()
                 if (self.window.manager.cheat.dynamax is True):
-                    self.manager.player.pokemon.scale *= 3
+                    self.window.manager.player.pokemon.scale *= 3
                 self.music.stop(self.music_player)
                 self.window.show_view(self.window.start_view)
 
