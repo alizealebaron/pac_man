@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 15:40:05 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 22:02:30 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -116,8 +116,7 @@ class PlayerModel():
             PokemonModel: Un pokémon aléatoire sélectionné dans la liste.
         """
 
-        return (lst_pokemons[14])
-        # return (random.choice(lst_pokemons.name))
+        return (random.choice(lst_pokemons))
 
     def _get_random_name(self) -> str:
 
