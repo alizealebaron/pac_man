@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/08 16:09:04 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/10 17:55:53 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -221,7 +221,7 @@ class MenuView(arcade.View):
                              sprite_height)
         )
 
-        credit_txt = arcade.Text("Credits",
+        credit_txt = arcade.Text("Crédits",
                                  self.width - (sprite_width) - 10,
                                  self.height - (sprite_height / 2),
                                  color=arcade.color.BLACK,

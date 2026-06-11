@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/05 07:59:24 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/10 17:53:49 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -47,7 +47,7 @@ class WinView(arcade.View):
         super().__init__(window)
 
         # Initialisation des infos de la view
-        self.title = "Thanks you for playing !"
+        self.title = "Félicitations ! Vous avez gagné !"
         self.emotion = "Happy"
 
         # Chargement des textures
