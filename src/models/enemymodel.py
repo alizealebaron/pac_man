@@ -68,6 +68,7 @@ class EnemyModel:
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
         self.offset_y = self._get_offset_y()
+        self.is_fleeing = False
 
     # +---------------------------------------------------------------------+
     # |                            Reset Method                             |
@@ -78,6 +79,7 @@ class EnemyModel:
         self.current_direction = None
         self.last_direction = None
         self.maze = self._rev_maze(maze)
+        self.start_pos = self._get_start_pos()
         self.reset_pos()
 
     def reset_pos(self):
@@ -125,20 +127,26 @@ class EnemyModel:
 
         self.sprite.on_update(delta_time)
 
+    # +---------------------------------------------------------------------+
+    # |                                Algo                                 |
+    # +---------------------------------------------------------------------+
+
     def _asign_algo(self) -> str:
         match self.mon:
             case 'Drifloon':
                 return 'random'
             case 'Duskull':
-                return 'behind'
-            case 'Haunter':
                 return 'bfs'
+            case 'Haunter':
+                return 'behind'
             case 'Misdreavus':
                 return 'random'
             case _:
                 return 'random'
 
     def _enemy_move(self) -> Tuple[int, int]:
+        if self.is_fleeing:
+            return self._escape_move()
         match self.algo:
             case 'random':
                 return self._random_move()
@@ -165,32 +173,34 @@ class EnemyModel:
         return self._direction_to_velocity(random.choice(possible_dir))
 
     def _behind_move(self) -> Tuple[int]:
-        possible_dir = self._get_direction(self.x, self.y)
-        min_dist = None
+        distance = abs(self.x - self.player.x) + abs(self.y - self.player.y)
 
-        for direction in possible_dir:
-            match direction:
-                case 'up':
-                    distance = abs(self.x - self.player.x) + abs((self.y + 1) - self.player.y)
-                case 'right':
-                    distance = abs((self.x + 1) - self.player.x) + abs(self.y - self.player.y)
-                case 'down':
-                    distance = abs(self.x - self.player.x) + abs((self.y - 1) - self.player.y)
-                case 'left':
-                    distance = abs((self.x - 1) - self.player.x) + abs(self.y - self.player.y)
+        if distance <= 1:
+            tx, ty = self.player.x, self.player.y
+        else:
+            tx, ty = self._get_behind_player()
+        parent = self._bfs_algo(tx, ty)
 
-            if min_dist is None:
-                min_dist = distance
-                next_direction = direction
+        if parent is None:
+            return (0, 0)
 
-            if distance < min_dist:
-                min_dist = distance
-                next_direction = direction
+        node = (tx, ty)
+        while parent[node] != (self.x, self.y):
+            node = parent[node]
 
-        return self._direction_to_velocity(next_direction)
+        if node == (self.x, self.y + 1):
+            return self._direction_to_velocity('up')
+        if node == (self.x + 1, self.y):
+            return self._direction_to_velocity('right')
+        if node == (self.x, self.y - 1):
+            return self._direction_to_velocity('down')
+        if node == (self.x - 1, self.y):
+            return self._direction_to_velocity('left')
+
+        return (0, 0)
 
     def _in_front_move(self) -> Tuple[int]:
-        parent = self._bfs_algo()
+        parent = self._bfs_algo(self.player.x, self.player.y)
 
         if parent is None:
             return (0, 0)
@@ -210,7 +220,7 @@ class EnemyModel:
 
         return (0, 0)
 
-    def _bfs_algo(self):
+    def _bfs_algo(self, target_x: int, target_y: int):
         visited = set()
         queue = [(self.x, self.y)]
         parent = {}
@@ -237,11 +247,69 @@ class EnemyModel:
                 if n not in visited:
                     visited.add(n)
                     parent[n] = current
-                    if n == (self.player.x, self.player.y):
+                    if n == (target_x, target_y):
                         return parent
                     queue.append(n)
 
         return None
+
+    def _escape_move(self) -> Tuple[int]:
+        possible_dir = self._get_direction(self.x, self.y)
+ 
+        if self.last_direction:
+            opposite = OPPOSITES.get(self.last_direction)
+            filtered_dir = [d for d in possible_dir if d != opposite]
+            if filtered_dir:
+                possible_dir = filtered_dir
+ 
+        best_dir = None
+        best_distance = -1
+ 
+        for dir in possible_dir:
+            match dir:
+                case 'up':
+                    x, y = self.x, self.y + 1
+                case 'right':
+                    x, y = self.x + 1, self.y
+                case 'down':
+                    x, y = self.x, self.y - 1
+                case 'left':
+                    x, y = self.x - 1, self.y
+ 
+            distance = abs(self.player.x - x) + abs(self.player.y - y)
+ 
+            if distance > best_distance:
+                best_dir = dir
+                best_distance = distance
+            elif distance == best_distance:
+                if random.choice([True, False]):
+                    best_dir = dir
+
+        return self._direction_to_velocity(best_dir)
+
+
+    # +---------------------------------------------------------------------+
+    # |                                Utils                                |
+    # +---------------------------------------------------------------------+
+
+    def _get_behind_player(self) -> Tuple[int, int]:
+        match self.player.direction:
+            case 'up':
+                x, y = self.player.x, self.player.y - 1
+            case 'right':
+                x, y = self.player.x - 1, self.player.y
+            case 'down':
+                x, y = self.player.x, self.player.y + 1
+            case 'left':
+                x, y = self.player.x + 1, self.player.y
+            case _:
+                return self.player.x, self.player.y
+
+        if 0 <= y < len(self.maze) and 0 <= x < len(self.maze[0]):
+            if self._get_direction(x, y):
+                return x, y
+
+        return self.player.x, self.player.y
 
     def _get_direction(self, x: int, y: int) -> list[str]:
         possible_dir = []

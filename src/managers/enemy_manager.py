@@ -59,7 +59,7 @@ class EnemyManager:
     def _create_enemies(self) -> list[EnemyModel]:
 
         enemies = []
-        enemies_infos = [blinky, clyde, inky]
+        enemies_infos = [blinky, clyde, inky, pinky]
 
         for info in enemies_infos:
             mon = info
