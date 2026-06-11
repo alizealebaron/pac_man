@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 12:54:43 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 15:16:22 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -17,6 +17,7 @@
 import random
 import json
 from typing import Tuple
+import arcade
 from src.models.animated_sprite import AnimatedSprite
 from src.models.enemydatamodel import EnemyDataModel
 from src.models.playerModel import PlayerModel
@@ -36,7 +37,6 @@ OPPOSITES = {
     'down': 'up',
     'left': 'right'
 }
-
 
 # +-------------------------------------------------------------------------+
 # |                                 Classe                                  |
@@ -89,8 +89,8 @@ class EnemyModel:
         enemy_data = self._get_enemy_data(mon)
 
         self.scale = enemy_data.scale
-        self.sprite = AnimatedSprite(mon, enemy_data.width, enemy_data.height,
-                                     enemy_data.nb_anim, is_enemy=True)
+        self.sprite = AnimatedSprite(mon, enemy_data.width, enemy_data.height, enemy_data.nb_anim, is_enemy=True)
+        self.sprite.owner = self
         self.sprite.center_x = self.x
         self.sprite.center_y = self.y
         self.algo = self._asign_algo()
@@ -99,6 +99,11 @@ class EnemyModel:
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
         self.offset_y = self._get_offset_y()
+        self.is_fleeing = False
+        self.is_dead = False
+        self.respawn_timer = 0.0
+        self.just_respawned = False
+        self.death_timer = 3
 
     # +---------------------------------------------------------------------+
     # |                            Reset Method                             |
@@ -115,7 +120,9 @@ class EnemyModel:
         self.current_direction = None
         self.last_direction = None
         self.maze = self._rev_maze(maze)
+        self.start_pos = self._get_start_pos()
         self.reset_pos()
+        self._reset_death()
 
     def reset_pos(self):
         """
@@ -128,6 +135,12 @@ class EnemyModel:
         self.y = y
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
+
+    def _reset_death(self):
+        self.is_fleeing = False
+        self.is_dead = False
+        self.respawn_timer = 0.0
+        self.just_respawned = False
 
     # +---------------------------------------------------------------------+
     # |                            View Method                              |
@@ -175,7 +188,27 @@ class EnemyModel:
                 self.current_direction))
             self.current_direction = None
 
+        if self.is_dead:
+            self.respawn_timer += delta_time
+            self.reset_pos()
+            if self.respawn_timer >= self.death_timer:
+                self.is_dead = False
+                self.just_respawned = True
+                self.respawn_timer = 0.0
+                self.is_fleeing = False
+
+        if self.is_fleeing:
+            if self.sprite.color != arcade.color.BLEU_DE_FRANCE:
+                self.sprite.color = arcade.color.BLEU_DE_FRANCE
+        else:
+            if self.sprite.color != arcade.color.WHITE:
+                self.sprite.color = arcade.color.WHITE
+
         self.sprite.on_update(delta_time)
+
+    # +---------------------------------------------------------------------+
+    # |                                Algo                                 |
+    # +---------------------------------------------------------------------+
 
     def _asign_algo(self) -> str:
         """
@@ -189,9 +222,9 @@ class EnemyModel:
             case 'Drifloon':
                 return 'random'
             case 'Duskull':
-                return 'behind'
-            case 'Haunter':
                 return 'bfs'
+            case 'Haunter':
+                return 'behind'
             case 'Misdreavus':
                 return 'random'
             case _:
@@ -207,6 +240,8 @@ class EnemyModel:
             de l'ennemi sous la forme (vx, vy), où vx est la composante
             horizontale et vy est la composante verticale.
         """
+        if self.is_fleeing:
+            return self._escape_move()
         match self.algo:
             case 'random':
                 return self._random_move()
@@ -244,48 +279,33 @@ class EnemyModel:
         return self._direction_to_velocity(random.choice(possible_dir))
 
     def _behind_move(self) -> Tuple[int]:
+        distance = abs(self.x - self.player.x) + abs(self.y - self.player.y)
 
-        """
-        Détermine la direction de déplacement de l'ennemi en se basant sur la
-        position du joueur, en choisissant la direction qui rapproche le plus
-        l'ennemi du joueur parmi les directions possibles.
+        if distance <= 1:
+            tx, ty = self.player.x, self.player.y
+        else:
+            tx, ty = self._get_behind_player()
+        parent = self._bfs_algo(tx, ty)
 
-        Returns:
-            Tuple[int]: Un tuple représentant la direction de déplacement de
-            l'ennemi sous la forme (vx, vy), où vx est la composante
-            horizontale et vy est la composante verticale.
-        """
+        if parent is None:
+            return (0, 0)
 
-        possible_dir = self._get_direction(self.x, self.y)
-        min_dist = None
+        node = (tx, ty)
+        while parent[node] != (self.x, self.y):
+            node = parent[node]
 
-        for direction in possible_dir:
-            match direction:
-                case 'up':
-                    distance = (abs(self.x - self.player.x) +
-                                abs((self.y + 1) - self.player.y))
-                case 'right':
-                    distance = (abs((self.x + 1) - self.player.x) +
-                                abs(self.y - self.player.y))
-                case 'down':
-                    distance = (abs(self.x - self.player.x) +
-                                abs((self.y - 1) - self.player.y))
-                case 'left':
-                    distance = (abs((self.x - 1) - self.player.x) +
-                                abs(self.y - self.player.y))
+        if node == (self.x, self.y + 1):
+            return self._direction_to_velocity('up')
+        if node == (self.x + 1, self.y):
+            return self._direction_to_velocity('right')
+        if node == (self.x, self.y - 1):
+            return self._direction_to_velocity('down')
+        if node == (self.x - 1, self.y):
+            return self._direction_to_velocity('left')
 
-            if min_dist is None:
-                min_dist = distance
-                next_direction = direction
-
-            if distance < min_dist:
-                min_dist = distance
-                next_direction = direction
-
-        return self._direction_to_velocity(next_direction)
+        return (0, 0)
 
     def _in_front_move(self) -> Tuple[int]:
-
         """
         Détermine la direction de déplacement de l'ennemi en utilisant un
         algorithme de recherche en largeur (BFS) pour trouver le chemin le plus
@@ -297,8 +317,7 @@ class EnemyModel:
             l'ennemi sous la forme (vx, vy), où vx est la composante
             horizontale et vy est la composante verticale.
         """
-
-        parent = self._bfs_algo()
+        parent = self._bfs_algo(self.player.x, self.player.y)
 
         if parent is None:
             return (0, 0)
@@ -318,8 +337,7 @@ class EnemyModel:
 
         return (0, 0)
 
-    def _bfs_algo(self):
-
+    def _bfs_algo(self, target_x: int, target_y: int):
         """
         Implémente un algorithme de recherche en largeur (BFS) pour trouver le
         chemin le plus court entre la position actuelle de l'ennemi et la
@@ -358,11 +376,63 @@ class EnemyModel:
                 if n not in visited:
                     visited.add(n)
                     parent[n] = current
-                    if n == (self.player.x, self.player.y):
+                    if n == (target_x, target_y):
                         return parent
                     queue.append(n)
 
         return None
+
+    def _escape_move(self) -> Tuple[int]:
+        possible_dir = self._get_direction(self.x, self.y)
+ 
+        best_dir = None
+        best_distance = -1
+ 
+        for dir in possible_dir:
+            match dir:
+                case 'up':
+                    x, y = self.x, self.y + 1
+                case 'right':
+                    x, y = self.x + 1, self.y
+                case 'down':
+                    x, y = self.x, self.y - 1
+                case 'left':
+                    x, y = self.x - 1, self.y
+ 
+            distance = abs(self.player.x - x) + abs(self.player.y - y)
+ 
+            if distance > best_distance:
+                best_dir = dir
+                best_distance = distance
+            elif distance == best_distance:
+                if random.choice([True, False]):
+                    best_dir = dir
+
+        return self._direction_to_velocity(best_dir)
+
+
+    # +---------------------------------------------------------------------+
+    # |                                Utils                                |
+    # +---------------------------------------------------------------------+
+
+    def _get_behind_player(self) -> Tuple[int, int]:
+        match self.player.direction:
+            case 'up':
+                x, y = self.player.x, self.player.y - 1
+            case 'right':
+                x, y = self.player.x - 1, self.player.y
+            case 'down':
+                x, y = self.player.x, self.player.y + 1
+            case 'left':
+                x, y = self.player.x + 1, self.player.y
+            case _:
+                return self.player.x, self.player.y
+
+        if 0 <= y < len(self.maze) and 0 <= x < len(self.maze[0]):
+            if self._get_direction(x, y):
+                return x, y
+
+        return self.player.x, self.player.y
 
     def _get_direction(self, x: int, y: int) -> list[str]:
 
@@ -555,3 +625,6 @@ class EnemyModel:
                 return (len(self.maze[0]) - 1, 0)
             case 'Misdreavus':
                 return (len(self.maze[0]) - 1, len(self.maze) - 1)
+
+    def die(self):
+        self.is_dead = True
