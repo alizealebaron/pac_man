@@ -6,9 +6,14 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 10:07:49 by rruiz           #+#    #+#               #
-#  Updated: 2026/05/21 10:36:13 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/11 13:55:15 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
+
+# +-------------------------------------------------------------------------+
+# |                               Importation                               |
+# +-------------------------------------------------------------------------+
+
 
 import json
 from typing import Any
@@ -16,7 +21,21 @@ import sys
 from src.models.configmodel import ConfigModel
 
 
+# +-------------------------------------------------------------------------+
+# |                                 Classe                                  |
+# +-------------------------------------------------------------------------+
+
 class ConfigLoader:
+
+    """
+    Classe responsable du chargement de la configuration du jeu à partir d'un
+    fichier JSON.
+
+    Attributes:
+        default_config (dict): La configuration par défaut utilisée en cas de
+            problème lors du chargement du fichier de configuration.
+    """
+
     default_config = {
         'highscore_filename': 'highscores.json',
         'level': [
@@ -42,6 +61,17 @@ class ConfigLoader:
 
     @staticmethod
     def load_config(config_file_path: str | None) -> ConfigModel:
+
+        """
+        Charge la configuration du jeu à partir d'un fichier JSON.
+        Args:
+            config_file_path (str | None): Le chemin vers le fichier de
+                configuration. Si None, la configuration par défaut est
+                utilisée.
+        Returns:
+            ConfigModel: La configuration du jeu.
+        """
+
         if not config_file_path:
             return ConfigModel.build_config(ConfigLoader.default_config)
 
@@ -54,6 +84,17 @@ class ConfigLoader:
 
     @staticmethod
     def _clean_config(config_file_path: str) -> dict[str, Any]:
+
+        """
+        Lit le fichier de configuration, supprime les commentaires et les
+        lignes vides, et retourne un dictionnaire de configuration propre.
+
+        Args:
+            config_file_path (str): Le chemin vers le fichier de configuration.
+        Returns:
+            dict[str, Any]: Un dictionnaire de configuration propre.
+        """
+
         try:
             with open(config_file_path, 'r') as f:
                 config = f.read()
