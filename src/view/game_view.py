@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 20:30:21 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 21:20:37 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -413,8 +413,7 @@ class GameView(arcade.View):
         if (self.manager.cheat.ghost_freeze is False):
             self.enemy_manager.on_update(delta_time)
 
-        if (self.manager.cheat.invicibility is False and
-           int(self.timer) != self.manager.config.level_max_time):
+        if (int(self.timer) != self.manager.config.level_max_time):
             self.check_enemy_collisions()
 
     def on_show_view(self) -> None:
@@ -454,7 +453,7 @@ class GameView(arcade.View):
             lst_collisions += arcade.check_for_collision_with_list(player,
                                                                    ennemy)
 
-        if not self.manager.player.is_super:
+        if not self.manager.player.is_super and self.manager.cheat.invicibility is False:
             if (lst_collisions):
                 self.manager.player.nb_life -= 1
                 if (self.manager.player.nb_life) == 0:

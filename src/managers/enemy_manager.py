@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 15:12:38 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/11 20:36:09 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -87,8 +87,8 @@ class EnemyManager:
         """
 
         enemies = []
-        # enemies_infos = [blinky, clyde, inky, pinky]
-        enemies_infos = [clyde]
+        enemies_infos = [blinky, clyde, inky, pinky]
+        # enemies_infos = [clyde]
 
         for info in enemies_infos:
             mon = info
