@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 11:21:25 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 20:21:27 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -313,6 +313,11 @@ class GameView(arcade.View):
 
         if (self.show_pause_menu is True):
             self.pause_manager.enable()
+
+        self.manager.player.sprite.scale = (self.manager.player.pokemon.scale *
+                                            self.scale)
+        self.player_sprites = arcade.SpriteList()
+        self.player_sprites.append(self.manager.player.sprite)
 
         volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):

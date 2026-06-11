@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 13:32:00 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 14:48:14 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 20:22:02 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -124,7 +124,7 @@ class CheatView(arcade.View):
         inv_row.add(self.btn_ghost)
         self.v_box.add(inv_row)
 
-        # === Gelé les fantôme ===
+        # === Augmenter / Réduire la vitesse ===
 
         inv_row = arcade.gui.UIBoxLayout(vertical=False, space_between=20)
         inv_label = arcade.gui.UILabel(
@@ -140,6 +140,24 @@ class CheatView(arcade.View):
         )
         self.btn_player_speed.on_click = self.manage_player_speed
         inv_row.add(self.btn_player_speed)
+        self.v_box.add(inv_row)
+
+        # === Le fameux mode dynamax :D ===
+
+        inv_row = arcade.gui.UIBoxLayout(vertical=False, space_between=20)
+        inv_label = arcade.gui.UILabel(
+            text="Mode Dynamax",
+            text_color=arcade.color.WHITE,
+            font_size=18
+        )
+        inv_row.add(inv_label)
+
+        self.btn_dyna = arcade.gui.UIFlatButton(
+            text="Oui" if (self.manager.cheat.dynamax is True) else "Non",
+            width=200
+        )
+        self.btn_dyna.on_click = self.manage_dynamax
+        inv_row.add(self.btn_dyna)
         self.v_box.add(inv_row)
 
         # === Création des derniers éléments et ajouts au manager ===
@@ -189,6 +207,19 @@ class CheatView(arcade.View):
         new_speed = (self.manager.player.speed % 10) + 1
         self.btn_player_speed.text = f"{new_speed}"
         self.manager.player.speed = new_speed
+
+    def manage_dynamax(self, _) -> None:
+
+        """Gère le changement d'état du mod dynamax."""
+
+        if self.btn_dyna.text == "Oui":
+            self.btn_dyna.text = "Non"
+            self.manager.cheat.dynamax = False
+            self.manager.player.pokemon.scale /= 3
+        else:
+            self.btn_dyna.text = "Oui"
+            self.manager.cheat.dynamax = True
+            self.manager.player.pokemon.scale *= 3
 
     # +---------------------------------------------------------------------+
     # |                            View Methods                             |
