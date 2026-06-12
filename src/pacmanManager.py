@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 15:38:35 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 11:08:48 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -128,6 +128,9 @@ class PacmanManager():
         self.player.nb_life = self.config.lives
         self.actual_level = 0
         self.current_level = self.level[self.actual_level]
+        self.player.is_super = False
+        self.player.super_timer = 0.0
+        self.enemy_manager.reset_enemy()
         self.reset_player_position()
         self.enemy_manager.set_current_level(self.current_level)
 
