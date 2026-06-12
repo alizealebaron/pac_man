@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 09:56:44 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 11:53:25 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -120,6 +120,8 @@ class EnemyManager:
     def reset_enemy(self) -> None:
         """Réinitialise les ennemis."""
         for enemy in self.enemies:
+            enemy.sprite.color = arcade.color.WHITE
+            enemy.is_fleeing = False
             enemy.already_dead = False
             enemy.reset_pos()
 

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 09:56:57 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 11:52:51 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -643,3 +643,5 @@ class EnemyModel:
     def die(self):
         self.is_dead = True
         self.already_dead = True
+        self.is_fleeing = False
+        self.sprite.color = arcade.color.WHITE

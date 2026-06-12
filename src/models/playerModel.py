@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 22:02:30 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 11:59:02 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -80,6 +80,7 @@ class PlayerModel():
         self.sprite = AnimatedSprite(self.pokemon.name, self.pokemon.width,
                                      self.pokemon.height, self.pokemon.nb_anim)
         self.speed = 3.0
+        self.just_change = False
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
@@ -97,6 +98,7 @@ class PlayerModel():
         self.sprite.current_direction = "down"
         self.is_super = False
         self.super_timer = 0.0
+        self.just_change = False
 
     # +---------------------------------------------------------------------+
     # |                              Methods                                |
