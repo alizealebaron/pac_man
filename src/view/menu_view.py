@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 09:43:26 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 10:14:23 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -74,6 +74,9 @@ class MenuView(arcade.View):
         self.sprite_qwerty = arcade.load_texture("assets/menu/keybinds.png")
         self.sprite_azerty = arcade.load_texture("assets/menu/keybinds_azerty"
                                                  ".png")
+        self.sprite_arrow = arcade.load_texture("assets/menu/keybinds_arrow"
+                                                ".png")
+        self.sprite_keybinds = self.sprite_qwerty
         self.sprite_frame = arcade.load_texture("assets/sprite/face_frame.png")
         self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
                                                   f"{self.player_pokemon.name}"
@@ -136,6 +139,9 @@ class MenuView(arcade.View):
         # Initialisation de la musique
         self.music_player = None
 
+        # Timer
+        self.change_timer = 3.0
+
     # +---------------------------------------------------------------------+
     # |                            Btn Methods                              |
     # +---------------------------------------------------------------------+
@@ -177,6 +183,23 @@ class MenuView(arcade.View):
         self.pokemon_sprite = arcade.load_texture(f"assets/sprite/pokemon/"
                                                   f"{self.player_pokemon.name}"
                                                   "/portraits/Normal.png")
+
+    def on_update(self, delta_time):
+        """Met à jour la vue selon le temps."""
+
+        self.change_timer -= delta_time
+
+        if self.change_timer <= 0:
+
+            self.change_timer = 3.0
+
+            if self.sprite_keybinds == self.sprite_arrow:
+                if self.window.manager.settings.configuration == "QWERTY":
+                    self.sprite_keybinds = self.sprite_qwerty
+                else:
+                    self.sprite_keybinds = self.sprite_azerty
+            else:
+                self.sprite_keybinds = self.sprite_arrow
 
     def on_draw(self) -> None:
 
@@ -223,14 +246,8 @@ class MenuView(arcade.View):
 
         self._draw_little_scoreboard()
 
-        # Affichage de l'encadré en bas à droite
-        if (self.window.manager.settings.configuration == "AZERTY"):
-            sprite_keybinds = self.sprite_azerty
-        else:
-            sprite_keybinds = self.sprite_qwerty
-
         arcade.draw_texture_rect(
-            texture=sprite_keybinds,
+            texture=self.sprite_keybinds,
             rect=arcade.XYWH(self.width - (sprite_width / 2) - 20,
                              (sprite_height / 2) + 20,
                              sprite_width,
