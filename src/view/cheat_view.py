@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 13:32:00 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 12:10:54 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 16:07:08 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -155,7 +155,7 @@ class CheatView(arcade.View):
         if (self.manager.actual_level + 2 > (len(self.manager.level))):
             text = "Fin du jeu"
         else:
-            text= f"Passer à l'étage n°{self.manager.actual_level + 2}"
+            text = f"Passer à l'étage n°{self.manager.actual_level + 2}"
 
         self.btn_level_skip = arcade.gui.UIFlatButton(
             text=text,

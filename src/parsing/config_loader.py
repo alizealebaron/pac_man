@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 10:07:49 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 12:48:16 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 16:38:59 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -51,7 +51,6 @@ class ConfigLoader:
             {'id': 10, 'width': 20, 'height': 20}
         ],
         'lives': 3,
-        'pacgum': 42,
         'points_per_pacgum': 10,
         'points_per_super_pacgum': 50,
         'points_per_ghost': 200,

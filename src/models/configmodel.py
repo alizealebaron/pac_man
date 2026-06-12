@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 11:08:47 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 12:13:45 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 16:39:22 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -23,7 +23,7 @@ import sys
 # +-------------------------------------------------------------------------+
 
 
-mandatory_keys: list[str] = ['highscore_filename', 'level', 'lives', 'pacgum',
+mandatory_keys: list[str] = ['highscore_filename', 'level', 'lives',
                              'points_per_pacgum', 'points_per_super_pacgum',
                              'points_per_ghost', 'level_max_time', 'seed']
 optional_keys: list[str] = []
@@ -84,7 +84,6 @@ class ConfigModel(BaseModel):
                                               min_length=1)
     level: list[LevelConfig] = Field(min_length=1, default_factory=list)
     lives: int = Field(ge=1, le=1000, default=3)
-    pacgum: int = Field(ge=1, le=1000, default=42)
     points_per_pacgum: int = Field(ge=1, le=1000, default=10)
     points_per_super_pacgum: int = Field(ge=1, le=1000, default=50)
     points_per_ghost: int = Field(ge=1, le=1000, default=100)

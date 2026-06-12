@@ -34,3 +34,4 @@
 ### Documentation de librairie python
 
 - [The Python Arcade Library](https://api.arcade.academy/en/3.3.3/index.html)
+- [Pac-man](https://fr.wikipedia.org/wiki/Pac-Man)
