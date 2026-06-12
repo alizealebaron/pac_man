@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 15:12:38 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 09:49:35 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -87,8 +87,8 @@ class EnemyManager:
         """
 
         enemies = []
-        # enemies_infos = [blinky, clyde, inky, pinky]
-        enemies_infos = [clyde]
+        enemies_infos = [blinky, clyde, inky, pinky]
+        # enemies_infos = [clyde]
 
         for info in enemies_infos:
             mon = info
@@ -120,6 +120,7 @@ class EnemyManager:
     def reset_enemy(self) -> None:
         """Réinitialise les ennemis."""
         for enemy in self.enemies:
+            enemy.already_dead = False
             enemy.reset_pos()
 
     # +---------------------------------------------------------------------+
