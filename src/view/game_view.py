@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 09:58:26 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 11:24:00 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -415,26 +415,14 @@ class GameView(arcade.View):
 
         self.manager.player.sprite.on_update(delta_time)
 
-
-        if (self.manager.cheat.ghost_freeze is False):
-            for enemy in self.enemy_manager.enemies:
-                enemy.on_update(delta_time)
-                if enemy.just_respawned:
-                    self.enemy_manager.enemies_sprite.append(enemy.sprite)
-                    enemy.just_respawned = False
-                if enemy.is_dead:
-                    if enemy.sprite in self.enemy_manager.enemies_sprite:
-                        self.enemy_manager.enemies_sprite.remove(enemy.sprite)
-
-        elif self.manager.cheat.ghost_freeze is True:
-            for enemy in self.enemy_manager.enemies:
-                if enemy.just_respawned:
-                    self.enemy_manager.enemies_sprite.append(enemy.sprite)
-                    enemy.just_respawned = False
-                if enemy.is_dead:
-                    enemy.on_update(delta_time)
-                    if enemy.sprite in self.enemy_manager.enemies_sprite:
-                        self.enemy_manager.enemies_sprite.remove(enemy.sprite)
+        for enemy in self.enemy_manager.enemies:
+            enemy.on_update(delta_time)
+            if enemy.just_respawned:
+                self.enemy_manager.enemies_sprite.append(enemy.sprite)
+                enemy.just_respawned = False
+            if enemy.is_dead:
+                if enemy.sprite in self.enemy_manager.enemies_sprite:
+                    self.enemy_manager.enemies_sprite.remove(enemy.sprite)
 
         if (int(self.timer) != self.manager.config.level_max_time):
             self.check_enemy_collisions()
@@ -476,8 +464,12 @@ class GameView(arcade.View):
             lst_collisions += arcade.check_for_collision_with_list(player,
                                                                    ennemy)
 
-        if not self.manager.player.is_super and self.manager.cheat.invicibility is False:
+        if ((not self.manager.player.is_super) and
+           self.manager.cheat.intagibilite is False and
+           self.manager.cheat.invicibility is False):
+
             if (lst_collisions):
+
                 self.manager.player.nb_life -= 1
                 if (self.manager.player.nb_life) == 0:
                     return
@@ -485,7 +477,11 @@ class GameView(arcade.View):
                 self._player_original_pos()
                 self.enemy_manager.reset_enemy()
 
-        elif self.manager.player.is_super:
+        elif ((self.manager.player.is_super and
+              self.manager.cheat.intagibilite is False) or
+              (self.manager.player.is_super and
+              self.manager.cheat.invicibility is True)):
+
             if (lst_collisions):
                 for collision in lst_collisions:
                     enemy = collision.owner
@@ -495,12 +491,13 @@ class GameView(arcade.View):
                         point = self.manager.config.points_per_ghost
                         self.manager.player.score += point
                     else:
-                        self.manager.player.nb_life -= 1
-                        if (self.manager.player.nb_life) == 0:
-                            return
-                        self.manager.player.reset_position()
-                        self._player_original_pos()
-                        self.enemy_manager.reset_enemy()
+                        if (self.manager.cheat.invicibility is False):
+                            self.manager.player.nb_life -= 1
+                            if (self.manager.player.nb_life) == 0:
+                                return
+                            self.manager.player.reset_position()
+                            self._player_original_pos()
+                            self.enemy_manager.reset_enemy()
 
     def get_collectibles(self) -> None:
 

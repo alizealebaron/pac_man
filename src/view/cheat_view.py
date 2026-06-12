@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 13:32:00 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 20:22:02 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 10:59:27 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -110,14 +110,14 @@ class CheatView(arcade.View):
 
         inv_row = arcade.gui.UIBoxLayout(vertical=False, space_between=20)
         inv_label = arcade.gui.UILabel(
-            text="Gel des fantômes",
+            text="Intangibilité",
             text_color=arcade.color.WHITE,
             font_size=18
         )
         inv_row.add(inv_label)
 
         self.btn_ghost = arcade.gui.UIFlatButton(
-            text="Oui" if (self.manager.cheat.ghost_freeze is True) else "Non",
+            text="Oui" if (self.manager.cheat.intagibilite is True) else "Non",
             width=200
         )
         self.btn_ghost.on_click = self.manage_ghost
@@ -191,14 +191,14 @@ class CheatView(arcade.View):
 
     def manage_ghost(self, _) -> None:
 
-        """Gère le changement d'état du gel des fantômes."""
+        """Gère le changement d'intagibilite."""
 
         if self.btn_ghost.text == "Oui":
             self.btn_ghost.text = "Non"
-            self.manager.cheat.ghost_freeze = False
+            self.manager.cheat.intagibilite = False
         else:
             self.btn_ghost.text = "Oui"
-            self.manager.cheat.ghost_freeze = True
+            self.manager.cheat.intagibilite = True
 
     def manage_player_speed(self, _) -> None:
 
