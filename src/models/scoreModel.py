@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 10:36:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/01 10:15:29 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 13:49:59 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -23,6 +23,15 @@ from pydantic import BaseModel, Field
 # +-------------------------------------------------------------------------+
 
 class Score(BaseModel):
+
+    """
+    Modèle de données pour les scores des personnages du jeu.
+
+    Attributes:
+        name (str): Le nom du personnage.
+        score (int): Le score du personnage.
+        pokemon (str): Le pokémon associé au personnage.
+    """
 
     # +---------------------------------------------------------------------+
     # |                              Attributs                              |

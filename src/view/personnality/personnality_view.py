@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 01:33:59 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/04 11:46:32 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 14:04:40 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -35,15 +35,33 @@ UNSELECTED_PATH = "assets/quizz/question_unselected.png"
 
 class PersonnalityView(arcade.View):
 
+    """
+    Vue pour le test de personnalité.
+
+    Attributes:
+        window (arcade.Window): La fenêtre de jeu.
+        background (arcade.Texture): La texture de fond de la vue.
+        music_player (arcade.SoundPlayer): Le lecteur de musique pour la vue.
+        reponses (List[str]): La liste des réponses possibles à la question.
+        selected_reponse (int): L'index de la réponse actuellement
+            sélectionnée.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, window: arcade.Window):
+
+        """
+        Initialise la vue de personnalité.
+
+        Args:
+            window (arcade.Window): La fenêtre de jeu.
+        """
+
         super().__init__()
-
         self.window = window
-
         self.background = arcade.load_texture(BACKGROUND_PATH)
 
         # Initialisation de la musique
@@ -57,16 +75,25 @@ class PersonnalityView(arcade.View):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_show_view(self):
-        """Appelé quand la vue change"""
+    def on_show_view(self) -> None:
+
+        """
+        Méthode appelée lorsque la vue est affichée. Elle démarre la
+        musique de la vue.
+        """
+
         volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
             self.music = arcade.Sound(MUSIC_PATH,
                                       streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
 
-    def on_draw(self):
-        """ Render the screen. """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
+
         # Clear the screen
         self.clear()
 
@@ -132,14 +159,22 @@ class PersonnalityView(arcade.View):
 
             start_y += space_between
 
-    def on_mouse_press(self, x, y, _, __):
+    def on_mouse_press(self, x, y, _, __) -> None:
+
+        """
+        Méthode appelée lorsque l'on clique sur la souris.
+        """
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
             self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key, _) -> None:
+
+        """
+        Méthode appelée lorsque l'on appuie sur une touche du clavier.
+        """
 
         dict_key = self.window.manager.settings.dict_key
         dict_key = dict_key[self.window.manager.settings.configuration]
@@ -165,7 +200,11 @@ class PersonnalityView(arcade.View):
     # |                            Draw methods                             |
     # +---------------------------------------------------------------------+
 
-    def draw_begin_text(self):
+    def draw_begin_text(self) -> None:
+
+        """
+        Affiche le texte d'introduction du test de personnalité.
+        """
 
         text_box_sprite = arcade.load_texture("assets/menu/text_box.png")
         arcade.draw_texture_rect(texture=text_box_sprite,

@@ -10,4 +10,5 @@ dependencies = [
     "flake8>=7.3.0",
     "mypy>=2.1.0",
     "pydantic>=2.13.4",
+    "pyinstaller>=6.20.0",
 ]

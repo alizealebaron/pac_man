@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 08:06:31 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/10 17:53:31 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 14:40:35 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -32,11 +32,29 @@ MUSIC_PATH = "assets/music/gameover_theme.mp3"
 
 class GameoverView(WinView):
 
+    """
+    View affichée lorsque le joueur perd la partie.
+
+    Attributs:
+        background (arcade.Texture): Texture de fond de la view.
+        title (str): Titre affiché sur la view.
+        emotion (str): Emotion affichée sur le portrait du pokemon.
+        profile_tex (arcade.Texture): Texture du portrait du pokemon.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, window):
+
+        """
+        Initialise la view de gameover.
+        Args:
+            window (arcade.Window): La fenêtre de jeu.
+        """
+
+        # Appel du constructeur de la classe parente
         super().__init__(window)
 
         self.background = arcade.load_texture(BACKGROUND_PATH)
@@ -53,8 +71,13 @@ class GameoverView(WinView):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_show_view(self):
-        """Appelé quand la vue change"""
+    def on_show_view(self) -> None:
+
+        """
+        Méthode appelée lorsque la vue est affichée. Elle démarre la
+        musique de la vue.
+        """
+
         self.ui_manager.enable()
 
         if not (self.music_player and self.music_player.playing):

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 09:51:50 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 09:58:26 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,6 +21,7 @@ from src.managers.collectible_manager import CollectibleManager
 from src.view.save_score.win_view import WinView
 from src.view.save_score.gameover_view import GameoverView
 from src.view.cheat_view import CheatView
+from src.view.settings_view import SettingsView
 from src.pacmanManager import PacmanManager
 
 # +-------------------------------------------------------------------------+
@@ -35,18 +36,68 @@ SCROLL_PATH = "assets/menu/scroll.png"
 TILE_SIZE = 64
 TRANSITION_DISTANCE = 64
 
+
 # +-------------------------------------------------------------------------+
 # |                                 Classe                                  |
 # +-------------------------------------------------------------------------+
 
 class GameView(arcade.View):
 
+    """
+    Vue principale du jeu, gère l'affichage du labyrinthe, des ennemis, du
+    joueur, des collectibles, de l'UI et du menu de pause.
+
+    Attributs:
+        manager (PacmanManager): Le manager du jeu, gère la logique du jeu et
+            les données.
+        enemy_manager (EnemyManager): Le manager des ennemis, gère la logique
+            des ennemis et leurs données.
+        collectible_manager (CollectibleManager): Le manager des collectibles,
+            gère la logique des collectibles et leurs données.
+        maze_renderer (MazeRenderer): Le renderer du labyrinthe,
+            gère l'affichage du labyrinthe.
+        player_sprites (arcade.SpriteList): La liste des sprites du joueur,
+            gère l'affichage du joueur.
+        music_player (arcade.SoundPlayer): Le lecteur de musique pour la vue,
+            gère la musique de la vue.
+        music (arcade.Sound): La musique de la vue, gère la musique de la
+            vue.
+        background (arcade.Texture): Le background de la vue, gère l'affichage
+            du background.
+        sprite_frame (arcade.Texture): Le sprite du cadre du portrait du
+            joueur, gère l'affichage du cadre du portrait du joueur.
+        scroll_texture (arcade.Texture): Le sprite du fond de l'UI, gère
+            l'affichage du fond de l'UI.
+        cheat_scroll (arcade.Texture): Le sprite du fond de l'UI du menu de
+            triche, gère l'affichage du fond de l'UI du menu de triche.
+        timer (float): Le timer du niveau, gère le temps restant pour finir le
+            niveau.
+        is_finished (int): La variable qui indique si le niveau est fini, gère
+            l'état du niveau (0: en cours, 1: gagné, 2:
+            perdu).
+        show_pause_menu (bool): La variable qui indique si le menu de pause est
+            affiché, gère l'affichage du menu de pause.
+        pause_manager (arcade.gui.UIManager): Le manager de l'UI pour gérer les
+            éléments graphiques du menu de pause.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, manager: PacmanManager, music_player=None, music=None):
-        """ Initializer """
+
+        """
+        Initialise la vue du jeu.
+
+        Args:
+            manager (PacmanManager): Le manager du jeu, gère la logique du jeu
+                et les données.
+            music_player (arcade.SoundPlayer, optional): Le lecteur de musique
+                pour la vue, gère la musique de la vue. Defaults to None.
+            music (arcade.Sound, optional): La musique de la vue, gère la
+                musique de la vue. Defaults to None.
+        """
 
         # === Initialisation de la classe parente ===
         super().__init__()
@@ -120,7 +171,11 @@ class GameView(arcade.View):
     # |                             Init Methods                            |
     # +---------------------------------------------------------------------+
 
-    def init_textures(self):
+    def init_textures(self) -> None:
+
+        """
+        Initialise les textures utilisées dans la vue du jeu.
+        """
 
         self.background = arcade.load_texture(BACKGROUND_PATH)
         pokemon = self.manager.player.pokemon.name
@@ -132,14 +187,21 @@ class GameView(arcade.View):
         self.cheat_scroll = arcade.load_texture("assets/menu/small_leader"
                                                 "board.png")
 
-    def init_btn_layout(self):
+    def init_btn_layout(self) -> None:
+
+        """
+        Initialise les éléments graphiques du menu de pause.
+        """
 
         btn_resume = arcade.gui.UIFlatButton(text="Retour au jeu", width=150)
         btn_start_new_game = arcade.gui.UIFlatButton(text="Nouvelle partie",
                                                      width=150)
         btn_cheat = arcade.gui.UIFlatButton(text="Triche",
-                                            width=320)
-        btn_exit = arcade.gui.UIFlatButton(text="Retour au menu principal", width=320)
+                                            width=150)
+        btn_param = arcade.gui.UIFlatButton(text="Paramètres",
+                                            width=150)
+        btn_exit = arcade.gui.UIFlatButton(text="Retour au menu principal",
+                                           width=320)
 
         self.grid = arcade.gui.UIGridLayout(
             column_count=2, row_count=3, horizontal_spacing=20,
@@ -148,7 +210,8 @@ class GameView(arcade.View):
 
         self.grid.add(btn_resume, column=0, row=0)
         self.grid.add(btn_start_new_game, column=1, row=0)
-        self.grid.add(btn_cheat, column=0, row=1, column_span=2)
+        self.grid.add(btn_cheat, column=0, row=1)
+        self.grid.add(btn_param, column=1, row=1)
         self.grid.add(btn_exit, column=0, row=2, column_span=2)
 
         self.anchor = self.pause_manager.add(arcade.gui.UIAnchorLayout())
@@ -170,26 +233,42 @@ class GameView(arcade.View):
         @btn_start_new_game.event("on_click")
         def on_click_start_new_game_button(event):
             self.manager.reset_game()
+            self.music.stop(self.music_player)
             self.window.show_view(GameView(self.manager))
 
         @btn_cheat.event("on_click")
         def on_click_cheat(event):
             self.window.show_view(CheatView(self.window, self))
 
+        @btn_param.event("on_click")
+        def on_click_param(event):
+            self.music.stop(self.music_player)
+            self.window.show_view(SettingsView(self.window, self))
+
         @btn_exit.event("on_click")
         def on_click_exit_button(event):
             self.manager.reset_game()
+            self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
     # +---------------------------------------------------------------------+
     # |                               Methods                               |
     # +---------------------------------------------------------------------+
 
-    def on_hide_view(self):
+    def on_hide_view(self) -> None:
+
+        """
+        Méthode appelée lorsque la vue est cachée.
+        """
+
         self.pause_manager.disable()
 
-    def on_draw(self):
-        """ Draw everything """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
+
         self.clear()
 
         # Affichage du background
@@ -200,19 +279,24 @@ class GameView(arcade.View):
         self.collectible_manager.draw()
 
         # Récupération des coordonnées du joueur en pixel
-        pixel_x = self.manager.player.x * TILE_SIZE + 32 + self.manager.player.pixel_offset_x
-        pixel_y = self.manager.player.y * TILE_SIZE + 32 + self.manager.player.pixel_offset_y
+        pixel_x = (self.manager.player.x * TILE_SIZE + 32 +
+                   self.manager.player.pixel_offset_x)
+        pixel_y = (self.manager.player.y * TILE_SIZE + 32 +
+                   self.manager.player.pixel_offset_y)
 
         # Affichage du joueur au centre du labyrinthe
-        self.manager.player.sprite.center_x = pixel_x * self.scale + self.offset_x
-        self.manager.player.sprite.center_y = pixel_y * self.scale + self.offset_y
+        self.manager.player.sprite.center_x = (pixel_x * self.scale +
+                                               self.offset_x)
+        self.manager.player.sprite.center_y = (pixel_y * self.scale +
+                                               self.offset_y)
         self.player_sprites.draw()
 
         for enemy in self.enemy_manager.enemies:
             pixel_x = enemy.x * TILE_SIZE + 32 + enemy.pixel_offset_x
             pixel_y = enemy.y * TILE_SIZE + 32 + enemy.pixel_offset_y
             enemy.sprite.center_x = pixel_x * self.scale + self.offset_x
-            enemy.sprite.center_y = pixel_y * self.scale + self.offset_y - enemy.offset_y
+            enemy.sprite.center_y = (pixel_y * self.scale +
+                                     self.offset_y - enemy.offset_y)
 
         for enemy in self.enemy_manager.get_respawning_enemies():
             countdown = enemy.death_timer - int(enemy.respawn_timer)
@@ -252,7 +336,7 @@ class GameView(arcade.View):
                                       self.window.width / 2,
                                       self.height * 0.65,
                                       color=arcade.color.BLACK,
-                                      font_size=25,
+                                      font_size=36,
                                       font_name="FOT-Humming Pro",
                                       anchor_x="center",
                                       anchor_y="center")
@@ -260,8 +344,9 @@ class GameView(arcade.View):
             pause_title.draw()
             self.pause_manager.draw()
 
-    def on_update(self, delta_time):
-        """ Movement and game logic """
+    def on_update(self, delta_time) -> None:
+
+        """Mise à jour de la vue, appelée 60 fois par seconde."""
 
         # Mise à jour du timer
         if (self.show_pause_menu is True):
@@ -319,7 +404,9 @@ class GameView(arcade.View):
                 for enemy in self.manager.enemy_manager.enemies:
                     enemy.is_fleeing = True
 
-            if self.manager.player.super_timer >= self.manager.player.time_super_max:
+            if (self.manager.player.super_timer >=
+               self.manager.player.time_super_max):
+
                 self.manager.player.is_super = False
                 for enemy in self.manager.enemy_manager.enemies:
                     enemy.is_fleeing = False
@@ -349,14 +436,23 @@ class GameView(arcade.View):
                     if enemy.sprite in self.enemy_manager.enemies_sprite:
                         self.enemy_manager.enemies_sprite.remove(enemy.sprite)
 
-        if (self.manager.cheat.invicibility is False and int(self.timer) != self.manager.config.level_max_time):
+        if (int(self.timer) != self.manager.config.level_max_time):
             self.check_enemy_collisions()
 
-    def on_show_view(self):
-        """Appelé quand la vue change"""
+    def on_show_view(self) -> None:
+
+        """
+        Méthode appelée lorsque la vue est affichée. Elle démarre la
+        musique de la vue.
+        """
 
         if (self.show_pause_menu is True):
             self.pause_manager.enable()
+
+        self.manager.player.sprite.scale = (self.manager.player.pokemon.scale *
+                                            self.scale)
+        self.player_sprites = arcade.SpriteList()
+        self.player_sprites.append(self.manager.player.sprite)
 
         volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
@@ -368,7 +464,9 @@ class GameView(arcade.View):
     # |                        Methods for collisions                       |
     # +---------------------------------------------------------------------+
 
-    def check_enemy_collisions(self):
+    def check_enemy_collisions(self) -> None:
+
+        """Vérifie les collisions entre le joueur et les ennemis."""
 
         lst_collisions = []
 
@@ -378,7 +476,7 @@ class GameView(arcade.View):
             lst_collisions += arcade.check_for_collision_with_list(player,
                                                                    ennemy)
 
-        if not self.manager.player.is_super:
+        if not self.manager.player.is_super and self.manager.cheat.invicibility is False:
             if (lst_collisions):
                 self.manager.player.nb_life -= 1
                 if (self.manager.player.nb_life) == 0:
@@ -394,7 +492,8 @@ class GameView(arcade.View):
                     if not enemy.already_dead:
                         self.manager.enemy_manager.enemies_sprite.remove(enemy.sprite)
                         enemy.die()
-                        self.manager.player.score += self.manager.config.points_per_ghost
+                        point = self.manager.config.points_per_ghost
+                        self.manager.player.score += point
                     else:
                         self.manager.player.nb_life -= 1
                         if (self.manager.player.nb_life) == 0:
@@ -403,7 +502,12 @@ class GameView(arcade.View):
                         self._player_original_pos()
                         self.enemy_manager.reset_enemy()
 
-    def get_collectibles(self):
+    def get_collectibles(self) -> None:
+
+        """
+        Vérifie les collisions entre le joueur et les collectibles,
+        et met à jour le score et l'état du niveau en conséquence.
+        """
 
         p = self.collectible_manager.remove_pacgum(self.player_sprites,
                                                    self.manager.config,
@@ -417,19 +521,37 @@ class GameView(arcade.View):
     # +---------------------------------------------------------------------+
 
     def _rev_maze(self, maze: list[list[int]]) -> list[list[int]]:
+
+        """
+        Inverse le labyrinthe pour l'adapter au système de coordonnées
+        d'Arcade.
+
+        Args:
+             maze (list[list[int]]): La matrice représentant le labyrinthe.
+        Returns:
+             list[list[int]]: La matrice du labyrinthe inversée.
+        """
+
         rev_maze: list[list[int]] = []
         for i in range(len(maze) - 1, -1, -1):
             rev_maze.append(maze[i])
 
         return rev_maze
 
-    def _player_original_pos(self):
+    def _player_original_pos(self) -> None:
+
+        """
+        Initialise la position du joueur au point de départ défini dans le
+        labyrinthe.
+        """
 
         nb_columns = len(self.rev_maze[0])
         nb_lines = len(self.rev_maze)
 
-        grid_x = (nb_columns) // 2 if nb_columns % 2 == 0 else (nb_columns + 1) // 2
-        grid_y = (nb_lines) // 2 + 1 if nb_lines % 2 == 0 else (nb_lines + 1) // 2
+        grid_x = ((nb_columns) // 2 if nb_columns % 2 == 0 else
+                  (nb_columns + 1) // 2)
+        grid_y = ((nb_lines) // 2 + 1 if nb_lines % 2 == 0 else
+                  (nb_lines + 1) // 2)
 
         self.manager.player.x = grid_x - 1
         self.manager.player.y = grid_y - 1
@@ -437,7 +559,11 @@ class GameView(arcade.View):
         self.manager.player.pixel_offset_x = 0.0
         self.manager.player.pixel_offset_y = 0.0
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key, _) -> None:
+
+        """
+        Méthode appelée lorsque l'on appuie sur une touche du clavier.
+        """
 
         if (self.show_pause_menu is False):
 
@@ -464,9 +590,21 @@ class GameView(arcade.View):
                 self.window.set_mouse_visible(False)
 
     def _player_move(self) -> tuple[float, float]:
+
+        """
+        Calcule le déplacement du joueur en fonction de sa direction actuelle
+        et de la configuration du labyrinthe.
+
+        Returns:
+            tuple[float, float]: Le déplacement en pixels sur les axes x et y.
+        """
+
         player = self.manager.player
 
-        if player.next_direction and self._is_opposite_direction(player.direction, player.next_direction):
+        if (player.next_direction and
+            self._is_opposite_direction(player.direction,
+                                        player.next_direction)):
+
             player.direction = player.next_direction
             player.next_direction = None
 
@@ -513,9 +651,24 @@ class GameView(arcade.View):
         return (0, 0)
 
     def _can_move(self, direction: str) -> bool:
+
+        """
+        Vérifie si le joueur peut se déplacer dans la direction donnée en
+        fonction de la configuration du labyrinthe.
+
+        Args:
+            direction (str): La direction dans laquelle le joueur souhaite se
+                déplacer ('up', 'down', 'left', 'right').
+        Returns:
+            bool: True si le joueur peut se déplacer dans la direction donnée,
+                False sinon.
+        """
+
         grid_x = self.manager.player.x
         grid_y = self.manager.player.y
-        if grid_y < 0 or grid_y >= len(self.rev_maze) or grid_x < 0 or grid_x >= len(self.rev_maze[0]):
+        if (grid_y < 0 or grid_y >= len(self.rev_maze) or
+           grid_x < 0 or grid_x >= len(self.rev_maze[0])):
+
             return False
 
         match direction:
@@ -535,6 +688,21 @@ class GameView(arcade.View):
                 return False
 
     def _is_opposite_direction(self, current: str, next_dir: str) -> bool:
+
+        """
+        Vérifie si la prochaine direction est opposée à la direction actuelle
+        du joueur.
+
+        Args:
+            current (str): La direction actuelle du joueur ('up', 'down',
+                'left','right').
+            next_dir (str): La prochaine direction du joueur.
+
+        Returns:
+            bool: True si la prochaine direction est opposée à la direction
+                actuelle, False sinon.
+        """
+
         opposites = {
             "up": "down",
             "down": "up",
@@ -547,7 +715,9 @@ class GameView(arcade.View):
     # |                            Draw Methods                             |
     # +---------------------------------------------------------------------+
 
-    def draw_background(self):
+    def draw_background(self) -> None:
+
+        """Affiche le background de la vue."""
 
         arcade.draw_texture_rect(
             texture=self.background,
@@ -559,7 +729,13 @@ class GameView(arcade.View):
             )
         )
 
-    def draw_UI(self):
+    def draw_UI(self) -> None:
+
+        """
+        Affiche l'interface utilisateur (UI) de la vue,
+        comprenant les informations sur le joueur, le niveau et le
+        temps restant.
+        """
 
         # Affichage de la partie haut gauche de l'UI
         sprite_size = 75
@@ -591,7 +767,8 @@ class GameView(arcade.View):
 
         player_score = arcade.Text(f"Score: {self.manager.player.score}",
                                    sprite_size + 25 + 20,
-                                   (self.hauteur - (sprite_size / 2) - 35) - 20,
+                                   ((self.hauteur -
+                                     (sprite_size / 2) - 35) - 20),
                                    color=arcade.color.WHITE,
                                    font_size=15,
                                    font_name="Comic Sans MS")

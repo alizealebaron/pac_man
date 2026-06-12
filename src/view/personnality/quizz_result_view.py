@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 16:28:27 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/05 14:48:08 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 20:27:14 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -36,12 +36,42 @@ UNSELECTED_PATH = "assets/quizz/question_unselected.png"
 
 class ResultQuizzView(arcade.View):
 
+    """
+    Vue pour afficher les résultats du quizz de personnalité.
+
+    Attributes:
+        window (arcade.Window): La fenêtre de jeu.
+        background (arcade.Texture): La texture de fond de la vue.
+        music_player (arcade.SoundPlayer): Le lecteur de musique pour la vue.
+        dict_caracteres (Dict[str, int]): Un dictionnaire associant les
+            caractères à leurs scores respectifs.
+        index_carac (int): L'index du caractère actuellement affiché.
+        caractere (str): Le caractère dominant du joueur.
+        lst_carac (List[str]): La liste des caractéristiques associées au
+            caractère dominant.
+        random_pokemon (str): Le nom du pokémon généré aléatoirement.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, window: arcade.Window, music_player: Any, music: Any,
                  dict_caractere: Dict[str, int]):
+
+        """
+        Initialise la vue de résultat du quizz.
+
+        Args:
+            window (arcade.Window): La fenêtre de jeu.
+            music_player (Any): Le lecteur de musique pour la vue.
+            music (Any): La musique à jouer dans la vue.
+            dict_caractere (Dict[str, int]): Un dictionnaire associant les
+                caractères à leurs scores respectifs.
+        """
+
+        # Init de la classe parente
+
         super().__init__()
 
         self.window = window
@@ -66,8 +96,12 @@ class ResultQuizzView(arcade.View):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_draw(self):
-        """ Render the screen. """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
+
         # Clear the screen
         self.clear()
 
@@ -100,14 +134,22 @@ class ResultQuizzView(arcade.View):
         else:
             self.draw_pokemon()
 
-    def on_mouse_press(self, x, y, _, __):
+    def on_mouse_press(self, x, y, _, __) -> None:
+
+        """
+        Méthode appelée lorsque l'on clique sur la souris.
+        """
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
             self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key, _) -> None:
+
+        """
+        Méthode appelée lorsque l'on appuie sur une touche du clavier.
+        """
 
         if key == arcade.key.ENTER or key == arcade.key.SPACE:
 
@@ -116,6 +158,8 @@ class ResultQuizzView(arcade.View):
             else:
                 self.window.manager.player.pokemon = self.random_pokemon
                 self.window.manager.player.update_pokemon_sprite()
+                if (self.window.manager.cheat.dynamax is True):
+                    self.window.manager.player.pokemon.scale *= 3
                 self.music.stop(self.music_player)
                 self.window.show_view(self.window.start_view)
 
@@ -123,7 +167,11 @@ class ResultQuizzView(arcade.View):
     # |                            Draw Methods                             |
     # +---------------------------------------------------------------------+
 
-    def draw_pokemon(self):
+    def draw_pokemon(self) -> None:
+
+        """
+        Affiche le pokémon correspondant au caractère dominant du joueur.
+        """
 
         possible_pokemon1 = [obj for obj in self.window.manager.pokemons
                              if obj.comportement1 == self.caractere]
@@ -171,7 +219,12 @@ class ResultQuizzView(arcade.View):
 
         texte.draw()
 
-    def write_end_text(self):
+    def write_end_text(self) -> None:
+
+        """
+        Affiche le texte final du résultat du quizz, qui correspond à une
+        caractéristique du caractère dominant du joueur.
+        """
 
         center_x = self.width / 2
         center_y = self.height / 2

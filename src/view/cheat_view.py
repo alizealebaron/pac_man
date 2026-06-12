@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 13:32:00 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 10:30:01 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 20:22:02 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -32,11 +32,35 @@ BACKGROUND_PATH = "assets/background/cheat_background.png"
 
 class CheatView(arcade.View):
 
+    """
+    Vue de triche, permet d'activer des cheats pour faciliter le jeu.
+
+    Attributs:
+        game_view (arcade.View): La vue du jeu, pour pouvoir y retourner.
+        manager (PacmanManager): Le manager du jeu, pour pouvoir accéder
+            aux cheats.
+        background (arcade.Texture): Le background de la vue.
+        retour_sprite (arcade.Texture): Le sprite du bouton de retour.
+        score_sprite (arcade.Texture): Le sprite du fond des settings.
+        ui_manager (arcade.gui.UIManager): Le manager de l'UI pour gérer les
+            éléments graphiques de la vue.
+        v_box (arcade.gui.UIBoxLayout): Le layout vertical pour organiser les
+            éléments de la vue.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, window: arcade.Window, game_view: arcade.View):
+
+        """
+        Initialise la vue de triche.
+
+        Args:
+            window (arcade.Window): La fenêtre du jeu.
+            game_view (arcade.View): La vue du jeu, pour pouvoir y retourner.
+        """
 
         # Initialisation du composant parent
         super().__init__(window)
@@ -56,7 +80,11 @@ class CheatView(arcade.View):
     # |                            Init Methods                             |
     # +---------------------------------------------------------------------+
 
-    def init_settings_gui(self):
+    def init_settings_gui(self) -> None:
+
+        """
+        Initialise les éléments graphiques de la vue de triche.
+        """
 
         self.v_box = arcade.gui.UIBoxLayout(space_between=20)
 
@@ -96,7 +124,7 @@ class CheatView(arcade.View):
         inv_row.add(self.btn_ghost)
         self.v_box.add(inv_row)
 
-        # === Gelé les fantôme ===
+        # === Augmenter / Réduire la vitesse ===
 
         inv_row = arcade.gui.UIBoxLayout(vertical=False, space_between=20)
         inv_label = arcade.gui.UILabel(
@@ -112,6 +140,24 @@ class CheatView(arcade.View):
         )
         self.btn_player_speed.on_click = self.manage_player_speed
         inv_row.add(self.btn_player_speed)
+        self.v_box.add(inv_row)
+
+        # === Le fameux mode dynamax :D ===
+
+        inv_row = arcade.gui.UIBoxLayout(vertical=False, space_between=20)
+        inv_label = arcade.gui.UILabel(
+            text="Mode Dynamax",
+            text_color=arcade.color.WHITE,
+            font_size=18
+        )
+        inv_row.add(inv_label)
+
+        self.btn_dyna = arcade.gui.UIFlatButton(
+            text="Oui" if (self.manager.cheat.dynamax is True) else "Non",
+            width=200
+        )
+        self.btn_dyna.on_click = self.manage_dynamax
+        inv_row.add(self.btn_dyna)
         self.v_box.add(inv_row)
 
         # === Création des derniers éléments et ajouts au manager ===
@@ -132,7 +178,9 @@ class CheatView(arcade.View):
     # |                             Btn Methods                             |
     # +---------------------------------------------------------------------+
 
-    def manage_invicibility(self, _):
+    def manage_invicibility(self, _) -> None:
+
+        """Gère le changement d'état de l'invincibilité."""
 
         if self.btn_inv.text == "Oui":
             self.btn_inv.text = "Non"
@@ -141,7 +189,9 @@ class CheatView(arcade.View):
             self.btn_inv.text = "Oui"
             self.manager.cheat.invicibility = True
 
-    def manage_ghost(self, _):
+    def manage_ghost(self, _) -> None:
+
+        """Gère le changement d'état du gel des fantômes."""
 
         if self.btn_ghost.text == "Oui":
             self.btn_ghost.text = "Non"
@@ -150,26 +200,48 @@ class CheatView(arcade.View):
             self.btn_ghost.text = "Oui"
             self.manager.cheat.ghost_freeze = True
 
-    def manage_player_speed(self, _):
+    def manage_player_speed(self, _) -> None:
+
+        """Gère le changement de vitesse du joueur."""
 
         new_speed = (self.manager.player.speed % 10) + 1
         self.btn_player_speed.text = f"{new_speed}"
         self.manager.player.speed = new_speed
 
+    def manage_dynamax(self, _) -> None:
+
+        """Gère le changement d'état du mod dynamax."""
+
+        if self.btn_dyna.text == "Oui":
+            self.btn_dyna.text = "Non"
+            self.manager.cheat.dynamax = False
+            self.manager.player.pokemon.scale /= 3
+        else:
+            self.btn_dyna.text = "Oui"
+            self.manager.cheat.dynamax = True
+            self.manager.player.pokemon.scale *= 3
+
     # +---------------------------------------------------------------------+
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_show_view(self):
-        """Appelé quand la vue change"""
+    def on_show_view(self) -> None:
+
+        """Appelée quand la vue est affichée"""
+
         self.ui_manager.enable()
 
-    def on_hide_view(self):
-        """Appelé quand la vue change"""
+    def on_hide_view(self) -> None:
+
+        """Appelée quand la vue est cachée"""
+
         self.ui_manager.disable()
 
-    def on_draw(self):
-        """ Draw everything """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
 
         self.clear()
 
@@ -208,13 +280,21 @@ class CheatView(arcade.View):
 
         self.ui_manager.draw()
 
-    def on_mouse_press(self, x, y, _, __):
+    def on_mouse_press(self, x, y, _, __) -> None:
+
+        """
+        Méthode appelée lorsque l'on clique sur la souris.
+        """
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
             self.window.show_view(self.game_view)
 
-    def on_key_press(self, key, modifiers):
+    def on_key_press(self, key, modifiers) -> None:
+
+        """
+        Méthode appelée lorsque l'on appuie sur une touche du clavier.
+        """
 
         # Afficher le menu de pause
         if key == arcade.key.ESCAPE:

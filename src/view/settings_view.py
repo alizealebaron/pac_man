@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/23 13:56:54 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 08:09:09 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 09:48:05 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -33,14 +33,38 @@ MUSIC_PATH = "assets/music/settings_theme.mp3"
 
 class SettingsView(arcade.View):
 
+    """
+    Vue des paramètres, permet de régler le volume de la musique et la
+    configuration des touches.
+
+    Attributs:
+        background (arcade.Texture): Le background de la vue.
+        music_player (arcade.SoundPlayer): Le lecteur de musique pour la vue.
+        ui_manager (arcade.gui.UIManager): Le manager de l'UI pour gérer les
+            éléments graphiques de la vue.
+        v_box (arcade.gui.UIBoxLayout): Le layout vertical pour organiser les
+            éléments de la vue.
+        previous_view (arcade.View): La vue précédente pour pouvoir y
+            retourner.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window):
+    def __init__(self, window: arcade.Window, previous_view: arcade.View):
+
+        """
+        Initialise la vue des paramètres.
+
+        Args:
+            window (arcade.Window): La fenêtre du jeu.
+            previous_view (arcade.View): La view précédente.
+        """
 
         # Appelle à la fonction d'initialisation parente
         super().__init__(window)
+        self.previous_view = previous_view
 
         # Récupération du manager
         self.manager: PacmanManager = self.window.manager
@@ -61,7 +85,9 @@ class SettingsView(arcade.View):
     # |                            Init Methods                             |
     # +---------------------------------------------------------------------+
 
-    def init_settings_gui(self):
+    def init_settings_gui(self) -> None:
+
+        """Initialise les éléments graphiques de la vue des paramètres"""
 
         # Création d'un layout vertical pour ordonner nos éléments
         self.v_box = arcade.gui.UIBoxLayout(space_between=20)
@@ -117,8 +143,13 @@ class SettingsView(arcade.View):
     # |                            View Methods                             |
     # +---------------------------------------------------------------------+
 
-    def on_show_view(self):
-        """Appelé quand la vue change"""
+    def on_show_view(self) -> None:
+
+        """
+        Méthode appelée lorsque la vue est affichée. Elle démarre la
+        musique de la vue.
+        """
+
         self.ui_manager.enable()
         volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
@@ -126,12 +157,16 @@ class SettingsView(arcade.View):
                                       streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
 
-    def on_hide_view(self):
-        """Appelé quand la vue change"""
+    def on_hide_view(self) -> None:
+        """Méthode appelée lorsque la vue est cachée."""
         self.ui_manager.disable()
 
-    def on_draw(self):
-        """ Draw everything """
+    def on_draw(self) -> None:
+
+        """
+        Méthode appelée pour dessiner la vue.
+        """
+
         self.clear()
 
         # Affichage du background
@@ -174,16 +209,20 @@ class SettingsView(arcade.View):
 
     def on_mouse_press(self, x, y, _, __):
 
+        """
+        Méthode appelée lorsque l'on clique sur la souris.
+        """
+
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
             self.music.stop(self.music_player)
-            self.window.show_view(self.window.start_view)
+            self.window.show_view(self.previous_view)
 
     # +---------------------------------------------------------------------+
     # |                           Change Methods                            |
     # +---------------------------------------------------------------------+
 
-    def on_volume_change(self, event):
+    def on_volume_change(self, _) -> None:
         """Gère le changement de volume via le slider"""
         self.manager.settings.volume = self.volume_slider.value / 100.0
 
@@ -191,7 +230,7 @@ class SettingsView(arcade.View):
             self.music.set_volume(self.manager.settings.volume,
                                   self.music_player)
 
-    def on_key_config_click(self, event):
+    def on_key_config_click(self, _) -> None:
         """Gère le changement de configuration de touches"""
 
         if self.key_config_button.text == "QWERTY":

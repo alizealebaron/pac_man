@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 10:00:15 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 15:38:35 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -40,11 +40,47 @@ POKEMONS_FILE = "data/pokemon_data.json"
 
 class PacmanManager():
 
+    """
+    Classe principale du manager du jeu, gère la logique du jeu et les
+    données.
+
+    Attributs:
+        config (ConfigModel): La configuration du jeu, chargée depuis un
+            fichier JSON.
+        pokemons (List[PokemonModel]): La liste des pokémons, chargée depuis
+            un fichier JSON.
+        player (PlayerModel): Le joueur, généré aléatoirement à partir de la
+            configuration et de la liste des pokémons.
+        level (List[Level]): La liste des niveaux du jeu, générée à partir de
+            la configuration.
+        actual_level (int): Le niveau actuel du jeu.
+        current_level (Level): Le niveau actuel du jeu.
+        enemy_manager (EnemyManager): Le manager des ennemis, gère la logique
+            des ennemis du jeu.
+        scoreboard (List[Score]): Le tableau des scores, chargé depuis un
+            fichier JSON.
+        data_questions (DataQuestionsModel): Les données des questions,
+            chargées depuis un fichier JSON.
+        settings (SettingsModel): Les paramètres du jeu, gérés par la vue des
+            paramètres.
+        cheat (CheatModel): Les options de triche du jeu, gérées par la
+            vue de triche.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self, arg: argparse.Namespace):
+
+        """
+        Initialise le manager du jeu, charge les données depuis les fichiers
+        JSON et génère les niveaux et le joueur.
+
+        Args:
+            arg (argparse.Namespace): Les arguments de la ligne de commande,
+                contenant le chemin du fichier de configuration.
+        """
 
         # Récupération de la config
         self.config: ConfigModel = ConfigLoader.load_config(arg.config_file)
@@ -61,7 +97,8 @@ class PacmanManager():
         self.current_level = self.level[self.actual_level]
 
         # Génération des ennemies
-        self.enemy_manager = EnemyManager(self.config, self.current_level, self.player)
+        self.enemy_manager = EnemyManager(self.config,
+                                          self.current_level, self.player)
 
         # Récupération du scoreboard
         self.scoreboard = self.retrieve_score_from_json()
@@ -79,7 +116,12 @@ class PacmanManager():
     # |                               Setters                               |
     # +---------------------------------------------------------------------+
 
-    def reset_game(self):
+    def reset_game(self) -> None:
+
+        """
+        Réinitialise le jeu, remet le joueur à sa position de départ,
+        réinitialise le score et les vies, et remet à jour le niveau actuel.
+        """
 
         self.actual_level = 0
         self.player.score = 0
@@ -90,10 +132,22 @@ class PacmanManager():
         self.enemy_manager.set_current_level(self.current_level)
 
     def update_new_level(self):
+
+        """
+        Passe au niveau suivant, met à jour le niveau actuel et réinitialise
+        la position du joueur.
+        """
+
         self.actual_level += 1
         self.current_level = self.level[self.actual_level]
 
     def reset_player_position(self):
+
+        """
+        Réinitialise la position du joueur à sa position de départ, et remet à
+        jour sa direction.
+        """
+
         self.player.direction = None
         self.player.next_direction = None
         self.player.sprite.current_direction = "down"
@@ -103,6 +157,14 @@ class PacmanManager():
     # +---------------------------------------------------------------------+
 
     def retrieve_score_from_json(self) -> List[Score]:
+
+        """
+        Récupère le tableau des scores depuis un fichier JSON, et le
+        convertit en une liste d'objets Score.
+
+        Returns:
+            List[Score]: La liste des scores récupérée depuis le fichier JSON.
+        """
 
         lst_score = []
 
@@ -120,6 +182,12 @@ class PacmanManager():
 
     def update_json_score(self):
 
+        """
+        Met à jour le fichier JSON du tableau des scores avec les scores
+        actuels, en convertissant la liste d'objets Score en une liste de
+        dictionnaires.
+        """
+
         dict_data = [obj.__dict__ for obj in self.scoreboard]
 
         score_file = self.config.highscore_filename
@@ -133,7 +201,16 @@ class PacmanManager():
                                     self.config.seed))
         return level_list
 
-    def retrieve_questions_from_json(self):
+    def retrieve_questions_from_json(self) -> DataQuestionsModel:
+
+        """
+        Récupère les données des questions depuis un fichier JSON, et les
+        convertit en un objet DataQuestionsModel.
+
+        Returns:
+            DataQuestionsModel: Les données des questions récupérées depuis le
+            fichier JSON, converties en un objet DataQuestionsModel.
+        """
 
         with open(QUESTIONS_FILE, "r") as file:
             data_dict = json.load(file)
@@ -142,7 +219,17 @@ class PacmanManager():
 
         return data
 
-    def retrieve_pokemon_data_from_json(self):
+    def retrieve_pokemon_data_from_json(self) -> List[PokemonModel]:
+
+        """
+        Récupère les données des pokémons depuis un fichier JSON, et les
+        convertit en une liste d'objets PokemonModel.
+
+        Returns:
+            List[PokemonModel]: La liste des pokémons récupérée depuis
+                le fichier JSON, convertie en une liste d'objets
+                PokemonModel.
+        """
 
         lst_pokemon = []
 

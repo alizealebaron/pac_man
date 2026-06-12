@@ -27,11 +27,26 @@ import arcade
 
 class SettingsModel():
 
+    """
+    Modèle de données pour les paramètres du jeu.
+
+    Attributes:
+        configuration (str): La configuration de touches actuelle
+            ("QWERTY" ou "AZERTY").
+        volume (float): Le volume actuel du jeu (entre 0.0 et 1.0).
+        dict_key (Dict[str, Dict[str, int]]): Un dictionnaire associant les
+            configurations de touches à leurs mappings respectifs.
+    """
+
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
     def __init__(self):
+
+        """
+        Initialise les paramètres du jeu avec des valeurs par défaut.
+        """
 
         self.configuration = "QWERTY"
         self.volume = 0.5

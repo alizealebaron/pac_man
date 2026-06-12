@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 09:42:34 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 09:56:57 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -37,6 +37,7 @@ OPPOSITES = {
     'down': 'up',
     'left': 'right'
 }
+
 
 # +-------------------------------------------------------------------------+
 # |                                 Classe                                  |
@@ -89,7 +90,9 @@ class EnemyModel:
         enemy_data = self._get_enemy_data(mon)
 
         self.scale = enemy_data.scale
-        self.sprite = AnimatedSprite(mon, enemy_data.width, enemy_data.height, enemy_data.nb_anim, is_enemy=True)
+        self.sprite = AnimatedSprite(mon, enemy_data.width,
+                                     enemy_data.height, enemy_data.nb_anim,
+                                     is_enemy=True)
         self.sprite.owner = self
         self.sprite.center_x = self.x
         self.sprite.center_y = self.y
@@ -148,6 +151,7 @@ class EnemyModel:
     # +---------------------------------------------------------------------+
 
     def on_update(self, delta_time):
+
         """
         Met à jour la position de l'ennemi en fonction de son algorithme de
         déplacement et met à jour son sprite.
@@ -385,10 +389,10 @@ class EnemyModel:
 
     def _escape_move(self) -> Tuple[int]:
         possible_dir = self._get_direction(self.x, self.y)
- 
+
         best_dir = None
         best_distance = -1
- 
+
         for dir in possible_dir:
             match dir:
                 case 'up':
@@ -399,9 +403,9 @@ class EnemyModel:
                     x, y = self.x, self.y - 1
                 case 'left':
                     x, y = self.x - 1, self.y
- 
+
             distance = abs(self.player.x - x) + abs(self.player.y - y)
- 
+
             if distance > best_distance:
                 best_dir = dir
                 best_distance = distance
@@ -411,12 +415,21 @@ class EnemyModel:
 
         return self._direction_to_velocity(best_dir)
 
-
     # +---------------------------------------------------------------------+
     # |                                Utils                                |
     # +---------------------------------------------------------------------+
 
     def _get_behind_player(self) -> Tuple[int, int]:
+
+        """
+        Calcule les coordonnées d'une position derrière le joueur par
+        rapport à l'ennemi, en fonction de la direction actuelle du joueur.
+
+        Returns:
+            Tuple[int, int]: Un tuple représentant les coordonnées de la
+            position derrière le joueur sous la forme (x, y).
+        """
+
         match self.player.direction:
             case 'up':
                 x, y = self.player.x, self.player.y - 1
