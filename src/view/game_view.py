@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 09:51:06 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 11:10:09 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -420,8 +420,7 @@ class GameView(arcade.View):
                 if enemy.sprite in self.enemy_manager.enemies_sprite:
                     self.enemy_manager.enemies_sprite.remove(enemy.sprite)
 
-        if (self.manager.cheat.ghost_freeze is False):
-            self.enemy_manager.on_update(delta_time)
+        self.enemy_manager.on_update(delta_time)
 
         if (int(self.timer) != self.manager.config.level_max_time):
             self.check_enemy_collisions()
@@ -463,8 +462,12 @@ class GameView(arcade.View):
             lst_collisions += arcade.check_for_collision_with_list(player,
                                                                    ennemy)
 
-        if not self.manager.player.is_super and self.manager.cheat.invicibility is False:
+        if ((not self.manager.player.is_super) and
+           self.manager.cheat.intagibilite is False and
+           self.manager.cheat.invicibility is False):
+
             if (lst_collisions):
+
                 self.manager.player.nb_life -= 1
                 if (self.manager.player.nb_life) == 0:
                     return
@@ -472,7 +475,11 @@ class GameView(arcade.View):
                 self._player_original_pos()
                 self.enemy_manager.reset_enemy()
 
-        elif self.manager.player.is_super:
+        elif ((self.manager.player.is_super and
+              self.manager.cheat.intagibilite is False) or
+              (self.manager.player.is_super and
+              self.manager.cheat.invicibility is True)):
+
             if (lst_collisions):
                 for collision in lst_collisions:
                     enemy = collision.owner

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/18 16:14:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 15:35:55 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 11:02:32 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -14,12 +14,15 @@
 # |                               Importation                               |
 # +-------------------------------------------------------------------------+
 
-import arcade
-import argparse
-import sys
-from src.parsing.arg_parser import check_argument
-from src.view.main_window import MainWindow
-from src.pacmanManager import PacmanManager
+try:
+    import arcade
+    import argparse
+    import sys
+    from src.parsing.arg_parser import check_argument
+    from src.view.main_window import MainWindow
+    from src.pacmanManager import PacmanManager
+except Exception:
+    print('Program interrupt by user.', file=sys.stderr)
 
 # +-------------------------------------------------------------------------+
 # |                                  CONST                                  |
