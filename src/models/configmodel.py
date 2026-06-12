@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 11:08:47 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 16:49:14 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 12:13:45 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -133,13 +133,14 @@ class ConfigModel(BaseModel):
                         valid_levels.append(LevelConfig.model_validate(item))
                     except ValidationError as e:
                         print(
-                            f"Warning: invalid level config {item}: {e}; skipped",
-                            file=sys.stderr
+                            f"Warning: invalid level config {item}: {e}; "
+                            "skipped", file=sys.stderr
                         )
                 if valid_levels:
                     clean[field_name] = valid_levels
                 else:
-                    print("Warning: no valid levels found; using default", file=sys.stderr)
+                    print("Warning: no valid levels found; using default",
+                          file=sys.stderr)
                 continue
 
             try:

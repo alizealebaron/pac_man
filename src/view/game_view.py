@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 12:02:11 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 12:14:23 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -486,7 +486,8 @@ class GameView(arcade.View):
                 for collision in lst_collisions:
                     enemy = collision.owner
                     if not enemy.already_dead:
-                        self.manager.enemy_manager.enemies_sprite.remove(enemy.sprite)
+                        (self.manager.enemy_manager.enemies_sprite.remove(
+                            enemy.sprite))
                         enemy.die()
                         point = self.manager.config.points_per_ghost
                         self.manager.player.score += point
