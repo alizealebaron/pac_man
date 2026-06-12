@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 16:01:34 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 09:56:57 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -107,6 +107,7 @@ class EnemyModel:
         self.respawn_timer = 0.0
         self.just_respawned = False
         self.death_timer = 3
+        self.already_dead = False
 
     # +---------------------------------------------------------------------+
     # |                            Reset Method                             |
@@ -641,3 +642,4 @@ class EnemyModel:
 
     def die(self):
         self.is_dead = True
+        self.already_dead = True

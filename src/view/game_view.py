@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 11:10:09 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 11:12:19 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -164,6 +164,8 @@ class GameView(arcade.View):
         self.init_btn_layout()
         self.pause_manager.disable()
         self.show_pause_menu = False
+
+        self.test = 0
 
     # +---------------------------------------------------------------------+
     # |                             Init Methods                            |
@@ -366,6 +368,7 @@ class GameView(arcade.View):
                 self.manager.player.reset_position()
                 self.window.show_view(GameView(self.manager, self.music_player,
                                                self.music))
+                return
         if (self.is_finished == 2):
             self.music.stop(self.music_player)
             self.window.set_mouse_visible(True)
@@ -407,18 +410,21 @@ class GameView(arcade.View):
                 self.manager.player.is_super = False
                 for enemy in self.manager.enemy_manager.enemies:
                     enemy.is_fleeing = False
+                    enemy.already_dead = False
                     self.manager.player.super_timer = 0.0
 
         self.manager.player.sprite.on_update(delta_time)
 
-        for enemy in self.enemy_manager.enemies:
-            enemy.on_update(delta_time)
-            if enemy.just_respawned:
-                self.enemy_manager.enemies_sprite.append(enemy.sprite)
-                enemy.just_respawned = False
-            if enemy.is_dead:
-                if enemy.sprite in self.enemy_manager.enemies_sprite:
-                    self.enemy_manager.enemies_sprite.remove(enemy.sprite)
+
+        if (self.manager.cheat.ghost_freeze is False):
+            for enemy in self.enemy_manager.enemies:
+                enemy.on_update(delta_time)
+                if enemy.just_respawned:
+                    self.enemy_manager.enemies_sprite.append(enemy.sprite)
+                    enemy.just_respawned = False
+                if enemy.is_dead:
+                    if enemy.sprite in self.enemy_manager.enemies_sprite:
+                        self.enemy_manager.enemies_sprite.remove(enemy.sprite)
 
         self.enemy_manager.on_update(delta_time)
 
@@ -483,11 +489,18 @@ class GameView(arcade.View):
             if (lst_collisions):
                 for collision in lst_collisions:
                     enemy = collision.owner
-                    shorcut = self.manager.enemy_manager.enemies_sprite
-                    shorcut.remove(enemy.sprite)
-                    enemy.die()
-                    point = self.manager.config.points_per_ghost
-                    self.manager.player.score += (point)
+                    if not enemy.already_dead:
+                        self.manager.enemy_manager.enemies_sprite.remove(enemy.sprite)
+                        enemy.die()
+                        point = self.manager.config.points_per_ghost
+                        self.manager.player.score += point
+                    else:
+                        self.manager.player.nb_life -= 1
+                        if (self.manager.player.nb_life) == 0:
+                            return
+                        self.manager.player.reset_position()
+                        self._player_original_pos()
+                        self.enemy_manager.reset_enemy()
 
     def get_collectibles(self) -> None:
 

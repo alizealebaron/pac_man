@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 20:36:09 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 09:56:44 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -120,6 +120,7 @@ class EnemyManager:
     def reset_enemy(self) -> None:
         """Réinitialise les ennemis."""
         for enemy in self.enemies:
+            enemy.already_dead = False
             enemy.reset_pos()
 
     # +---------------------------------------------------------------------+
