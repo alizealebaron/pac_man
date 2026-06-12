@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 11:08:47 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 12:07:36 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/11 16:49:14 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -50,8 +50,8 @@ class LevelConfig(BaseModel):
     # +---------------------------------------------------------------------+
 
     id: int = Field(ge=1)
-    width: int = Field(ge=1, le=500, default=10)
-    height: int = Field(ge=1, le=500, default=10)
+    width: int = Field(ge=2, le=500, default=10)
+    height: int = Field(ge=2, le=500, default=10)
 
 
 class ConfigModel(BaseModel):
@@ -124,6 +124,22 @@ class ConfigModel(BaseModel):
                     print(
                         f"Warning: invalid value for '{field_name}': {data}"
                         f"; using default value", file=sys.stderr)
+                continue
+
+            if field_name == 'level' and isinstance(data, list):
+                valid_levels = []
+                for item in data:
+                    try:
+                        valid_levels.append(LevelConfig.model_validate(item))
+                    except ValidationError as e:
+                        print(
+                            f"Warning: invalid level config {item}: {e}; skipped",
+                            file=sys.stderr
+                        )
+                if valid_levels:
+                    clean[field_name] = valid_levels
+                else:
+                    print("Warning: no valid levels found; using default", file=sys.stderr)
                 continue
 
             try:
