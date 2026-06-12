@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 11:22:37 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 11:24:00 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -464,7 +464,6 @@ class GameView(arcade.View):
             lst_collisions += arcade.check_for_collision_with_list(player,
                                                                    ennemy)
 
-        print("Coucou")
         if ((not self.manager.player.is_super) and
            self.manager.cheat.intagibilite is False and
            self.manager.cheat.invicibility is False):
