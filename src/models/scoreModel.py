@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 10:36:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 13:49:59 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 14:22:04 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -37,6 +37,6 @@ class Score(BaseModel):
     # |                              Attributs                              |
     # +---------------------------------------------------------------------+
 
-    name: str = Field(min_length=1, max_length=20)
+    name: str = Field(min_length=1, max_length=10)
     score: int = Field(ge=0)
     pokemon: str = Field(min_length=1)

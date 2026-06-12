@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 14:44:54 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 14:52:13 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -17,6 +17,7 @@
 import arcade
 import arcade.gui
 from src.models.scoreModel import Score
+import re
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -29,6 +30,10 @@ MUSIC_PATH = "assets/music/save_score_theme.mp3"
 SELECTED_PATH = "assets/quizz/question_selected.png"
 UNSELECTED_PATH = "assets/quizz/question_unselected.png"
 SCROLL_PATH = "assets/menu/scroll.png"
+
+# Validation du nom
+NAME_MAX_LEN = 10
+NAME_ALLOWED_RE = re.compile(r'[^A-Za-z0-9 ]+')
 
 
 # +-------------------------------------------------------------------------+
@@ -161,6 +166,10 @@ class WinView(arcade.View):
         Méthode appelée lorsque l'on appuie sur une touche du clavier.
         """
 
+        # Ne pas traiter les touches si le saisie du nom est active
+        if self.show_input_ui:
+            return
+
         dict_key = self.window.manager.settings.dict_key
         dict_key = dict_key[self.window.manager.settings.configuration]
 
@@ -224,8 +233,10 @@ class WinView(arcade.View):
         )
 
         # Création de la boîte de texte
+        default_name = re.sub(NAME_ALLOWED_RE, "",
+                              self.window.manager.player.name)[:NAME_MAX_LEN]
         self.input_field = arcade.gui.UIInputText(
-            text=self.window.manager.player.name,
+            text=default_name,
             width=300,
             height=40,
             text_color=arcade.color.BLACK,
@@ -238,13 +249,17 @@ class WinView(arcade.View):
         @self.input_field.event("on_event")
         def on_text_event(event):
             if isinstance(event, arcade.gui.events.UIKeyPressEvent):
-                if event.symbol in (arcade.key.ENTER, arcade.key.ENTER):
-                    new_name = self.input_field.text.strip()
-                    if new_name:
+                cleaned = (re.sub(NAME_ALLOWED_RE, "", self.input_field.text)
+                           [:NAME_MAX_LEN])
+                if cleaned != self.input_field.text:
+                    self.input_field.text = cleaned
+                if event.symbol == arcade.key.ENTER:
+                    new_name = self.input_field.text
+                    if new_name.strip():
                         # On applique le nouveau nom
                         self.window.manager.player.name = new_name
                         self.show_input_ui = False
-                        # Nettoyage et suppression de l'UI
+                        # Nettoyage
                         self.ui_manager.remove(self.anchor_layout)
                         # Lancement de la sauvegarde
                         self.save_without_name()
