@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 11:52:51 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 12:10:03 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -64,6 +64,12 @@ class EnemyModel:
         pixel_offset_y (int): Le décalage en pixels sur l'axe y pour
             l'animation de déplacement.
         offset_y (int): Le décalage vertical pour le positionnement du sprite.
+        is_fleeing (bool): Est ce que l'ennemie est en train de fuir le player.
+        is_dead (bool): Est ce que l'ennemie est mort.
+        respawn_timer (float): Le temps avant le respawn de l'ennemie.
+        just_respawned (bool): Est ce que l'ennemie viens de respawn.
+        death_timer (int): Le temps de mort de l'ennemie.
+        already_dead (bool): Est ce que l'ennemie est deja mort.
     """
 
     # +---------------------------------------------------------------------+

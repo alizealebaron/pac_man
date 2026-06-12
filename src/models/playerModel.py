@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 11:59:02 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 12:11:19 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -47,6 +47,7 @@ class PlayerModel():
         score (int): Le score du joueur.
         sprite (AnimatedSprite): Le sprite animé du joueur.
         speed (float): La vitesse de déplacement du joueur.
+        just_change (bool): Est ce que l'état du joueur viens de changer.
     """
 
     # +---------------------------------------------------------------------+
