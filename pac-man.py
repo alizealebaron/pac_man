@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/18 16:14:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 11:02:32 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 11:13:00 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -62,8 +62,8 @@ def main() -> None:
     except KeyboardInterrupt:
         print('Program interrupt by user.', file=sys.stderr)
 
-    except Exception as e:
-        print(f'Unexpected error: {e}', file=sys.stderr)
+    # except Exception as e:
+    #     print(f'Unexpected error: {e}', file=sys.stderr)
 
 
 if __name__ == '__main__':
