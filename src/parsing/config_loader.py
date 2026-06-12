@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 10:07:49 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 13:55:15 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 12:48:16 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -39,24 +39,24 @@ class ConfigLoader:
     default_config = {
         'highscore_filename': 'highscores.json',
         'level': [
-            {'id': 1, 'width': 10, 'height': 10},
-            {'id': 2, 'width': 11, 'height': 11},
-            {'id': 3, 'width': 12, 'height': 12},
-            {'id': 4, 'width': 13, 'height': 13},
-            {'id': 5, 'width': 14, 'height': 14},
-            {'id': 6, 'width': 15, 'height': 15},
-            {'id': 7, 'width': 16, 'height': 16},
-            {'id': 8, 'width': 17, 'height': 17},
-            {'id': 9, 'width': 18, 'height': 18},
-            {'id': 10, 'width': 19, 'height': 19}
+            {'id': 1, 'width': 6, 'height': 6},
+            {'id': 2, 'width': 10, 'height': 6},
+            {'id': 3, 'width': 8, 'height': 8},
+            {'id': 4, 'width': 8, 'height': 10},
+            {'id': 5, 'width': 10, 'height': 10},
+            {'id': 6, 'width': 12, 'height': 8},
+            {'id': 7, 'width': 12, 'height': 12},
+            {'id': 8, 'width': 16, 'height': 14},
+            {'id': 9, 'width': 16, 'height': 18},
+            {'id': 10, 'width': 20, 'height': 20}
         ],
         'lives': 3,
         'pacgum': 42,
         'points_per_pacgum': 10,
         'points_per_super_pacgum': 50,
         'points_per_ghost': 200,
-        'seed': 42,
-        'level_max_time': 90
+        'seed': 24,
+        'level_max_time': 120
         }
 
     @staticmethod
