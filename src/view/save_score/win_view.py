@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 14:52:13 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 15:17:23 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -203,8 +203,11 @@ class WinView(arcade.View):
         l'écran titre.
         """
 
+        default_name = re.sub(NAME_ALLOWED_RE, "",
+                              self.window.manager.player.name)[:NAME_MAX_LEN]
+        self.window.manager.player.name = default_name
         score = {
-            "name": self.window.manager.player.name,
+            "name": default_name,
             "score": self.window.manager.player.score,
             "pokemon": self.window.manager.player.pokemon.name
         }

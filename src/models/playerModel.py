@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 12:11:19 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 15:18:06 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -137,7 +137,7 @@ class PlayerModel():
                    "Careful", "Bashful", "Relaxed", "Adamant", "Serious",
                    "Lonely", "Timid", "Chaotic"]
 
-        return random.choice(prefixe) + "_" + self.pokemon.name
+        return random.choice(prefixe) + self.pokemon.name
 
     def update_pokemon_sprite(self) -> None:
 
