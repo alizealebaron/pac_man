@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 21:20:37 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 09:51:06 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,6 +21,7 @@ from src.managers.collectible_manager import CollectibleManager
 from src.view.save_score.win_view import WinView
 from src.view.save_score.gameover_view import GameoverView
 from src.view.cheat_view import CheatView
+from src.view.settings_view import SettingsView
 from src.pacmanManager import PacmanManager
 
 # +-------------------------------------------------------------------------+
@@ -194,7 +195,9 @@ class GameView(arcade.View):
         btn_start_new_game = arcade.gui.UIFlatButton(text="Nouvelle partie",
                                                      width=150)
         btn_cheat = arcade.gui.UIFlatButton(text="Triche",
-                                            width=320)
+                                            width=150)
+        btn_param = arcade.gui.UIFlatButton(text="Paramètres",
+                                            width=150)
         btn_exit = arcade.gui.UIFlatButton(text="Retour au menu principal",
                                            width=320)
 
@@ -205,7 +208,8 @@ class GameView(arcade.View):
 
         self.grid.add(btn_resume, column=0, row=0)
         self.grid.add(btn_start_new_game, column=1, row=0)
-        self.grid.add(btn_cheat, column=0, row=1, column_span=2)
+        self.grid.add(btn_cheat, column=0, row=1)
+        self.grid.add(btn_param, column=1, row=1)
         self.grid.add(btn_exit, column=0, row=2, column_span=2)
 
         self.anchor = self.pause_manager.add(arcade.gui.UIAnchorLayout())
@@ -227,11 +231,17 @@ class GameView(arcade.View):
         @btn_start_new_game.event("on_click")
         def on_click_start_new_game_button(event):
             self.manager.reset_game()
+            self.music.stop(self.music_player)
             self.window.show_view(GameView(self.manager))
 
         @btn_cheat.event("on_click")
         def on_click_cheat(event):
             self.window.show_view(CheatView(self.window, self))
+
+        @btn_param.event("on_click")
+        def on_click_param(event):
+            self.music.stop(self.music_player)
+            self.window.show_view(SettingsView(self.window, self))
 
         @btn_exit.event("on_click")
         def on_click_exit_button(event):
@@ -324,7 +334,7 @@ class GameView(arcade.View):
                                       self.window.width / 2,
                                       self.height * 0.65,
                                       color=arcade.color.BLACK,
-                                      font_size=25,
+                                      font_size=36,
                                       font_name="FOT-Humming Pro",
                                       anchor_x="center",
                                       anchor_y="center")

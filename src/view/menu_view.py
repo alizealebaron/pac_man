@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 15:03:37 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 09:43:26 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -147,7 +147,7 @@ class MenuView(arcade.View):
         self.window.show_view(PersonnalityView(self.window))
 
     def open_settings(self) -> None:
-        self.window.show_view(SettingsView(self.window))
+        self.window.show_view(SettingsView(self.window, self))
 
     def open_score(self) -> None:
         self.window.show_view(ScoreboardView(self.window))

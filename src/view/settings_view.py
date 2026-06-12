@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/23 13:56:54 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 15:07:54 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 09:48:05 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -44,23 +44,27 @@ class SettingsView(arcade.View):
             éléments graphiques de la vue.
         v_box (arcade.gui.UIBoxLayout): Le layout vertical pour organiser les
             éléments de la vue.
+        previous_view (arcade.View): La vue précédente pour pouvoir y
+            retourner.
     """
 
     # +---------------------------------------------------------------------+
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window):
+    def __init__(self, window: arcade.Window, previous_view: arcade.View):
 
         """
         Initialise la vue des paramètres.
 
         Args:
             window (arcade.Window): La fenêtre du jeu.
+            previous_view (arcade.View): La view précédente.
         """
 
         # Appelle à la fonction d'initialisation parente
         super().__init__(window)
+        self.previous_view = previous_view
 
         # Récupération du manager
         self.manager: PacmanManager = self.window.manager
@@ -155,7 +159,6 @@ class SettingsView(arcade.View):
 
     def on_hide_view(self) -> None:
         """Méthode appelée lorsque la vue est cachée."""
-
         self.ui_manager.disable()
 
     def on_draw(self) -> None:
@@ -213,7 +216,7 @@ class SettingsView(arcade.View):
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
             self.music.stop(self.music_player)
-            self.window.show_view(self.window.start_view)
+            self.window.show_view(self.previous_view)
 
     # +---------------------------------------------------------------------+
     # |                           Change Methods                            |
