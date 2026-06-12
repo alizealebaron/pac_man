@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 13:32:00 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 10:59:27 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 12:10:54 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -142,6 +142,29 @@ class CheatView(arcade.View):
         inv_row.add(self.btn_player_speed)
         self.v_box.add(inv_row)
 
+        # === Level skip ===
+
+        inv_row = arcade.gui.UIBoxLayout(vertical=False, space_between=20)
+        inv_label = arcade.gui.UILabel(
+            text="Passer le niveau actuel",
+            text_color=arcade.color.WHITE,
+            font_size=18
+        )
+        inv_row.add(inv_label)
+
+        if (self.manager.actual_level + 2 > (len(self.manager.level))):
+            text = "Fin du jeu"
+        else:
+            text= f"Passer à l'étage n°{self.manager.actual_level + 2}"
+
+        self.btn_level_skip = arcade.gui.UIFlatButton(
+            text=text,
+            width=200
+        )
+        self.btn_level_skip.on_click = self.manage_level_skip
+        inv_row.add(self.btn_level_skip)
+        self.v_box.add(inv_row)
+
         # === Le fameux mode dynamax :D ===
 
         inv_row = arcade.gui.UIBoxLayout(vertical=False, space_between=20)
@@ -207,6 +230,12 @@ class CheatView(arcade.View):
         new_speed = (self.manager.player.speed % 10) + 1
         self.btn_player_speed.text = f"{new_speed}"
         self.manager.player.speed = new_speed
+
+    def manage_level_skip(self, _) -> None:
+
+        """Passe le niveau au prochain level"""
+        self.game_view.is_finished = 1
+        self.window.show_view(self.game_view)
 
     def manage_dynamax(self, _) -> None:
 
