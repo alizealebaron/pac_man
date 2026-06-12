@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 08:30:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 15:11:43 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 11:59:17 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -168,6 +168,7 @@ class CollectibleManager:
             total_points += config.points_per_super_pacgum
             player.is_super = True
             player.super_timer = 0.0
+            player.just_change = True
 
         is_all_collected = (len(self.spg_sprites) == 0 and
                             len(self.pg_sprites) == 0)

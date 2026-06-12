@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 11:24:00 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 12:02:11 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -400,8 +400,8 @@ class GameView(arcade.View):
         if self.manager.player.is_super:
             self.manager.player.super_timer += delta_time
 
-            if not self.manager.enemy_manager.enemies[0].is_fleeing:
-                for enemy in self.manager.enemy_manager.enemies:
+            for enemy in self.manager.enemy_manager.enemies:
+                if not enemy.already_dead:
                     enemy.is_fleeing = True
 
             if (self.manager.player.super_timer >=
@@ -509,6 +509,13 @@ class GameView(arcade.View):
         p = self.collectible_manager.remove_pacgum(self.player_sprites,
                                                    self.manager.config,
                                                    self.manager.player)
+
+        if self.manager.player.just_change:
+            for enemy in self.enemy_manager.enemies:
+                if not enemy.is_dead:
+                    enemy.is_fleeing = True
+                    enemy.already_dead = False
+            self.manager.player.just_change = False
 
         points, self.is_finished = p
         self.manager.player.score += points
