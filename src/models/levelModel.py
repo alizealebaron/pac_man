@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 14:39:15 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 14:26:18 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/13 13:56:46 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,6 +16,8 @@
 
 
 from src.mazegenerator.mazegenerator import MazeGenerator
+import os
+import contextlib
 
 
 # +-------------------------------------------------------------------------+
@@ -43,4 +45,7 @@ class Level():
         """
 
         self.level = num_level
-        self.maze = MazeGenerator((width, height), seed=(num_level + seed))
+        with open(os.devnull, 'w') as f:
+            with contextlib.redirect_stdout(f):
+                self.maze = MazeGenerator((width, height), seed=(num_level +
+                                                                 seed))
