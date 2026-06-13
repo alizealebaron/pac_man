@@ -209,11 +209,41 @@ Le projet suit un modèle d'architecture MVC (Modèle — Vue — Contrôleur) s
 
 Afin de facilité la prise en main de ce projet qui comporttait de nombreuses tâches et fonctionnalité, nous avons mis en place un backlog. Un backlog est une liste qui priorise les fonctionnalités à améliorer et à développer en ce qui concerne un produit ou un service informatique (application mobile, logiciel, etc.). Nous avons ainsi listé la liste des fonctionnalités à implémenté et fractionné chacune d'entre elles en plusieurs tâches. Cela nous a permis d'avoir une bonne vision d'ensemble du projet. Nous avons aussi fait une liste des améliorations et bugs que nous trouvions pour améliorer notre projet au long du développement de celui-ci.
 
+### Documents de gestion de projet
+
 Vous pourrez retrouvez tous les documents qui ont permis d'organiser notre travail dans le dossier `project_management/`. Cela comprend les fichiers suivants :
 
 ```
-
+project_management/
+├── backlog/
+    └── backlof_Pacman.xlsx		# Fichier excel contenant notre backlog avant la fin du projet      
+├── sketch/
+    ├── gameover_sketch.webp	# Croquis intial de la vue gameover	
+    ├── mainmenu_sketch.webp	# Croquis intial de la vue menu
+    └── win_sketch.webp			# Croquis intial de la vue de victoire
+└── uml/
+    ├── light_UML.png			# Diagramme UML simplifié de notre projet
+    └── logique_findejeu.webp	# Diagramme de fonctionnement de la fin de jeu
 ```
+
+### Répartition des rôles au global
+
+**Alebaron** :
+- Implémentation de l'interface utilisateur (UI)
+- Implémentation du système de score
+- Gestion des paramètères et cheats
+- Écriture des questions du quizz
+- Vérification de la docstring
+- Écriture du README
+
+**Rruiz** :
+- Récupération de la config
+- Génération du labyrinthe
+- Déplacements du joueurs
+- Déplacements des ennemies
+- Correction des bugs
+- Mise à la norme flake8 et mypy
+
 
 ## Ressources
 
@@ -238,6 +268,15 @@ Vous pourrez retrouvez tous les documents qui ont permis d'organiser notre trava
 - [Pokémon donjon mystère assets](https://www.spriters-resource.com/nintendo_switch/pokemonmysterydungeonrescueteamdx/)
 - [Pokémon donjon mystère musique](https://youtu.be/w7TP5d5mUMw?si=hrDAKu1_mXS0yPxW)
 
+### Utilisation de l'IA
+
+- Aide au débuggage du code
+- Aide à la compréhension d'éléments d'arcade
+- Vulgarisation de calculs d'affichage
+- Reformulation de phrases et traduction en anglais (README)
+- Génération d'une partie de la docstring
+- Correction d'erreur mypy
+
 ### Crédits
 
 - **Animations des pokémons & Icones**: CHUNSOFT, Emmuffin, G~, FrivolousAqua, baronessfaron, chime, anomalocaris, Uni, Emboarger, Angels-Snack, Morei, ShyStarryRain, Ichor, Frostdrop1, Caitemis, JFain, NickOnimura, NeroIntruder
@@ -249,3 +288,8 @@ Vous pourrez retrouvez tous les documents qui ont permis d'organiser notre trava
 ### Disclaimer
 
 Ce jeu est un fangame crée dans le cadre d'un projet scolaire. Pokémon et Pokémon donjon mystère appartiennent à Nintendo, Game Freak, Creatures et The Pokemon Compagny. Merci de supporter les oeuvres officielles.
+
+---
+
+**Dernière modification**: 13 juin 2026\
+**Contact :** alebaron@student.42lehavre.fr / rruiz@student.42lehavre.fr
