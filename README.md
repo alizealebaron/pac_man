@@ -29,6 +29,10 @@
 
 **Rendu le :** Non rendu.
 
+## Aperçu du jeu
+
+![Gif du jeu](project_management/pac-mon.gif)
+
 ## Description
 
 **Pac-man** est un jeu vidéo créé par Tōru Iwatani en 1980. Après 46 ans d'existence, ce jeu d'arcade est toujours aussi réputé et reste un point incontournable de l'histoire des jeux vidéo. Aujourd'hui, c'est à notre tour de le développer.
