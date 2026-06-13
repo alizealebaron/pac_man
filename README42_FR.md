@@ -12,6 +12,8 @@ Les objectifs clés de ce projet sont:
 - **Réutilisation des projets d'autrui**: Utiliser le travail d'autres étudiants afin de générer notre labyrinthe.
 - **Gestion de projet**: Apprendre à gérer un projet complexe en groupe.
 
+[Lien vers la page Itch.io](https://alebaron.itch.io/pac-mon)
+
 ## Installation
 
 ```bash

@@ -12,6 +12,9 @@ Key objectives of this project:
 - **Reuse of others' work**: Use other students' work to generate our maze.
 - **Project management**: Learn to manage a complex group project.
 
+[Link to Itch.io page](https://alebaron.itch.io/pac-mon)
+
+
 ## Instructions
 
 ```bash
