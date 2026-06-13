@@ -31,7 +31,9 @@
 
 ## Aperçu du jeu
 
-![Gif du jeu](project_management/pac-mon.gif)
+<p align="center">
+  <img width="800" height="400" src="/project_management/pac_mon.gif">
+</p>
 
 ## Description
 
