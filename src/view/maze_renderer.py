@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 16:53:13 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 14:58:48 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/13 12:19:45 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,6 +16,7 @@
 
 import arcade
 from PIL import Image
+import random
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -23,8 +24,9 @@ from PIL import Image
 
 
 WALL_DIR = 'assets/sprite/wall/'
-MAP_NAME = 'tiny_wood.png'
-MAP_FILE = f'{WALL_DIR}' + f'{MAP_NAME}'
+MAP_NAME = ['electric_maze.png', 'joyous_tower.png', 'mount_faraway.png',
+            'purity_forest.png']
+MAP_FILE = f'{WALL_DIR}' + f'{random.choice(MAP_NAME)}'
 TILE_SIZE = 64
 
 
