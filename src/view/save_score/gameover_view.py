@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 08:06:31 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 14:40:35 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 16:31:34 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,6 +16,7 @@
 
 import arcade
 from src.view.save_score.win_view import WinView
+from typing import Any
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -46,7 +47,7 @@ class GameoverView(WinView):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window):
+    def __init__(self, window: Any) -> None:
 
         """
         Initialise la view de gameover.

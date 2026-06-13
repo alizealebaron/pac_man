@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 04:44:09 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 14:21:34 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 15:48:32 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -18,7 +18,7 @@ import time
 import arcade
 import random
 from typing import Any, List
-from src.models.questionModel import QuestionModel
+from src.models.questionModel import QuestionModel, ReponseModel
 from src.view.personnality.quizz_result_view import ResultQuizzView
 
 # +-------------------------------------------------------------------------+
@@ -60,7 +60,8 @@ class QuizzView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window: arcade.Window, music_player: Any, music: Any):
+    def __init__(self, window: arcade.Window, music_player: Any,
+                 music: Any) -> None:
 
         """
         Initialise la vue du quizz de personnalité.
@@ -88,7 +89,7 @@ class QuizzView(arcade.View):
         self.index_question = 0
 
         # Initialisation des réponses
-        self.reponses = []
+        self.reponses: List[ReponseModel] = []
         self.selected_reponse = 0
 
         # Initialisation du caractère
@@ -129,14 +130,14 @@ class QuizzView(arcade.View):
 
         random.seed(int(time.time()))
 
-        lst_questions = self.window.manager.data_questions.questions
-        lst_questions: List[QuestionModel] = list(lst_questions.values())
+        questions_dict = self.window.manager.data_questions.questions
+        lst_questions: List[QuestionModel] = list(questions_dict.values())
 
         temp_question = lst_questions.pop(len(lst_questions) - 1)
-        lst_questions = random.sample(lst_questions, 10)
-        lst_questions.append(temp_question)
+        result = random.sample(lst_questions, 10)
+        result.append(temp_question)
 
-        return lst_questions
+        return result
 
     # +---------------------------------------------------------------------+
     # |                            View Methods                             |
@@ -178,7 +179,7 @@ class QuizzView(arcade.View):
         if self.index_question < len(self.lst_questions):
             self.draw_actual_question()
 
-    def on_mouse_press(self, x, y, _, __) -> None:
+    def on_mouse_press(self, x: int, y: int, _: int, __: int) -> None:
 
         """
         Méthode appelée lorsque l'on clique sur la souris.
@@ -189,7 +190,7 @@ class QuizzView(arcade.View):
             self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
-    def on_key_press(self, key, _) -> None:
+    def on_key_press(self, key: int, _: int) -> None:
 
         """
         Méthode appelée lorsque l'on appuie sur une touche du clavier.

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 12:46:42 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 15:18:06 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/13 10:59:33 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -71,8 +71,8 @@ class PlayerModel():
         self.y = 0
         self.pixel_offset_x = 0.0
         self.pixel_offset_y = 0.0
-        self.direction = None
-        self.next_direction = None
+        self.direction: str | None = None
+        self.next_direction: str | None = None
         self.nb_life = config.lives
         self.score = 0
         self.is_super = False

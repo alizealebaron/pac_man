@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/01 14:38:04 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 15:12:56 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 17:39:14 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,6 +16,10 @@
 
 
 import arcade
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.models.enemymodel import EnemyModel
 
 
 # +-------------------------------------------------------------------------+
@@ -47,7 +51,8 @@ class AnimatedSprite(arcade.Sprite):
     # +---------------------------------------------------------------------+
 
     def __init__(self, pokemon_name: str, pokemon_width: int,
-                 pokemon_height: int, nb_anim: int, is_enemy: bool = None):
+                 pokemon_height: int, nb_anim: int,
+                 is_enemy: bool = False) -> None:
 
         """
         Initialise le sprite animé pour un personnage donné.
@@ -78,13 +83,14 @@ class AnimatedSprite(arcade.Sprite):
         self.current_direction = 'down'
         self.current_frame = 0
         self.frame_counter = 0
+        self.owner: 'EnemyModel' | None = None
         self.update_texture()
 
     # +---------------------------------------------------------------------+
     # |                                Method                               |
     # +---------------------------------------------------------------------+
 
-    def _load_walk_anim(self) -> dict:
+    def _load_walk_anim(self) -> dict[str, list[arcade.Texture]]:
 
         """
         Charge les animations de marche à partir de la feuille de sprite.
@@ -113,7 +119,7 @@ class AnimatedSprite(arcade.Sprite):
             'right': anim_east
         }
 
-    def update_texture(self):
+    def update_texture(self) -> None:
         """
         Met à jour la texture du sprite en fonction de la direction et de la
         frame actuelle.
@@ -123,7 +129,7 @@ class AnimatedSprite(arcade.Sprite):
                    [self.current_frame])
         self.texture = texture
 
-    def on_update(self, _: float):
+    def on_update(self, _: float) -> None:
         """
         Met à jour l'animation du sprite en fonction de la direction
         actuelle.

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/11 08:28:59 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 10:59:00 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 14:21:43 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -30,7 +30,7 @@ class CheatModel():
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialise le modèle de cheats avec les cheats désactivés par défaut.
         """

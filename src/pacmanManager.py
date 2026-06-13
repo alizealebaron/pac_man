@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/21 13:04:41 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 11:08:48 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 17:39:49 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -71,7 +71,7 @@ class PacmanManager():
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, arg: argparse.Namespace):
+    def __init__(self, arg: argparse.Namespace) -> None:
 
         """
         Initialise le manager du jeu, charge les données depuis les fichiers
@@ -134,7 +134,7 @@ class PacmanManager():
         self.reset_player_position()
         self.enemy_manager.set_current_level(self.current_level)
 
-    def update_new_level(self):
+    def update_new_level(self) -> None:
 
         """
         Passe au niveau suivant, met à jour le niveau actuel et réinitialise
@@ -144,7 +144,7 @@ class PacmanManager():
         self.actual_level += 1
         self.current_level = self.level[self.actual_level]
 
-    def reset_player_position(self):
+    def reset_player_position(self) -> None:
 
         """
         Réinitialise la position du joueur à sa position de départ, et remet à
@@ -169,9 +169,12 @@ class PacmanManager():
             List[Score]: La liste des scores récupérée depuis le fichier JSON.
         """
 
-        lst_score = []
+        lst_score: list[Score] = []
 
         score_file = self.config.highscore_filename
+        if not score_file:
+            return lst_score
+
         try:
             with open(score_file, "r") as file:
                 data = json.load(file)
@@ -183,7 +186,7 @@ class PacmanManager():
 
         return lst_score
 
-    def update_json_score(self):
+    def update_json_score(self) -> None:
 
         """
         Met à jour le fichier JSON du tableau des scores avec les scores
@@ -194,14 +197,15 @@ class PacmanManager():
         dict_data = [obj.__dict__ for obj in self.scoreboard]
 
         score_file = self.config.highscore_filename
-        with open(score_file, "w") as f:
-            json.dump(dict_data, f, indent=2)
+        if score_file:
+            with open(score_file, "w") as f:
+                json.dump(dict_data, f, indent=2)
 
     def create_maps(self, level: list[LevelConfig]) -> list[Level]:
         level_list: list[Level] = []
         for map in level:
             level_list.append(Level(map.id, map.width, map.height,
-                                    self.config.seed))
+                                    self.config.seed or 0))
         return level_list
 
     def retrieve_questions_from_json(self) -> DataQuestionsModel:

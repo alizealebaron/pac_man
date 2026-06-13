@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/23 13:56:54 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 09:48:05 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/13 09:54:39 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,6 +16,7 @@
 
 import arcade
 import arcade.gui
+from typing import Any
 from src.pacmanManager import PacmanManager
 
 # +-------------------------------------------------------------------------+
@@ -52,7 +53,8 @@ class SettingsView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window: arcade.Window, previous_view: arcade.View):
+    def __init__(self, window: arcade.Window,
+                 previous_view: arcade.View) -> None:
 
         """
         Initialise la vue des paramètres.
@@ -75,7 +77,7 @@ class SettingsView(arcade.View):
         self.settings_sprite = arcade.load_texture("assets/menu/settings.png")
 
         # Initialisation de la musique
-        self.music_player = None
+        self.music_player: Any = None
 
         # Configuration de l'UI Arcade Manager
         self.ui_manager = arcade.gui.UIManager()
@@ -107,7 +109,7 @@ class SettingsView(arcade.View):
             max_value=100,
             width=300
         )
-        self.volume_slider.on_change = self.on_volume_change
+        setattr(self.volume_slider, "on_change", self.on_volume_change)
         self.v_box.add(self.volume_slider)
 
         # Configuration du clavier
@@ -123,7 +125,7 @@ class SettingsView(arcade.View):
             text=self.manager.settings.configuration,
             width=200
         )
-        self.key_config_button.on_click = self.on_key_config_click
+        setattr(self.key_config_button, "on_click", self.on_key_config_click)
         self.v_box.add(self.key_config_button)
 
         # Création du conteneur d'ancrage global
@@ -207,7 +209,7 @@ class SettingsView(arcade.View):
         # Ajout des settings
         self.ui_manager.draw()
 
-    def on_mouse_press(self, x, y, _, __):
+    def on_mouse_press(self, x: int, y: int, _: int, __: int) -> None:
 
         """
         Méthode appelée lorsque l'on clique sur la souris.
@@ -215,14 +217,15 @@ class SettingsView(arcade.View):
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
-            self.music.stop(self.music_player)
+            if self.music_player:
+                self.music.stop(self.music_player)
             self.window.show_view(self.previous_view)
 
     # +---------------------------------------------------------------------+
     # |                           Change Methods                            |
     # +---------------------------------------------------------------------+
 
-    def on_volume_change(self, _) -> None:
+    def on_volume_change(self, _: arcade.gui.UIOnChangeEvent) -> None:
         """Gère le changement de volume via le slider"""
         self.manager.settings.volume = self.volume_slider.value / 100.0
 
@@ -230,7 +233,7 @@ class SettingsView(arcade.View):
             self.music.set_volume(self.manager.settings.volume,
                                   self.music_player)
 
-    def on_key_config_click(self, _) -> None:
+    def on_key_config_click(self, _: arcade.gui.UIOnClickEvent) -> None:
         """Gère le changement de configuration de touches"""
 
         if self.key_config_button.text == "QWERTY":

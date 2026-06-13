@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/23 10:58:55 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 15:06:18 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 15:32:59 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,6 +15,8 @@
 # +-------------------------------------------------------------------------+
 
 import arcade
+from typing import Any, Optional
+from pyglet.media import Player
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -43,7 +45,7 @@ class ScoreboardView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window):
+    def __init__(self, window: Any) -> None:
 
         """
         Initialise la vue du scoreboard.
@@ -66,7 +68,8 @@ class ScoreboardView(arcade.View):
         self.lst_score = self.window.manager.scoreboard
 
         # Initialisation de la musique
-        self.music_player = None
+        self.music: Optional[arcade.Sound] = None
+        self.music_player: Optional[Player] = None
 
     # +---------------------------------------------------------------------+
     # |                            View Methods                             |
@@ -81,8 +84,7 @@ class ScoreboardView(arcade.View):
 
         volume = self.window.manager.settings.volume
         if not (self.music_player and self.music_player.playing):
-            self.music = arcade.Sound(MUSIC_PATH,
-                                      streaming=True)
+            self.music = arcade.Sound(MUSIC_PATH, streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
 
     def on_draw(self) -> None:
@@ -128,7 +130,7 @@ class ScoreboardView(arcade.View):
         # Affichage des scores
         self.draw_big_scoreboard()
 
-    def on_mouse_press(self, x, y, _, __) -> None:
+    def on_mouse_press(self, x: int, y: int, _: int, __: int) -> None:
 
         """
         Méthode appelée lorsque l'on clique sur la souris.
@@ -136,7 +138,8 @@ class ScoreboardView(arcade.View):
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
-            self.music.stop(self.music_player)
+            if self.music and self.music_player:
+                self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
     # +---------------------------------------------------------------------+

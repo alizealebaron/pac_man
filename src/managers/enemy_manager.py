@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:41:40 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 11:53:25 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 17:25:31 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -54,7 +54,7 @@ class EnemyManager:
     # +---------------------------------------------------------------------+
 
     def __init__(self, config: ConfigModel, curr_level: Level,
-                 player: PlayerModel):
+                 player: PlayerModel) -> None:
 
         """
         Initialise le manager des ennemis.
@@ -70,7 +70,8 @@ class EnemyManager:
         self.player = player
         self.enemies: list[EnemyModel] = self._create_enemies()
 
-        self.enemies_sprite = arcade.SpriteList()
+        self.enemies_sprite: arcade.SpriteList[
+            arcade.Sprite] = arcade.SpriteList()
         for enemy in self.enemies:
             self.enemies_sprite.append(enemy.sprite)
 
@@ -129,7 +130,7 @@ class EnemyManager:
     # |                            View Method                              |
     # +---------------------------------------------------------------------+
 
-    def on_update(self, delta_time) -> None:
+    def on_update(self, delta_time: float) -> None:
         """Met à jour les ennemis."""
 
         for enemy in self.enemies:
@@ -139,7 +140,7 @@ class EnemyManager:
         """Dessine les ennemis."""
         self.enemies_sprite.draw()
 
-    def get_respawning_enemies(self):
+    def get_respawning_enemies(self) -> list[EnemyModel]:
         respawning = []
         for enemy in self.enemies:
             if enemy.is_dead is True:

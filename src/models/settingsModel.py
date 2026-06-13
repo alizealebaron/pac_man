@@ -42,7 +42,7 @@ class SettingsModel():
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self):
+    def __init__(self) -> None:
 
         """
         Initialise les paramètres du jeu avec des valeurs par défaut.

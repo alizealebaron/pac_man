@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 09:21:58 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 12:10:03 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 17:20:42 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,7 @@
 
 import random
 import json
-from typing import Tuple
+from typing import Tuple, Optional
 import arcade
 from src.models.animated_sprite import AnimatedSprite
 from src.models.enemydatamodel import EnemyDataModel
@@ -103,8 +103,8 @@ class EnemyModel:
         self.sprite.center_x = self.x
         self.sprite.center_y = self.y
         self.algo = self._asign_algo()
-        self.current_direction = None
-        self.last_direction = None
+        self.current_direction: Optional[Tuple[int, int]] = None
+        self.last_direction: Optional[str] = None
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
         self.offset_y = self._get_offset_y()
@@ -119,7 +119,7 @@ class EnemyModel:
     # |                            Reset Method                             |
     # +---------------------------------------------------------------------+
 
-    def reset_pos_and_maze(self, maze: list[list[int]]):
+    def reset_pos_and_maze(self, maze: list[list[int]]) -> None:
         """
         Réinitialise la position de l'ennemi et met à jour le labyrinthe.
 
@@ -134,7 +134,7 @@ class EnemyModel:
         self.reset_pos()
         self._reset_death()
 
-    def reset_pos(self):
+    def reset_pos(self) -> None:
         """
         Réinitialise la position de l'ennemi à sa position de départ et
         réinitialise les offsets pour l'animation de déplacement.
@@ -146,7 +146,7 @@ class EnemyModel:
         self.pixel_offset_x = 0
         self.pixel_offset_y = 0
 
-    def _reset_death(self):
+    def _reset_death(self) -> None:
         self.is_fleeing = False
         self.is_dead = False
         self.respawn_timer = 0.0
@@ -156,7 +156,7 @@ class EnemyModel:
     # |                            View Method                              |
     # +---------------------------------------------------------------------+
 
-    def on_update(self, delta_time):
+    def on_update(self, delta_time: float) -> None:
 
         """
         Met à jour la position de l'ennemi en fonction de son algorithme de
@@ -263,7 +263,7 @@ class EnemyModel:
             case _:
                 return (0, 0)
 
-    def _random_move(self) -> Tuple[int]:
+    def _random_move(self) -> Tuple[int, int]:
 
         """
         Détermine une direction de déplacement aléatoire pour l'ennemi parmi
@@ -289,7 +289,7 @@ class EnemyModel:
 
         return self._direction_to_velocity(random.choice(possible_dir))
 
-    def _behind_move(self) -> Tuple[int]:
+    def _behind_move(self) -> Tuple[int, int]:
         distance = abs(self.x - self.player.x) + abs(self.y - self.player.y)
 
         if distance <= 1:
@@ -316,7 +316,7 @@ class EnemyModel:
 
         return (0, 0)
 
-    def _in_front_move(self) -> Tuple[int]:
+    def _in_front_move(self) -> Tuple[int, int]:
         """
         Détermine la direction de déplacement de l'ennemi en utilisant un
         algorithme de recherche en largeur (BFS) pour trouver le chemin le plus
@@ -348,7 +348,11 @@ class EnemyModel:
 
         return (0, 0)
 
-    def _bfs_algo(self, target_x: int, target_y: int):
+    def _bfs_algo(
+            self,
+            target_x: int,
+            target_y: int
+            ) -> dict[Tuple[int, int], Tuple[int, int]] | None:
         """
         Implémente un algorithme de recherche en largeur (BFS) pour trouver le
         chemin le plus court entre la position actuelle de l'ennemi et la
@@ -393,8 +397,11 @@ class EnemyModel:
 
         return None
 
-    def _escape_move(self) -> Tuple[int]:
+    def _escape_move(self) -> Tuple[int, int]:
         possible_dir = self._get_direction(self.x, self.y)
+
+        if not possible_dir:
+            return (0, 0)
 
         best_dir = None
         best_distance = -1
@@ -481,7 +488,7 @@ class EnemyModel:
             possible_dir.append('left')
         return possible_dir
 
-    def _direction_to_velocity(self, direction: str) -> Tuple[int]:
+    def _direction_to_velocity(self, direction: str | None) -> Tuple[int, int]:
 
         """
         Convertit une direction de déplacement en une composante de vitesse
@@ -513,7 +520,10 @@ class EnemyModel:
             case _:
                 return (0, 0)
 
-    def _velocity_to_direction(self, velocity: Tuple[int]) -> Tuple[int]:
+    def _velocity_to_direction(
+            self,
+            velocity: Tuple[int, int] | None
+            ) -> str | None:
 
         """
         Convertit une composante de vitesse en une direction de déplacement
@@ -539,7 +549,7 @@ class EnemyModel:
             case (-1, 0):
                 return 'left'
             case _:
-                return (0, 0)
+                return None
 
     def _rev_maze(self, maze: list[list[int]]) -> list[list[int]]:
 
@@ -626,8 +636,10 @@ class EnemyModel:
                 return 10
             case 'Misdreavus':
                 return 10
+            case _:
+                return 0
 
-    def _get_start_pos(self) -> Tuple[int]:
+    def _get_start_pos(self) -> Tuple[int, int]:
 
         """
         Détermine la position de départ de l'ennemi en fonction de son type.
@@ -645,8 +657,10 @@ class EnemyModel:
                 return (len(self.maze[0]) - 1, 0)
             case 'Misdreavus':
                 return (len(self.maze[0]) - 1, len(self.maze) - 1)
+            case _:
+                return (0, 0)
 
-    def die(self):
+    def die(self) -> None:
         self.is_dead = True
         self.already_dead = True
         self.is_fleeing = False

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 14:35:28 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 14:51:23 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 14:25:14 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -39,7 +39,8 @@ class MainWindow(arcade.Window):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, title: str, fullscreen: bool, manager: PacmanManager):
+    def __init__(self, title: str, fullscreen: bool,
+                 manager: PacmanManager) -> None:
 
         """
         Initialise la fenêtre principale du jeu.

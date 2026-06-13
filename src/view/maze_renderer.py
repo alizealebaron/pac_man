@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 16:53:13 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/11 15:02:09 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 14:58:48 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -63,7 +63,7 @@ class MazeRenderer:
 
     def __init__(self, maze: list[list[int]], window_width: float,
                  window_height: float, hud_width_left: float = 200,
-                 hud_width_right: float = 200):
+                 hud_width_right: float = 200) -> None:
 
         """
         Initialise le MazeRenderer avec les paramètres nécessaires pour le
@@ -89,7 +89,7 @@ class MazeRenderer:
         self.offset_x = 0.0
         self.offset_y = 0.0
 
-        self.sprites = arcade.SpriteList()
+        self.sprites: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
         self.sprite_sheet = self._load_sprites(MAP_FILE)
         self._build_maze_sprites()
 
@@ -97,7 +97,7 @@ class MazeRenderer:
     # |                               Methods                               |
     # +---------------------------------------------------------------------+
 
-    def _build_maze_sprites(self):
+    def _build_maze_sprites(self) -> None:
 
         """
         Construit les sprites du labyrinthe à partir de la matrice de valeurs
@@ -140,7 +140,7 @@ class MazeRenderer:
                                        center_y=center_y, scale=self.scale)
                 self.sprites.append(sprite)
 
-    def _load_sprites(self, path: str) -> list:
+    def _load_sprites(self, path: str) -> list[Image.Image]:
 
         """
         Charge les textures des murs et des chemins à partir d'une feuille de
@@ -162,7 +162,7 @@ class MazeRenderer:
 
         return frames
 
-    def draw(self):
+    def draw(self) -> None:
 
         """
         Méthode appelée pour dessiner les sprites.

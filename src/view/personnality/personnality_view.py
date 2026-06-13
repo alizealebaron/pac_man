@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/26 01:33:59 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 14:04:40 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 15:49:55 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,6 +16,7 @@
 
 import arcade
 from src.view.personnality.quizz_view import QuizzView
+from typing import List, Optional, Any
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -51,7 +52,7 @@ class PersonnalityView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window: arcade.Window):
+    def __init__(self, window: arcade.Window) -> None:
 
         """
         Initialise la vue de personnalité.
@@ -65,10 +66,10 @@ class PersonnalityView(arcade.View):
         self.background = arcade.load_texture(BACKGROUND_PATH)
 
         # Initialisation de la musique
-        self.music_player = None
+        self.music_player: Optional[Any] = None
 
         # Initalisation des questions
-        self.reponses = ["Oui", "Non"]
+        self.reponses: List[str] = ["Oui", "Non"]
         self.selected_reponse = 0
 
     # +---------------------------------------------------------------------+
@@ -159,7 +160,7 @@ class PersonnalityView(arcade.View):
 
             start_y += space_between
 
-    def on_mouse_press(self, x, y, _, __) -> None:
+    def on_mouse_press(self, x: int, y: int, _: int, __: int) -> None:
 
         """
         Méthode appelée lorsque l'on clique sur la souris.
@@ -167,10 +168,11 @@ class PersonnalityView(arcade.View):
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
-            self.music.stop(self.music_player)
+            if self.music_player is not None:
+                self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
-    def on_key_press(self, key, _) -> None:
+    def on_key_press(self, key: int, _: int) -> None:
 
         """
         Méthode appelée lorsque l'on appuie sur une touche du clavier.
@@ -193,7 +195,8 @@ class PersonnalityView(arcade.View):
                                                 self.music_player,
                                                 self.music))
             elif self.selected_reponse == 1:
-                self.music.stop(self.music_player)
+                if self.music_player is not None:
+                    self.music.stop(self.music_player)
                 self.window.show_view(self.window.start_view)
 
     # +---------------------------------------------------------------------+

@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/27 16:28:27 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 20:27:14 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 15:42:38 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,7 @@
 
 import arcade
 import random
-from typing import Any, Dict
+from typing import Any, Dict, List, Optional
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -57,7 +57,7 @@ class ResultQuizzView(arcade.View):
     # +---------------------------------------------------------------------+
 
     def __init__(self, window: arcade.Window, music_player: Any, music: Any,
-                 dict_caractere: Dict[str, int]):
+                 dict_caractere: Dict[str, int]) -> None:
 
         """
         Initialise la vue de résultat du quizz.
@@ -87,10 +87,11 @@ class ResultQuizzView(arcade.View):
         self.caractere = max(self.dict_caracteres,
                              key=lambda key: self.dict_caracteres[key])
         data_questions = self.window.manager.data_questions
-        self.lst_carac = data_questions.caracteres[self.caractere].split("\n")
+        self.lst_carac: List[str] = (
+            data_questions.caracteres[self.caractere].split("\n"))
 
         # Pokémon généré
-        self.random_pokemon = None
+        self.random_pokemon: Optional[Any] = None
 
     # +---------------------------------------------------------------------+
     # |                            View Methods                             |
@@ -134,7 +135,7 @@ class ResultQuizzView(arcade.View):
         else:
             self.draw_pokemon()
 
-    def on_mouse_press(self, x, y, _, __) -> None:
+    def on_mouse_press(self, x: int, y: int, _: int, __: int) -> None:
 
         """
         Méthode appelée lorsque l'on clique sur la souris.
@@ -145,7 +146,7 @@ class ResultQuizzView(arcade.View):
             self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
-    def on_key_press(self, key, _) -> None:
+    def on_key_press(self, key: int, _: int) -> None:
 
         """
         Méthode appelée lorsque l'on appuie sur une touche du clavier.
@@ -156,10 +157,11 @@ class ResultQuizzView(arcade.View):
             if ((len(self.lst_carac) > self.index_carac)):
                 self.index_carac += 1
             else:
-                self.window.manager.player.pokemon = self.random_pokemon
-                self.window.manager.player.update_pokemon_sprite()
-                if (self.window.manager.cheat.dynamax is True):
-                    self.window.manager.player.pokemon.scale *= 3
+                if self.random_pokemon is not None:
+                    self.window.manager.player.pokemon = self.random_pokemon
+                    self.window.manager.player.update_pokemon_sprite()
+                    if (self.window.manager.cheat.dynamax is True):
+                        self.window.manager.player.pokemon.scale *= 3
                 self.music.stop(self.music_player)
                 self.window.show_view(self.window.start_view)
 
@@ -182,6 +184,10 @@ class ResultQuizzView(arcade.View):
 
         if self.random_pokemon is None:
             self.random_pokemon = random.choice(possible_pokemon)
+
+        pokemon = self.random_pokemon
+        if pokemon is None:
+            return
 
         sprite = arcade.load_texture(f"assets/sprite/pokemon/"
                                      f"{self.random_pokemon.name}"

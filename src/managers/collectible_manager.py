@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 08:30:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 11:59:17 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/12 17:23:54 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -54,7 +54,7 @@ class CollectibleManager:
     # +---------------------------------------------------------------------+
 
     def __init__(self, maze: list[list[int]], scale: float = 1.0,
-                 offset_x: float = 0.0, offset_y: float = 0.0):
+                 offset_x: float = 0.0, offset_y: float = 0.0) -> None:
 
         """
         Initialise le manager de collectibles.
@@ -74,8 +74,9 @@ class CollectibleManager:
         self.offset_x = offset_x
         self.offset_y = offset_y
 
-        self.pg_sprites = arcade.SpriteList()
-        self.spg_sprites = arcade.SpriteList()
+        self.pg_sprites: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
+        self.spg_sprites: arcade.SpriteList[
+            arcade.Sprite] = arcade.SpriteList()
 
         # Initialiser les pacgums
         self._place_collectibles()
@@ -84,7 +85,7 @@ class CollectibleManager:
     # |                               Methods                               |
     # +---------------------------------------------------------------------+
 
-    def _place_collectibles(self):
+    def _place_collectibles(self) -> None:
         """
         Place les pacgums et super pacgums sur le labyrinthe en fonction
         de la configuration du maze.
@@ -130,7 +131,7 @@ class CollectibleManager:
     # +---------------------------------------------------------------------+
 
     def remove_pacgum(self,
-                      player_list: arcade.SpriteList,
+                      player_list: arcade.SpriteList[arcade.Sprite],
                       config: ConfigModel,
                       player: PlayerModel) -> Tuple[int, bool]:
 
@@ -179,7 +180,7 @@ class CollectibleManager:
     # |                                 Draw                                |
     # +---------------------------------------------------------------------+
 
-    def draw(self):
+    def draw(self) -> None:
         """Dessine les sprites des pacgums et super pacgums."""
         self.spg_sprites.draw()
         self.pg_sprites.draw()

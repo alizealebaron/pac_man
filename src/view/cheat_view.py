@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/09 13:32:00 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 16:07:08 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/13 10:59:25 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -52,7 +52,7 @@ class CheatView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window: arcade.Window, game_view: arcade.View):
+    def __init__(self, window: arcade.Window, game_view: arcade.View) -> None:
 
         """
         Initialise la vue de triche.
@@ -102,7 +102,7 @@ class CheatView(arcade.View):
             text="Oui" if (self.manager.cheat.invicibility is True) else "Non",
             width=200
         )
-        self.btn_inv.on_click = self.manage_invicibility
+        setattr(self.btn_inv, "on_click", self.manage_invicibility)
         inv_row.add(self.btn_inv)
         self.v_box.add(inv_row)
 
@@ -120,7 +120,7 @@ class CheatView(arcade.View):
             text="Oui" if (self.manager.cheat.intagibilite is True) else "Non",
             width=200
         )
-        self.btn_ghost.on_click = self.manage_ghost
+        setattr(self.btn_ghost, "on_click", self.manage_ghost)
         inv_row.add(self.btn_ghost)
         self.v_box.add(inv_row)
 
@@ -138,7 +138,7 @@ class CheatView(arcade.View):
             text=f"{self.manager.player.speed}",
             width=200
         )
-        self.btn_player_speed.on_click = self.manage_player_speed
+        setattr(self.btn_player_speed, "on_click", self.manage_player_speed)
         inv_row.add(self.btn_player_speed)
         self.v_box.add(inv_row)
 
@@ -161,7 +161,7 @@ class CheatView(arcade.View):
             text=text,
             width=200
         )
-        self.btn_level_skip.on_click = self.manage_level_skip
+        setattr(self.btn_level_skip, "on_click", self.manage_level_skip)
         inv_row.add(self.btn_level_skip)
         self.v_box.add(inv_row)
 
@@ -179,7 +179,7 @@ class CheatView(arcade.View):
             text="Oui" if (self.manager.cheat.dynamax is True) else "Non",
             width=200
         )
-        self.btn_dyna.on_click = self.manage_dynamax
+        setattr(self.btn_dyna, "on_click", self.manage_dynamax)
         inv_row.add(self.btn_dyna)
         self.v_box.add(inv_row)
 
@@ -201,7 +201,7 @@ class CheatView(arcade.View):
     # |                             Btn Methods                             |
     # +---------------------------------------------------------------------+
 
-    def manage_invicibility(self, _) -> None:
+    def manage_invicibility(self, _: arcade.gui.UIOnClickEvent) -> None:
 
         """Gère le changement d'état de l'invincibilité."""
 
@@ -212,7 +212,7 @@ class CheatView(arcade.View):
             self.btn_inv.text = "Oui"
             self.manager.cheat.invicibility = True
 
-    def manage_ghost(self, _) -> None:
+    def manage_ghost(self, _: arcade.gui.UIOnClickEvent) -> None:
 
         """Gère le changement d'intagibilite."""
 
@@ -223,7 +223,7 @@ class CheatView(arcade.View):
             self.btn_ghost.text = "Oui"
             self.manager.cheat.intagibilite = True
 
-    def manage_player_speed(self, _) -> None:
+    def manage_player_speed(self, _: arcade.gui.UIOnClickEvent) -> None:
 
         """Gère le changement de vitesse du joueur."""
 
@@ -231,13 +231,13 @@ class CheatView(arcade.View):
         self.btn_player_speed.text = f"{new_speed}"
         self.manager.player.speed = new_speed
 
-    def manage_level_skip(self, _) -> None:
+    def manage_level_skip(self, _: arcade.gui.UIOnClickEvent) -> None:
 
         """Passe le niveau au prochain level"""
-        self.game_view.is_finished = 1
+        self.game_view.is_finished = 1  # type: ignore[attr-defined]
         self.window.show_view(self.game_view)
 
-    def manage_dynamax(self, _) -> None:
+    def manage_dynamax(self, _: arcade.gui.UIOnClickEvent) -> None:
 
         """Gère le changement d'état du mod dynamax."""
 
@@ -309,7 +309,7 @@ class CheatView(arcade.View):
 
         self.ui_manager.draw()
 
-    def on_mouse_press(self, x, y, _, __) -> None:
+    def on_mouse_press(self, x: int, y: int, _: int, __: int) -> None:
 
         """
         Méthode appelée lorsque l'on clique sur la souris.
@@ -319,7 +319,7 @@ class CheatView(arcade.View):
         if (x > 2 and x < 95 and y > 995 and y < 1080):
             self.window.show_view(self.game_view)
 
-    def on_key_press(self, key, modifiers) -> None:
+    def on_key_press(self, key: int, modifiers: int) -> None:
 
         """
         Méthode appelée lorsque l'on appuie sur une touche du clavier.

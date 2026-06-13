@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/08 13:19:29 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/11 14:50:49 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/12 15:33:27 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -15,6 +15,8 @@
 # +-------------------------------------------------------------------------+
 
 import arcade
+from typing import Any, Optional
+from pyglet.media import Player
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -47,7 +49,7 @@ class CreditsView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window):
+    def __init__(self, window: Any) -> None:
 
         """
         Initialise la vue des crédits.
@@ -72,7 +74,7 @@ class CreditsView(arcade.View):
                            "JFain", "NickOnimura", "NeroIntruder"]
 
         # Initialisation de la musique
-        self.music_player = None
+        self.music_player: Optional[Player] = None
 
     # +---------------------------------------------------------------------+
     # |                            View Methods                             |
@@ -273,7 +275,7 @@ class CreditsView(arcade.View):
                                     anchor_y="center")
         artiste_title.draw()
 
-    def on_mouse_press(self, x, y, _, __) -> None:
+    def on_mouse_press(self, x: int, y: int, _: int, __: int) -> None:
 
         """
         Méthode appelée lorsque l'on clique sur la souris.
@@ -281,5 +283,6 @@ class CreditsView(arcade.View):
 
         # Bouton retour
         if (x > 2 and x < 95 and y > 995 and y < 1080):
-            self.music.stop(self.music_player)
+            if self.music_player:
+                self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)

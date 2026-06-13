@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 12:14:23 by rruiz           ###   ########.fr        #
+#  Updated: 2026/06/13 10:52:08 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -23,6 +23,7 @@ from src.view.save_score.gameover_view import GameoverView
 from src.view.cheat_view import CheatView
 from src.view.settings_view import SettingsView
 from src.pacmanManager import PacmanManager
+from pyglet.media import Player
 
 # +-------------------------------------------------------------------------+
 # |                                 Global                                  |
@@ -85,7 +86,9 @@ class GameView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, manager: PacmanManager, music_player=None, music=None):
+    def __init__(self, manager: PacmanManager,
+                 music_player: Player | None = None,
+                 music: arcade.Sound | None = None) -> None:
 
         """
         Initialise la vue du jeu.
@@ -139,7 +142,8 @@ class GameView(arcade.View):
         self._player_original_pos()
         self.manager.player.sprite.scale = (self.manager.player.pokemon.scale *
                                             self.scale)
-        self.player_sprites = arcade.SpriteList()
+        self.player_sprites: arcade.SpriteList[
+            arcade.Sprite] = arcade.SpriteList()
         self.player_sprites.append(self.manager.player.sprite)
 
         for enemy in self.enemy_manager.enemies:
@@ -225,30 +229,34 @@ class GameView(arcade.View):
         # Initialisation de l'input des boutons
 
         @btn_resume.event("on_click")
-        def on_click_resume_button(event):
+        def on_click_resume_button(event: arcade.gui.UIOnClickEvent) -> None:
             self.pause_manager.disable()
             self.show_pause_menu = False
             self.window.set_mouse_visible(False)
 
         @btn_start_new_game.event("on_click")
-        def on_click_start_new_game_button(event):
+        def on_click_start_new_game_button(
+                event: arcade.gui.UIOnClickEvent) -> None:
             self.manager.reset_game()
-            self.music.stop(self.music_player)
+            if self.music is not None and self.music_player is not None:
+                self.music.stop(self.music_player)
             self.window.show_view(GameView(self.manager))
 
         @btn_cheat.event("on_click")
-        def on_click_cheat(event):
+        def on_click_cheat(event: arcade.gui.UIOnClickEvent) -> None:
             self.window.show_view(CheatView(self.window, self))
 
         @btn_param.event("on_click")
-        def on_click_param(event):
-            self.music.stop(self.music_player)
+        def on_click_param(event: arcade.gui.UIOnClickEvent) -> None:
+            if self.music is not None and self.music_player is not None:
+                self.music.stop(self.music_player)
             self.window.show_view(SettingsView(self.window, self))
 
         @btn_exit.event("on_click")
-        def on_click_exit_button(event):
+        def on_click_exit_button(event: arcade.gui.UIOnClickEvent) -> None:
             self.manager.reset_game()
-            self.music.stop(self.music_player)
+            if self.music is not None and self.music_player is not None:
+                self.music.stop(self.music_player)
             self.window.show_view(self.window.start_view)
 
     # +---------------------------------------------------------------------+
@@ -344,7 +352,7 @@ class GameView(arcade.View):
             pause_title.draw()
             self.pause_manager.draw()
 
-    def on_update(self, delta_time) -> None:
+    def on_update(self, delta_time: float) -> None:
 
         """Mise à jour de la vue, appelée 60 fois par seconde."""
 
@@ -360,7 +368,8 @@ class GameView(arcade.View):
         # Vérification que le jeu est toujours en cours
         if (self.is_finished == 1):
             if (self.manager.actual_level == (len(self.manager.level) - 1)):
-                self.music.stop(self.music_player)
+                if self.music is not None and self.music_player is not None:
+                    self.music.stop(self.music_player)
                 self.window.set_mouse_visible(True)
                 self.window.show_view(WinView(self.window))
             else:
@@ -370,7 +379,8 @@ class GameView(arcade.View):
                                                self.music))
                 return
         if (self.is_finished == 2):
-            self.music.stop(self.music_player)
+            if self.music is not None and self.music_player is not None:
+                self.music.stop(self.music_player)
             self.window.set_mouse_visible(True)
             self.window.show_view(GameoverView(self.window))
 
@@ -484,7 +494,7 @@ class GameView(arcade.View):
 
             if (lst_collisions):
                 for collision in lst_collisions:
-                    enemy = collision.owner
+                    enemy = collision.owner  # type: ignore[attr-defined]
                     if not enemy.already_dead:
                         (self.manager.enemy_manager.enemies_sprite.remove(
                             enemy.sprite))
@@ -564,7 +574,7 @@ class GameView(arcade.View):
         self.manager.player.pixel_offset_x = 0.0
         self.manager.player.pixel_offset_y = 0.0
 
-    def on_key_press(self, key, _) -> None:
+    def on_key_press(self, key: int, _: int) -> None:
 
         """
         Méthode appelée lorsque l'on appuie sur une touche du clavier.
@@ -572,16 +582,16 @@ class GameView(arcade.View):
 
         if (self.show_pause_menu is False):
 
-            dict_key = self.manager.settings.dict_key
-            dict_key = dict_key[self.manager.settings.configuration]
+            all_keys = self.manager.settings.dict_key
+            keys = all_keys[self.manager.settings.configuration]
 
-            if key == dict_key["up"] or key == arcade.key.UP:
+            if key == keys["up"] or key == arcade.key.UP:
                 self.manager.player.next_direction = "up"
-            elif key == dict_key["left"] or key == arcade.key.LEFT:
+            elif key == keys["left"] or key == arcade.key.LEFT:
                 self.manager.player.next_direction = "left"
-            elif key == dict_key["down"] or key == arcade.key.DOWN:
+            elif key == keys["down"] or key == arcade.key.DOWN:
                 self.manager.player.next_direction = "down"
-            elif key == dict_key["right"] or key == arcade.key.RIGHT:
+            elif key == keys["right"] or key == arcade.key.RIGHT:
                 self.manager.player.next_direction = "right"
 
         # Afficher le menu de pause
@@ -606,9 +616,9 @@ class GameView(arcade.View):
 
         player = self.manager.player
 
-        if (player.next_direction and
-            self._is_opposite_direction(player.direction,
-                                        player.next_direction)):
+        if (player.direction is not None and player.next_direction and
+                self._is_opposite_direction(player.direction,
+                                            player.next_direction)):
 
             player.direction = player.next_direction
             player.next_direction = None
@@ -680,15 +690,19 @@ class GameView(arcade.View):
             case "up":
                 if not (self.rev_maze[grid_y][grid_x] & 1):
                     return True
+                return False
             case "right":
                 if not (self.rev_maze[grid_y][grid_x] & 2):
                     return True
+                return False
             case "down":
                 if not (self.rev_maze[grid_y][grid_x] & 4):
                     return True
+                return False
             case "left":
                 if not (self.rev_maze[grid_y][grid_x] & 8):
                     return True
+                return False
             case _:
                 return False
 

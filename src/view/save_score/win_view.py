@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/28 14:12:22 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 15:17:23 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/13 11:03:28 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -18,6 +18,8 @@ import arcade
 import arcade.gui
 from src.models.scoreModel import Score
 import re
+from typing import Any, Optional
+from pyglet.media import Player
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -55,7 +57,7 @@ class WinView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self, window):
+    def __init__(self, window: Any) -> None:
 
         """
         Initialise la view de victoire.
@@ -92,7 +94,7 @@ class WinView(arcade.View):
         self.lst_score = self.window.manager.scoreboard
 
         # Initialisation de la musique
-        self.music_player = None
+        self.music_player: Optional[Player] = None
 
         # Initalisation des questions
         self.reponses = ["Retour à l'écran titre",
@@ -101,9 +103,8 @@ class WinView(arcade.View):
         self.selected_reponse = 2
 
         # Gestion de l'input du pseudo
-
-        self.ui_manager = arcade.gui.UIManager()
-        self.input_field = None
+        self.ui_manager: arcade.gui.UIManager = arcade.gui.UIManager()
+        self.input_field: Optional[arcade.gui.UIInputText] = None
         self.show_input_ui = False
 
     # +---------------------------------------------------------------------+
@@ -160,7 +161,7 @@ class WinView(arcade.View):
             self.draw_profile_icone()
             self.draw_choice()
 
-    def on_key_press(self, key, _) -> None:
+    def on_key_press(self, key: int, _: int) -> None:
 
         """
         Méthode appelée lorsque l'on appuie sur une touche du clavier.
@@ -189,7 +190,8 @@ class WinView(arcade.View):
                 self.show_name_input()
             elif self.selected_reponse == 0:
                 self.window.manager.reset_game()
-                self.music.stop(self.music_player)
+                if self.music_player is not None:
+                    self.music.stop(self.music_player)
                 self.window.show_view(self.window.start_view)
 
     # +---------------------------------------------------------------------+
@@ -206,18 +208,19 @@ class WinView(arcade.View):
         default_name = re.sub(NAME_ALLOWED_RE, "",
                               self.window.manager.player.name)[:NAME_MAX_LEN]
         self.window.manager.player.name = default_name
-        score = {
+        data_score = {
             "name": default_name,
             "score": self.window.manager.player.score,
             "pokemon": self.window.manager.player.pokemon.name
         }
 
-        score = Score(**score)
+        score = Score(**data_score)
         self.window.manager.scoreboard.append(score)
         self.window.manager.update_json_score()
         self.window.manager.reset_game()
 
-        self.music.stop(self.music_player)
+        if self.music_player is not None:
+            self.music.stop(self.music_player)
         self.window.show_view(self.window.start_view)
 
     def show_name_input(self) -> None:
@@ -248,16 +251,19 @@ class WinView(arcade.View):
             border_width=0
         )
 
+        assert self.input_field is not None
+        input_field = self.input_field
+
         # Interception des touches clavier
-        @self.input_field.event("on_event")
-        def on_text_event(event):
+        @input_field.event("on_event")
+        def on_text_event(event: arcade.gui.UIEvent) -> None:
             if isinstance(event, arcade.gui.events.UIKeyPressEvent):
-                cleaned = (re.sub(NAME_ALLOWED_RE, "", self.input_field.text)
+                cleaned = (re.sub(NAME_ALLOWED_RE, "", input_field.text)
                            [:NAME_MAX_LEN])
-                if cleaned != self.input_field.text:
-                    self.input_field.text = cleaned
+                if cleaned != input_field.text:
+                    input_field.text = cleaned
                 if event.symbol == arcade.key.ENTER:
-                    new_name = self.input_field.text
+                    new_name = input_field.text
                     if new_name.strip():
                         # On applique le nouveau nom
                         self.window.manager.player.name = new_name
@@ -268,6 +274,7 @@ class WinView(arcade.View):
                         self.save_without_name()
 
         # Alignement au centre parfait (sur l'axe X et Y)
+        assert self.input_field is not None
         self.anchor_layout.add(
             anchor_x="center_x",
             anchor_y="center_y",

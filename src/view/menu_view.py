@@ -6,7 +6,7 @@
 #  By: alebaron, rruiz                           +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/20 10:28:01 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/12 10:14:23 by alebaron        ###   ########.fr        #
+#  Updated: 2026/06/13 10:38:08 by rruiz           ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -20,6 +20,8 @@ from src.view.scoreboard_view import ScoreboardView
 from src.view.settings_view import SettingsView
 from src.view.personnality.personnality_view import PersonnalityView
 from src.view.credits_view import CreditsView
+from pyglet.media import Player
+from typing import Any
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -57,7 +59,7 @@ class MenuView(arcade.View):
     # |                                Init                                 |
     # +---------------------------------------------------------------------+
 
-    def __init__(self):
+    def __init__(self) -> None:
 
         """
         Initialise la vue du menu principal, charge les ressources nécessaires
@@ -108,6 +110,7 @@ class MenuView(arcade.View):
         ligne_bas = self.hauteur * 0.20
 
         # Initialisation de la box à boutons
+        self.boutons: dict[str, dict[str, Any]]
         self.boutons = {
             "new_game": {
                 "texture": arcade.load_texture(BTN_PATH + "start.png"),
@@ -137,7 +140,7 @@ class MenuView(arcade.View):
         }
 
         # Initialisation de la musique
-        self.music_player = None
+        self.music_player: Player | None = None
 
         # Timer
         self.change_timer = 3.0
@@ -184,7 +187,7 @@ class MenuView(arcade.View):
                                                   f"{self.player_pokemon.name}"
                                                   "/portraits/Normal.png")
 
-    def on_update(self, delta_time):
+    def on_update(self, delta_time: float) -> None:
         """Met à jour la vue selon le temps."""
 
         self.change_timer -= delta_time
@@ -274,30 +277,33 @@ class MenuView(arcade.View):
                                  bold=True)
         credit_txt.draw()
 
-    def on_mouse_press(self, x, y, _, __) -> None:
+    def on_mouse_press(self, x: int, y: int, _: int, __: int) -> None:
 
         """
         Méthode appelée lorsque l'on clique sur la souris.
         """
 
-        for _, data in self.boutons.items():
+        for _nom, data in self.boutons.items():
             bx, by = data["pos"]
 
             if (bx - self.btn_width / 2 < x < bx + self.btn_width / 2 and
                by - self.btn_height / 2 < y < by + self.btn_height / 2):
-                self.music.stop(self.music_player)
+                if self.music_player is not None:
+                    self.music.stop(self.music_player)
                 data["action"]()
                 break
 
         volume = self.window.manager.settings.volume
         if (x > 1670 and x < 1720 and y > 110 and y < 155):
-            self.music.stop(self.music_player)
+            if self.music_player is not None:
+                self.music.stop(self.music_player)
             self.music = arcade.Sound("assets/music/easter_egg.mp3",
                                       streaming=True)
             self.music_player = self.music.play(volume=volume, loop=True)
 
         if (x > 1700 and x < 1920 and y > 1015 and y < 1075):
-            self.music.stop(self.music_player)
+            if self.music_player is not None:
+                self.music.stop(self.music_player)
             self.window.show_view(CreditsView(self.window))
 
     # +---------------------------------------------------------------------+
