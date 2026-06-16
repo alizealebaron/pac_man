@@ -9,7 +9,7 @@
 
 <div align="center">
   <p>
-      <!-- <img src="https://img.shields.io/badge/score-125%20%2F%20100-success?style=for-the-badge" /> -->
+	  <img src="https://img.shields.io/badge/score-100%20%2F%20100-success?style=for-the-badge" />
       <img src="https://img.shields.io/github/languages/count/alizealebaron/pac_man?style=for-the-badge&logo=" />
       <img src="https://img.shields.io/github/languages/top/alizealebaron/pac_man?style=for-the-badge" />
       <img src="https://img.shields.io/github/last-commit/alizealebaron/pac_man?style=for-the-badge" />
@@ -27,7 +27,7 @@
 
 **Commencé le :** 18/05/2026
 
-**Rendu le :** Non rendu.
+**Rendu le :** 15/06/2026.
 
 ## Aperçu du jeu
 
