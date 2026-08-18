@@ -26,7 +26,9 @@ from time import time
 
 WALL_DIR = 'assets/sprite/wall/'
 MAP_NAME = ['electric_maze.png', 'joyous_tower.png', 'mount_faraway.png',
-            'purity_forest.png']
+            'purity_forest.png', 'magma_cavern.png', 'nothern_range.png',
+            'purity_forest2.png', 'sky_tower.png', 'snow_path.png',
+            'water_pond.png']
 TILE_SIZE = 64
 
 

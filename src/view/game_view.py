@@ -387,8 +387,29 @@ class GameView(arcade.View):
 
         vx, vy = self._player_move()
 
-        self.manager.player.pixel_offset_x += (vx * self.manager.player.speed * SPEED_MODIFIER[self.manager.actual_level])
-        self.manager.player.pixel_offset_y += (vy * self.manager.player.speed * SPEED_MODIFIER[self.manager.actual_level])
+        old_offset_x = self.manager.player.pixel_offset_x
+        old_offset_y = self.manager.player.pixel_offset_y
+
+        self.manager.player.pixel_offset_x += (
+            vx * self.manager.player.speed * 
+            SPEED_MODIFIER[self.manager.actual_level]
+            )
+
+        self.manager.player.pixel_offset_y += (
+            vy * self.manager.player.speed *
+            SPEED_MODIFIER[self.manager.actual_level]
+            )
+
+        if (old_offset_x != 0 and
+                self.manager.player.pixel_offset_x != 0 and
+                (old_offset_x > 0) !=
+                (self.manager.player.pixel_offset_x > 0)):
+            self.manager.player.pixel_offset_x = 0
+        if (old_offset_y != 0 and
+                self.manager.player.pixel_offset_y != 0 and
+                (old_offset_y > 0) !=
+                (self.manager.player.pixel_offset_y > 0)):
+            self.manager.player.pixel_offset_y = 0
 
         if self.manager.player.pixel_offset_x >= TRANSITION_DISTANCE:
             self.manager.player.x += 1
@@ -623,6 +644,15 @@ class GameView(arcade.View):
 
             player.direction = player.next_direction
             player.next_direction = None
+
+            effective_speed = (player.speed *
+                               SPEED_MODIFIER[self.manager.actual_level])
+            if (player.pixel_offset_x != 0 and
+                    abs(player.pixel_offset_x) <= effective_speed):
+                player.pixel_offset_x = 0
+            if (player.pixel_offset_y != 0 and
+                    abs(player.pixel_offset_y) <= effective_speed):
+                player.pixel_offset_y = 0
 
         elif player.pixel_offset_x == 0 and player.pixel_offset_y == 0:
             if player.next_direction and self._can_move(player.next_direction):
