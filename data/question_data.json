@@ -1617,24 +1617,30 @@
             ]
         },
         "q70": {
-            "texte": "Quelle note allez-vous mettre au projet ?",
+            "texte": "Au hasard, si vous étiez en exam: quel serait votre état mental ?",
             "reponses": [
                 {
-                "reponse": "100/100 + outstanding project",
+                "reponse": "Full focus, pas KO, full perfect, juste le boss en fait. 100/100 ou rien.",
                 "scores": {
-                    "Docile": 1
+                    "Solo": 1
                 }
                 },
                 {
-                "reponse": "100/100 + outstanding project + 10€",
+                "reponse": "On tente d'aller le plus loin.",
                 "scores": {
-                    "Bizarre": 1
+                    "Timide": 1
                 }
                 },
                 {
-                "reponse": "100/100 + outstanding project",
+                "reponse": "Ouai on est là.",
                 "scores": {
-                    "Malin.e": 1
+                    "Relax": 1
+                }
+                },
+                {
+                "reponse": "Envie de m'immoler par le feu.",
+                "scores": {
+                    "Brave": 1
                 }
                 }
             ]
