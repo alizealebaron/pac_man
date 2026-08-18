@@ -3,10 +3,10 @@
 #                                                      :::      ::::::::    #
 #  game_view.py                                      :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
-#  By: alebaron, rruiz                           +#+  +:+       +#+         #
+#  By: emarette, rruiz, alebaron                 +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/02 20:04:34 by alebaron        #+#    #+#               #
-#  Updated: 2026/06/13 10:52:08 by rruiz           ###   ########.fr        #
+#  Updated: 2026/08/18 14:06:39 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -204,7 +204,7 @@ class GameView(arcade.View):
         btn_cheat = arcade.gui.UIFlatButton(text="Triche",
                                             width=150)
         btn_param = arcade.gui.UIFlatButton(text="Paramètres",
-                                            width=150)
+                                            width=320)
         btn_exit = arcade.gui.UIFlatButton(text="Retour au menu principal",
                                            width=320)
 
@@ -215,8 +215,8 @@ class GameView(arcade.View):
 
         self.grid.add(btn_resume, column=0, row=0)
         self.grid.add(btn_start_new_game, column=1, row=0)
-        self.grid.add(btn_cheat, column=0, row=1)
-        self.grid.add(btn_param, column=1, row=1)
+        # self.grid.add(btn_cheat, column=0, row=1)
+        self.grid.add(btn_param, column=0, row=1, column_span=2)
         self.grid.add(btn_exit, column=0, row=2, column_span=2)
 
         self.anchor = self.pause_manager.add(arcade.gui.UIAnchorLayout())
