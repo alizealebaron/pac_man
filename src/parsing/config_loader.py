@@ -3,10 +3,10 @@
 #                                                      :::      ::::::::    #
 #  config_loader.py                                  :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
-#  By: alebaron, rruiz                           +#+  +:+       +#+         #
+#  By: emarette, rruiz, alebaron                 +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/05/19 10:07:49 by rruiz           #+#    #+#               #
-#  Updated: 2026/06/12 16:38:59 by alebaron        ###   ########.fr        #
+#  Updated: 2026/08/18 10:00:37 by alebaron        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -46,9 +46,7 @@ class ConfigLoader:
             {'id': 5, 'width': 10, 'height': 10},
             {'id': 6, 'width': 12, 'height': 8},
             {'id': 7, 'width': 12, 'height': 12},
-            {'id': 8, 'width': 16, 'height': 14},
-            {'id': 9, 'width': 16, 'height': 18},
-            {'id': 10, 'width': 20, 'height': 20}
+            {'id': 8, 'width': 16, 'height': 14}
         ],
         'lives': 3,
         'points_per_pacgum': 10,
