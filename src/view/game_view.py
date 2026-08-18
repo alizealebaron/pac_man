@@ -36,6 +36,7 @@ SCROLL_PATH = "assets/menu/scroll.png"
 
 TILE_SIZE = 64
 TRANSITION_DISTANCE = 64
+SPEED_MODIFIER = [0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
 
 
 # +-------------------------------------------------------------------------+
@@ -386,8 +387,8 @@ class GameView(arcade.View):
 
         vx, vy = self._player_move()
 
-        self.manager.player.pixel_offset_x += vx * self.manager.player.speed
-        self.manager.player.pixel_offset_y += vy * self.manager.player.speed
+        self.manager.player.pixel_offset_x += (vx * self.manager.player.speed * SPEED_MODIFIER[self.manager.actual_level])
+        self.manager.player.pixel_offset_y += (vy * self.manager.player.speed * SPEED_MODIFIER[self.manager.actual_level])
 
         if self.manager.player.pixel_offset_x >= TRANSITION_DISTANCE:
             self.manager.player.x += 1
@@ -426,7 +427,7 @@ class GameView(arcade.View):
         self.manager.player.sprite.on_update(delta_time)
 
         for enemy in self.enemy_manager.enemies:
-            enemy.on_update(delta_time)
+            enemy.on_update(delta_time, self.manager.actual_level)
             if enemy.just_respawned:
                 self.enemy_manager.enemies_sprite.append(enemy.sprite)
                 enemy.just_respawned = False

@@ -134,7 +134,7 @@ class EnemyManager:
         """Met à jour les ennemis."""
 
         for enemy in self.enemies:
-            enemy.on_update(delta_time)
+            enemy.on_update(delta_time, self.curr_level)
 
     def draw(self) -> None:
         """Dessine les ennemis."""

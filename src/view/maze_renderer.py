@@ -17,6 +17,7 @@
 import arcade
 from PIL import Image
 import random
+from time import time
 
 # +-------------------------------------------------------------------------+
 # |                                 CONST                                   |
@@ -26,7 +27,6 @@ import random
 WALL_DIR = 'assets/sprite/wall/'
 MAP_NAME = ['electric_maze.png', 'joyous_tower.png', 'mount_faraway.png',
             'purity_forest.png']
-MAP_FILE = f'{WALL_DIR}' + f'{random.choice(MAP_NAME)}'
 TILE_SIZE = 64
 
 
@@ -92,7 +92,9 @@ class MazeRenderer:
         self.offset_y = 0.0
 
         self.sprites: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
-        self.sprite_sheet = self._load_sprites(MAP_FILE)
+        random.seed(int(time()))
+        map_file = f'{WALL_DIR}' + f'{random.choice(MAP_NAME)}'
+        self.sprite_sheet = self._load_sprites(map_file)
         self._build_maze_sprites()
 
     # +---------------------------------------------------------------------+

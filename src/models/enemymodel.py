@@ -28,6 +28,7 @@ from src.models.playerModel import PlayerModel
 
 
 SPEED = 1
+SPEED_MODIFIER = [0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2]
 TRANSITION_DISTANCE = 64
 ENEMY_FILE = 'data/enemy_data.json'
 
@@ -156,7 +157,7 @@ class EnemyModel:
     # |                            View Method                              |
     # +---------------------------------------------------------------------+
 
-    def on_update(self, delta_time: float) -> None:
+    def on_update(self, delta_time: float, curr_level: int) -> None:
 
         """
         Met à jour la position de l'ennemi en fonction de son algorithme de
@@ -171,8 +172,8 @@ class EnemyModel:
 
         vx, vy = self.current_direction if self.current_direction else (0, 0)
 
-        self.pixel_offset_x += vx * SPEED
-        self.pixel_offset_y += vy * SPEED
+        self.pixel_offset_x += (vx * SPEED * SPEED_MODIFIER[curr_level])
+        self.pixel_offset_y += (vy * SPEED * SPEED_MODIFIER[curr_level])
 
         if self.pixel_offset_x >= TRANSITION_DISTANCE:
             self.x += 1
